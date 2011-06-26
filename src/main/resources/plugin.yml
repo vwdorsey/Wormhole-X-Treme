@@ -1,5 +1,5 @@
 name: WormholeXTreme
-main: com.wormhole_xtreme.wormhole.WormholeXTreme
+main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
 version: 0.854
 authors: [Lologarithm, alron]
 softdepend: [Permissions, Help, WormholeXTremeWorlds]

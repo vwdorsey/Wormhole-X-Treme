@@ -1,7 +1,7 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-    <id>package</id>
+    <id>${project.version}</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -35,9 +35,9 @@
     </fileSets>
     <files>
         <file>
-  		    <source>${project.build.directory}/${artifactId}-${version}.jar</source>
-  		    <outputDirectory>/plugins/</outputDirectory>
-  		    <destName>WormholeXTreme.jar</destName>
+            <source>${project.build.directory}/WormholeXTreme.${project.packaging}</source>
+            <outputDirectory>/plugins/</outputDirectory>
+            <destName>WormholeXTreme.${project.packaging}</destName>            
         </file>
         <file>
             <source>${project.basedir}/lib/hsqldb.jar</source>
