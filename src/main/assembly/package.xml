@@ -39,13 +39,5 @@
             <outputDirectory>/plugins/</outputDirectory>
             <destName>WormholeXTreme.${project.packaging}</destName>            
         </file>
-        <file>
-            <source>${project.basedir}/lib/hsqldb.jar</source>
-            <outputDirectory>/lib/</outputDirectory>
-        </file>
-        <file>
-            <source>${project.basedir}/lib/hsqldb_lic.txt</source>
-            <outputDirectory>/docs/</outputDirectory>
-        </file>
     </files>
 </assembly>

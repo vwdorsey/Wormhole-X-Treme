@@ -1,3 +1,16 @@
+Changes 0.9 (6/26/11) - CB #928 compatible build
+- fixed onPlayerMove() teleport issue
+- applied formating fix
+- added myself to gpl license header
+- removed h2sqldb and replaced with sqlite
+- fixed onLoad() issues
+- fixed onDisable() issues
+- increased version number to 0.9
+- deleted unused libs folder
+- removed hsqldb from package.xml
+- fixed maven xml files
+
+
 Changes 0.854 (5/17/11 @ 16:13 PST):
 
 - Updated chunk (un)loading to happen when gate (de)activates and when dial lever state
