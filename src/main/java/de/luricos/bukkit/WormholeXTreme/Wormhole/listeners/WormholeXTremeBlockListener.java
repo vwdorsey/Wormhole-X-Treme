@@ -18,8 +18,9 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
@@ -46,7 +47,7 @@ import java.util.logging.Level;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-class WormholeXTremeBlockListener extends BlockListener {
+public class WormholeXTremeBlockListener extends BlockListener {
 
     /**
      * Handle block break.

@@ -18,8 +18,9 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 
@@ -40,7 +41,7 @@ import java.util.logging.Level;
  * 
  * @see WormholeXTremeRedstoneEvent
  */
-class WormholeXTremeRedstoneListener extends BlockListener {
+public class WormholeXTremeRedstoneListener extends BlockListener {
 
     /**
      * Checks if current is new.

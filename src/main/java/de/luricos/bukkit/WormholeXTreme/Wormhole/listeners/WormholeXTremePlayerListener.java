@@ -18,8 +18,9 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,7 +51,7 @@ import java.util.logging.Level;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-class WormholeXTremePlayerListener extends PlayerListener {
+public class WormholeXTremePlayerListener extends PlayerListener {
 
     /**
      * Button lever hit.

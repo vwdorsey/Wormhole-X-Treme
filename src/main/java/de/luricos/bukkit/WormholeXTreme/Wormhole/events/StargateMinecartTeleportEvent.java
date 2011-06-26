@@ -18,7 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.event;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.events;
 
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;

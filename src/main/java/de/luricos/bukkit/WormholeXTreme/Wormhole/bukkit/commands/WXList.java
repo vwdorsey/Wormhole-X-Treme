@@ -18,7 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.command;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
@@ -31,44 +31,43 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 /**
- * The Class WXRemove.
+ * The Class WXList.
  * 
  * @author alron
  */
-public class WXRemove implements CommandExecutor {
+public class WXList implements CommandExecutor {
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        final String[] a = CommandUtilities.commandEscaper(args);
-        if ((a.length >= 1) && (a.length <= 2)) {
-            if (a[0].equals("-all")) {
-                return false;
-            }
-            final Stargate s = StargateManager.getStargate(a[0]);
-
-            if (s != null) {
-                if (CommandUtilities.playerCheck(sender)
-                        ? WXPermissions.checkWXPermissions((Player) sender, s, PermissionType.REMOVE)
-                        : true) {
-                    boolean destroy = false;
-                    if ((a.length == 2) && a[1].equalsIgnoreCase("-all")) {
-                        destroy = true;
-                    }
-                    CommandUtilities.gateRemove(s, destroy);
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.getGateName());
-                } else {
-                    sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+        if (CommandUtilities.playerCheck(sender)
+                ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.LIST)
+                : true) {
+            final ArrayList<Stargate> gates = StargateManager.getAllGates();
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");
+            StringBuilder sb = new StringBuilder();
+            // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
+            for (int i = 0; i < gates.size(); i++) {
+                sb.append("\u00A77" + gates.get(i).getGateName());
+                if (i != gates.size() - 1) {
+                    sb.append("\u00A78, ");
                 }
-
-            } else {
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0] + ". Remember proper capitalization.");
+                if (sb.toString().length() >= 75) {
+                    sender.sendMessage(sb.toString());
+                    sb = new StringBuilder();
+                }
             }
+            if (!sb.toString().equals("")) {
+                sender.sendMessage(sb.toString());
+            }
+
         } else {
-            return false;
+            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }

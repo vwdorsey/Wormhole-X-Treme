@@ -18,10 +18,10 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.command;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
@@ -32,37 +32,32 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * The Class Build.
+ * The Class Compass.
  * 
  * @author alron
  */
-public class Build implements CommandExecutor {
+public class Compass implements CommandExecutor {
 
     /**
-     * Do build.
+     * Do compass.
      * 
      * @param player
      *            the player
-     * @param args
-     *            the args
      * @return true, if successful
      */
-    private static boolean doBuild(final Player player, final String[] args) {
-        if (args.length == 1) {
-            if (WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) {
-
-                if (StargateHelper.isStargateShape(args[0])) {
-                    StargateManager.addPlayerBuilderShape(player, StargateHelper.getStargateShape(args[0]));
-                    player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0]);
-                } else {
-                    player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + args[0]);
-                }
+    private static boolean doCompass(final Player player) {
+        if (WXPermissions.checkWXPermissions(player, PermissionType.COMPASS)) {
+            final Stargate closest = StargateManager.findClosestStargate(player.getLocation());
+            if (closest != null) {
+                player.setCompassTarget(closest.getGatePlayerTeleportLocation());
+                player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
             } else {
-                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
             }
-            return true;
+        } else {
+            player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
-        return false;
+        return true;
     }
 
     /* (non-Javadoc)
@@ -70,14 +65,8 @@ public class Build implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (CommandUtilities.playerCheck(sender)) {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if ((arguments.length < 3) && (arguments.length > 0)) {
-                final Player player = (Player) sender;
-                return doBuild(player, arguments);
-            }
-            return false;
-        }
-        return true;
+        return CommandUtilities.playerCheck(sender)
+                ? doCompass((Player) sender)
+                : true;
     }
 }

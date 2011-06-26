@@ -1,4 +1,4 @@
-/*
+/**
  *   Wormhole X-Treme Plugin for Bukkit
  *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
@@ -18,9 +18,8 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.command;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
@@ -32,15 +31,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.logging.Level;
-
 /**
- * The Class Force.
+ * The Class WXRemove.
  * 
  * @author alron
  */
-public class Force implements CommandExecutor {
+public class WXRemove implements CommandExecutor {
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -48,32 +44,32 @@ public class Force implements CommandExecutor {
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String[] a = CommandUtilities.commandEscaper(args);
-        if (a.length == 1) {
-            if (CommandUtilities.playerCheck(sender)
-                    ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)
-                    : true) {
-                if (a[0].equalsIgnoreCase("-all")) {
-                    for (final Stargate gate : StargateManager.getAllGates()) {
-                        CommandUtilities.closeGate(gate, true);
+        if ((a.length >= 1) && (a.length <= 2)) {
+            if (a[0].equals("-all")) {
+                return false;
+            }
+            final Stargate s = StargateManager.getStargate(a[0]);
+
+            if (s != null) {
+                if (CommandUtilities.playerCheck(sender)
+                        ? WXPermissions.checkWXPermissions((Player) sender, s, PermissionType.REMOVE)
+                        : true) {
+                    boolean destroy = false;
+                    if ((a.length == 2) && a[1].equalsIgnoreCase("-all")) {
+                        destroy = true;
                     }
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All gates have been deactivated, darkened, and have had their iris (if any) opened.");
-                } else if (StargateManager.isStargate(a[0])) {
-                    CommandUtilities.closeGate(StargateManager.getStargate(a[0]), true);
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + a[0] + " has been closed, darkened, and has had its iris (if any) opened.");
+                    CommandUtilities.gateRemove(s, destroy);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.getGateName());
                 } else {
-                    sender.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
-                    return false;
+                    sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                 }
 
-                if (CommandUtilities.playerCheck(sender)) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: \"" + ((Player) sender).getName() + "\" ran wxforce: " + Arrays.toString(a));
-                }
             } else {
-                sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0] + ". Remember proper capitalization.");
             }
-            return true;
         } else {
             return false;
         }
+        return true;
     }
 }

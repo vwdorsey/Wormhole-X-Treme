@@ -20,17 +20,23 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeServerListener;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeRedstoneListener;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeVehicleListener;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeBlockListener;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeEntityListener;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremePlayerListener;
 import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Build;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Compass;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Complete;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Dial;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Force;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Go;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.WXIDC;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.WXList;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.WXRemove;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.command.Wormhole;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Build;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Compass;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Complete;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Dial;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Force;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Go;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXIDC;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXList;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXRemove;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Wormhole;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
@@ -67,26 +73,24 @@ import java.util.logging.Logger;
  */
 public class WormholeXTreme extends JavaPlugin {
 
-    /** The player listener. */
+    /** listeners **/
     private static final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener();
-    /** The block listener. */
     private static final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener();
-    /** The vehicle listener. */
     private static final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener();
-    /** The entity listener. */
     private static final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
-    /** The server listener. */
     private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
-    /** The server listener. */
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
-    /** The Permissions. */
+
+    /** plugins **/
     private static PermissionHandler permissions = null;
-    /** The Help. */
     private static Help help = null;
+    
     /** The wormhole x treme worlds. */
     private static WorldHandler worldHandler = null;
+    
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
+    
     /** The log. */
     private static Logger log = null;
 
