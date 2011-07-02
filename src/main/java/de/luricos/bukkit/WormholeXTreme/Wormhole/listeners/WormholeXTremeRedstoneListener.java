@@ -27,6 +27,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.Material;
 
 import java.util.logging.Level;
 
@@ -80,10 +81,17 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
     @Override
     public void onBlockRedstoneChange(final BlockRedstoneEvent event) {
         final Block block = event.getBlock();
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Caught redstone event on block: " + block.toString() + " oldCurrent: " + event.getOldCurrent() + " newCurrent: " + event.getNewCurrent());
+        
         if (StargateManager.isBlockInGate(block)) {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Caught redstone event on block: " + block.toString() + " oldCurrent: " + event.getOldCurrent() + " newCurrent: " + event.getNewCurrent());
+            
             final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
-            if (stargate.isGateSignPowered() && stargate.isGateRedstonePowered() && (block.getTypeId() == 55) && isCurrentNew(event.getOldCurrent(), event.getNewCurrent())) {
+            if (
+                    (stargate.isGateSignPowered()) && (stargate.isGateRedstonePowered()) && 
+                    (block.getType().equals(Material.REDSTONE_WIRE)) && (isCurrentNew(event.getOldCurrent(), event.getNewCurrent())) && 
+                    (!stargate.isGateActive())
+                ) {
+                
                 if ((stargate.getGateRedstoneSignActivationBlock() != null) && block.equals(stargate.getGateRedstoneSignActivationBlock()) && isCurrentOn(event.getOldCurrent(), event.getNewCurrent())) {
                     stargate.tryClickTeleportSign(stargate.getGateDialSignBlock());
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone sign event on gate: " + stargate.getGateName() + " block: " + block.toString());
@@ -92,6 +100,7 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
                         stargate.shutdownStargate(true);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone shutdown event on gate: " + stargate.getGateName() + " block: " + block.toString());
                     }
+                    
                     if (!stargate.isGateActive() && (stargate.getGateDialSignTarget() != null) && !stargate.isGateRecentlyActive()) {
                         stargate.dialStargate(stargate.getGateDialSignTarget(), false);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone dial event on gate: " + stargate.getGateName() + " block: " + block.toString());

@@ -26,6 +26,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Class ConfigManager.
@@ -552,5 +553,14 @@ public class ConfigManager {
      */
     public static void setUseCooldownGroupTwo(final int time) {
         setConfigValue(ConfigKeys.USE_COOLDOWN_GROUP_TWO, time);
+    }
+    
+    /**
+     * Set the debug level
+     * 
+     * @param level - SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST
+     */
+    public static void setDebugLevel(final String level) {
+        setConfigValue(ConfigKeys.LOG_LEVEL, level.toUpperCase());
     }
 }

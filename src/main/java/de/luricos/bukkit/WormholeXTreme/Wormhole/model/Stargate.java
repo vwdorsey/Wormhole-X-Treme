@@ -348,6 +348,7 @@ public class Stargate {
         if (getGateShutdownTaskId() > 0) {
             WormholeXTreme.getScheduler().cancelTask(getGateShutdownTaskId());
         }
+        
         if (getGateAfterShutdownTaskId() > 0) {
             WormholeXTreme.getScheduler().cancelTask(getGateAfterShutdownTaskId());
         }
@@ -369,6 +370,7 @@ public class Stargate {
                 toggleRedstoneGateActivatedPower();
                 setGateRecentlyActive(false);
             }
+            
             if (!isGateLightsActive()) {
                 // This function lights, wooshes, and then adds portal material
                 lightStargate(true);
@@ -399,6 +401,13 @@ public class Stargate {
         if (!target.isGateLightsActive() || force) {
             setGateTarget(target);
             dialStargate();
+            
+            if (getGateTarget() == null) {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Target lost! Closing local wormhole for safety percussions.");
+                shutdownStargate(true);
+                return false;
+            }
+            
             getGateTarget().dialStargate();
             if ((isGateActive()) && (getGateTarget().isGateActive())) {
                 return true;
@@ -1911,29 +1920,33 @@ public class Stargate {
             if (isGateActive()) {
                 WorldUtils.scheduleChunkLoad(getGateDialLeverBlock());
             }
-            int materialId = getGateDialLeverBlock().getTypeId();
+            
+            Material material = getGateDialLeverBlock().getType();
             if (regenerate) {
-                getGateDialLeverBlock().setTypeIdAndData(69, WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
-                materialId = getGateDialLeverBlock().getTypeId();
+                getGateDialLeverBlock().setTypeIdAndData(Material.LEVER.getId(), WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
+                material = getGateDialLeverBlock().getType();
             }
+            
             final byte leverState = getGateDialLeverBlock().getData();
-            switch (materialId) {
-                case 77:
-                    getGateDialLeverBlock().setTypeId(69);
+            switch (material) {
+                case STONE_BUTTON:
+                    getGateDialLeverBlock().setType(Material.LEVER);
                     getGateDialLeverBlock().setData(leverState);
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
                     getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
-                case 69:
+                case LEVER:
                     getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 default:
                     break;
             }
+            
             if (!isGateActive()) {
                 WorldUtils.scheduleChunkUnload(getGateDialLeverBlock());
             }
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + Material.getMaterial(materialId).toString() + "\" State: \"" + leverState + "\"");
+            
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + leverState + "\"");
         }
     }
 

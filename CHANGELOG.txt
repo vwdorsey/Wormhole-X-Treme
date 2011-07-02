@@ -1,23 +1,22 @@
+Changes 0.905 - CB #953 compatible build
+
+- fixed RedstoneDialing NPE
+- added debug command
+- stargate dialing sequence is now NPE save
+- removed button notice when no stargate was found cause this would make buttons unusable cause of spammy messages
+- refactored getTypeId() to getType() in Stargate detection
+
 Changes 0.9 (6/26/11) - CB #928 compatible build
 
 - fixed onPlayerMove() teleport issue
-
 - applied formating fix
-
 - added myself to gpl license header
-
 - removed h2sqldb and replaced with sqlite
-
 - fixed onLoad() issues
-
 - fixed onDisable() issues
-
 - increased version number to 0.9
-
 - deleted unused libs folder
-
 - removed hsqldb from package.xml
-
 - fixed maven xml files
 
 
@@ -25,36 +24,29 @@ Changes 0.854 (5/17/11 @ 16:13 PST):
 
 - Updated chunk (un)loading to happen when gate (de)activates and when dial lever state
   changes happen. 
-
 - Fixed iris levers not being added properly with 2d gates. (Oops, guess that code WAS needed)
-
 - Fixed IndexOutOfBoundsException on 3d gate shapes without lighting blocks.
-
 - Hamfisted fix for signs not updating. Now we nuke the sign and build it from scratch every
   time a gate sign is toggled. Causes a flash, but... who cares. It works EVERY time now. 
 
 Changes 0.853 (5/13/11 @ 23:05 PST):
 
 - Fix for /dial gates breaking when a user who doesn't have dialer permission hit the lever.
-
 - Switched to getTypeId() from getType(), hopefully this works around the getType() == Air bug
   that might be lingering. (doubt it :| )
 
 Changes 0.852 (5/12/11 @ 07:55 PST):
 
 - Added support for upcoming Permissions 3.0.x release.
-
 - Fixed a NPE in 2d shape code dealing with light block positions.
-
 - Added soft dependencies to plugin.yml.
-
 - Minor log format changes for readability.
 
 Changes 0.851 (5/10/11 @ 21:56 PST):
 
 - Complete revamp of how we handle permissions checks. Lots more case statements, lots less
   if/else if. Much better. This is what enums are for.
-  
+ 
 - Added new gate use cooldowns. This feature will only work on complex permissions enabled 
   servers. There are three groups you can assign a player to; 'wormhole.cooldown.groupone',
   'wormhole.cooldown.grouptwo', and 'wormhole.cooldown.groupthree'. If you have an '*' on any

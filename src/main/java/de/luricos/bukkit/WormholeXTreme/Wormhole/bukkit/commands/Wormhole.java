@@ -37,6 +37,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Class Wormhole.
@@ -771,6 +774,27 @@ public class Wormhole implements CommandExecutor {
         }
     }
 
+    public static boolean doLogging(CommandSender sender, String[] args) {
+        if (args.length >= 2) {
+            String logLevel = args[1];
+
+            if (logLevel != null || !"".equals(logLevel)) {
+                List<String> allowedArgs = new ArrayList<String>(Arrays.asList("SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"));
+                if (allowedArgs.indexOf(logLevel.toUpperCase()) != -1) {
+                    ConfigManager.setDebugLevel(args[1]);
+                }
+            }
+            
+            if (sender instanceof Player) {
+                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + " Logging set to '" + ConfigManager.getLogLevel().getName() + "'. Please reload the server to apply this change.");
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -811,6 +835,8 @@ public class Wormhole implements CommandExecutor {
                 return doCooldown(sender, a);
             } else if (a[0].equalsIgnoreCase("restrict")) {
                 return doRestrict(sender, a);
+            } else if (a[0].equalsIgnoreCase("debug")) {
+                return doLogging(sender, a);
             } else {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', & 'custom'.");
