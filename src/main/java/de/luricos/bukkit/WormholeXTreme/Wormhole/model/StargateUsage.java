@@ -34,45 +34,43 @@ public class StargateUsage {
     private boolean hasPlayerUsedStargate = false;
     private boolean hasPlayerPermission = false;
     private boolean hasPlayerUseCooldown = false;
+    private boolean hasPlayerReachedDestination = false;
     private boolean isGateIrisActive = false;
     private boolean isGateActive = false;
 
     public StargateUsage() {
     }
 
-    public StargateUsage setPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
-        return this;
     }
 
-    public StargateUsage setStargate(Stargate stargate) {
+    public void setStargate(Stargate stargate) {
         this.stargate = stargate;
-        return this;
     }
 
-    public StargateUsage setPlayerUsedStargate(boolean used) {
+    public void setPlayerUsedStargate(boolean used) {
         this.hasPlayerUsedStargate = used;
-        return this;
     }
 
-    public StargateUsage setHasPlayerPermission(boolean has) {
+    public void setHasPlayerPermission(boolean has) {
         this.hasPlayerPermission = has;
-        return this;
     }
 
-    public StargateUsage setHasPlayerUseCooldown(boolean cooldown) {
+    public void setHasPlayerUseCooldown(boolean cooldown) {
         this.hasPlayerUseCooldown = cooldown;
-        return this;
     }
 
-    public StargateUsage setIsGateIrisActive(boolean active) {
+    public void  setIsGateIrisActive(boolean active) {
         this.isGateIrisActive = active;
-        return this;
     }
 
-    public StargateUsage setIsGateActive(boolean active) {
+    public void setIsGateActive(boolean active) {
         this.isGateActive = active;
-        return this;
+    }
+    
+    public void setPlayerReachedDestination(boolean destinationReached) {
+        this.hasPlayerReachedDestination = destinationReached;
     }
 
     public Player getPlayer() {
@@ -81,6 +79,10 @@ public class StargateUsage {
 
     public Stargate getStargate() {
         return this.stargate;
+    }
+    
+    public StargateUsage getStargateUsage() {
+        return this;
     }
 
     public boolean hasPlayerUsedStargate() {
@@ -93,6 +95,10 @@ public class StargateUsage {
 
     public boolean hasPlayerUseCooldown() {
         return this.hasPlayerUseCooldown;
+    }
+    
+    public boolean hasPlayerReachedDestination() {
+        return this.hasPlayerReachedDestination;
     }
 
     public boolean isGateIrisActive() {

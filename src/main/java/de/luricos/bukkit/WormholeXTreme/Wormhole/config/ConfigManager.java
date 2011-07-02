@@ -104,6 +104,10 @@ public class ConfigManager {
         gateDeactivated(normalHeader + "Gate successfully deactivated."),
         /** The gate dialed. */
         gateConnected(normalHeader + "Stargates connected."),
+        /** no GateShape found */
+        gateWithInvalidShape(errorHeader + "No valid Stargate shape was found."),
+        /** no GateShape found assistance */
+        gateWithInvalidShapeAssistance(normalHeader + "Type /wxbuild for build assistance."),
         /** The construct success. */
         constructSuccess(normalHeader + "Gate successfully constructed."),
         /** The construct name invalid. */
