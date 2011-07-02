@@ -299,9 +299,7 @@ public class StargateDBManager {
      */
     public static void shutdown() {
         try {
-            if (!wormholeSQLConnection.isClosed()) {
-                storeStatement = wormholeSQLConnection.prepareStatement("SHUTDOWN");
-                storeStatement.execute();
+            if ((wormholeSQLConnection != null) && (!wormholeSQLConnection.isClosed())) {
                 wormholeSQLConnection.close();
                 WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "WormholeDB shutdown successfull.");
             }
