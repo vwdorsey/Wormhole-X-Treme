@@ -20,9 +20,9 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.logic;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.entity.Player;
 
@@ -99,7 +99,7 @@ public class StargateUpdateRunnable implements Runnable {
      */
     @Override
     public void run() {
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + (stargate != null
+        WXTLogger.prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + (stargate != null
                 ? "\" Stargate \"" + stargate.getGateName()
                 : "") + "\"");
         switch (action) {

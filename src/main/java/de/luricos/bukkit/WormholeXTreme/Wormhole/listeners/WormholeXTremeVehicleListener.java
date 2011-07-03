@@ -28,6 +28,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -84,7 +85,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
             final Entity e = veh.getPassenger();
             if ((e != null) && (e instanceof Player)) {
                 final Player p = (Player) e;
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
+                WXTLogger.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
                 if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || (!st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER)))) {
                     p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                     return false;
@@ -110,7 +111,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
                 }
             } else {
                 if (st.getGateTarget().isGateIrisActive()) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
+                    WXTLogger.prettyLog(Level.FINE, false, "Minecart in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
                     veh.teleport(st.getGateMinecartTeleportLocation() != null
                             ? st.getGateMinecartTeleportLocation()
                             : st.getGatePlayerTeleportLocation());
@@ -143,7 +144,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
                 veh.setVelocity(new_speed);
             } else {
                 if (e != null) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Removing player from cart and doing some teleport hackery");
+                    WXTLogger.prettyLog(Level.FINE, false, "Removing player from cart and doing some teleport hackery");
                     veh.eject();
                     veh.remove();
                     final Minecart newveh = target.getWorld().spawn(target, Minecart.class);

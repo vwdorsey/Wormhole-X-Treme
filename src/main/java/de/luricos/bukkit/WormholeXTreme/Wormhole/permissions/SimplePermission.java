@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.entity.Player;
 
@@ -88,10 +89,10 @@ enum SimplePermission {
     protected boolean checkPermission(final Player player) {
         if ((player != null) && !ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissions() != null) && ConfigManager.getSimplePermissions()) {
             if (WormholeXTreme.getPermissions().has(player, simplePermissionNode)) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted simple \"" + toString() + "\" permissions.");
+                WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted simple \"" + toString() + "\" permissions.");
                 return true;
             }
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" denied simple \"" + toString() + "\" permissions.");
+            WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" denied simple \"" + toString() + "\" permissions.");
 
         }
         return false;

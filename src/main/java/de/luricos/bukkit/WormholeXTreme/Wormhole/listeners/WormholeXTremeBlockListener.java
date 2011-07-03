@@ -20,11 +20,11 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 
 import org.bukkit.Location;
@@ -102,7 +102,7 @@ public class WormholeXTremeBlockListener extends BlockListener {
             return false;
         } else {
             if (player != null) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied block destroy on: " + stargate.getGateName());
+                WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied block destroy on: " + stargate.getGateName());
             }
         }
         return true;
@@ -147,7 +147,7 @@ public class WormholeXTremeBlockListener extends BlockListener {
                         : closest.getGateShape() != null
                         ? closest.getGateShape().getShapeWooshDepth()
                         : 0) != 0)) || (blockDistanceSquared <= 25)) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
+                    WXTLogger.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);
                 }
             }
@@ -164,7 +164,7 @@ public class WormholeXTremeBlockListener extends BlockListener {
             final Player player = event.getPlayer();
             if ((stargate != null) && (player != null) && !WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE)) {
                 event.setCancelled(true);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.getGateName());
+                WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.getGateName());
             }
         }
     }
@@ -202,7 +202,7 @@ public class WormholeXTremeBlockListener extends BlockListener {
                         : closest.getGateShape() != null
                         ? closest.getGateShape().getShapeWooshDepth()
                         : 0) != 0)) || (blockDistanceSquared <= 25)) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+                    WXTLogger.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);
                 }
             }

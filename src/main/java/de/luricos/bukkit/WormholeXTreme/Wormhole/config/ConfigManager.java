@@ -26,7 +26,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The Class ConfigManager.
@@ -73,14 +72,18 @@ public class ConfigManager {
         /** The WORLDS SUPPORT DISABLE key. */
         WORLDS_SUPPORT_ENABLED,
         /** The LOG LEVEL. */
-        LOG_LEVEL
+        LOG_LEVEL,
+        /** The Gate welcome message. */
+        SHOW_GATE_WELCOME_MESSAGE,
+        /** The transportation method */
+        USE_EVENT_OR_TP_TRANSPORT
     }
 
     /**
      * The Enum StringTypes.
      */
     public static enum MessageStrings {
-
+        messageColor("\u00A77"),
         /** The error header. */
         errorHeader("\u00A73:: \u00A75error \u00A73:: \u00A77"),
         /** The normal header. */
@@ -252,6 +255,45 @@ public class ConfigManager {
         } else {
             return Level.INFO;
         }
+    }
+    
+    /**
+     * get WelcomeMessageEnabled boolean value
+     * 
+     * @return true if enabled (default) or false if disabled
+     */
+    public static boolean isGateArrivalWelcomeMessageEnabled() {
+        Setting wme;
+        if ((wme = ConfigManager.getConfigurations().get(ConfigKeys.SHOW_GATE_WELCOME_MESSAGE)) != null) {
+            return wme.getBooleanValue();
+        }
+        
+        return true;
+    }
+    /**
+     * Set SHOW_GATE_WELCOME_MESSAGE true or false
+     * @param g 
+     */
+    public static void setShowGWM(final boolean g) {
+        ConfigManager.setConfigValue(ConfigKeys.SHOW_GATE_WELCOME_MESSAGE, g);
+    }
+    
+    /**
+     * Get Transportation Method for onPlayerMove()
+     * 
+     * @return true EVENT, false TELEPORT
+     */
+    public static boolean getGateTransportMethod() {
+        Setting tm;
+        if ((tm = ConfigManager.getConfigurations().get(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT)) != null) {
+            return tm.getBooleanValue();
+        }
+        
+        return true;
+    }
+    
+    public static void setGateTransportMethod(boolean tm) {
+        ConfigManager.setConfigValue(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT, tm);
     }
 
     /**

@@ -20,10 +20,13 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  *
@@ -60,7 +63,7 @@ public class StargateUsageManager {
             StargateUsage stargateUsage = new StargateUsage();
             stargateUsage.setPlayer(player);
             
-            //@TODO: monitor for adding a player to keyring
+            WXTLogger.prettyLog(Level.FINE, false, "Adding '" + playerName + "' to StargateUsage keyring");
             StargateUsageManager.stargateUsageMap.put(playerName, stargateUsage);
         }
     }
@@ -71,8 +74,12 @@ public class StargateUsageManager {
             return;
         
         if (StargateUsageManager.stargateUsageMap.containsKey(playerName)) {
-            //@TODO: monitor for removing a player from keyring
+            WXTLogger.prettyLog(Level.FINE, false, "Removing '" + playerName + "' StargateUsage keyring");
             StargateUsageManager.stargateUsageMap.remove(playerName);
         }
+    }
+    
+    public static void clearStargateUsage() {
+        stargateUsageMap.clear();
     }
 }

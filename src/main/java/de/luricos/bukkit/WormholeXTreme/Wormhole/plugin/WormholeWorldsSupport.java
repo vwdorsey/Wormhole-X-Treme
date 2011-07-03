@@ -24,6 +24,7 @@ import de.luricos.bukkit.WormholeXTreme.Worlds.WormholeXTremeWorlds;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.plugin.Plugin;
 
@@ -45,7 +46,7 @@ public class WormholeWorldsSupport {
      */
     private static boolean checkWorldsVersion(final String version) {
         if (!version.startsWith("0.5")) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Not a supported version of Wormhole Worlds. Recommended is 0.5");
+            WXTLogger.prettyLog(Level.SEVERE, false, "Not a supported version of Wormhole Worlds. Recommended is 0.5");
             return false;
         }
         return true;
@@ -57,7 +58,7 @@ public class WormholeWorldsSupport {
     public static void disableWormholeWorlds() {
         if (WormholeXTreme.getWorldHandler() != null) {
             WormholeXTreme.setWorldHandler(null);
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Wormhole Worlds plugin.");
+            WXTLogger.prettyLog(Level.INFO, false, "Detached from Wormhole Worlds plugin.");
         }
     }
 
@@ -65,31 +66,47 @@ public class WormholeWorldsSupport {
      * Enable wormhole worlds.
      */
     public static void enableWormholeWorlds() {
+        enableWormholeWorlds(false);
+    }
+    
+    public static void enableWormholeWorlds(boolean reload) {
         if (ConfigManager.isWormholeWorldsSupportEnabled()) {
-            if (WormholeXTreme.getWorldHandler() == null) {
+            if (!WormholeWorldsSupport.isEnabled()) {
                 final Plugin worldsTest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("WormholeXTremeWorlds");
                 if (worldsTest != null) {
                     final String version = worldsTest.getDescription().getVersion();
                     if (checkWorldsVersion(version)) {
                         try {
                             WormholeXTreme.setWorldHandler(WormholeXTremeWorlds.getWorldHandler());
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Wormhole Worlds version " + version);
+                            WXTLogger.prettyLog(Level.INFO, false, "Attached to Wormhole Worlds version " + version);
                             // Worlds support means we can continue our load.
                             StargateDBManager.loadStargates(WormholeXTreme.getThisPlugin().getServer());
-                            WormholeXTreme.registerEvents(false);
-                            WormholeXTreme.registerCommands();
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, true, "Enable Completed.");
-
+                            
+                            if (!reload) {
+                                WormholeXTreme.registerEvents(false);
+                                WormholeXTreme.registerCommands();
+                            }
+                            
+                            WXTLogger.prettyLog(Level.INFO, true, "Enable Completed.");
                         } catch (final ClassCastException e) {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Wormhole Worlds: " + e.getMessage());
+                            WXTLogger.prettyLog(Level.WARNING, false, "Failed to get cast to Wormhole Worlds: " + e.getMessage());
                         }
                     }
                 } else {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Wormhole Worlds Plugin not yet available Stargates will not load until it enables.");
+                    WXTLogger.prettyLog(Level.INFO, false, "Wormhole Worlds Plugin not yet available Stargates will not load until it enables.");
                 }
+            } else {
+                WXTLogger.prettyLog(Level.INFO, false, "Wormhole Worlds Plugin not yet available Stargates will not load until it enables.");
             }
         } else {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Wormhole X-Treme Worlds Plugin support disabled via settings.txt.");
+            WXTLogger.prettyLog(Level.INFO, false, "Wormhole X-Treme Worlds Plugin support disabled via settings.txt.");
         }
+    }
+    
+    public static boolean isEnabled() {
+        if (WormholeXTreme.getWorldHandler() != null)
+            return true;
+        
+        return false;
     }
 }

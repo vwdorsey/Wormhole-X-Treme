@@ -25,6 +25,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -189,7 +190,7 @@ public class Stargate {
                         b.setType(wooshMaterial);
                     }
 
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Adding: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
+                    WXTLogger.prettyLog(Level.FINE, false, getGateName() + " Woosh Adding: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
 
                 if (getGateWooshBlocks().size() == getGateAnimationStep3D() + 1) {
@@ -213,7 +214,7 @@ public class Stargate {
                             b.setType(Material.AIR);
                         }
                     }
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
+                    WXTLogger.prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
 
                 // If this is the last step to animate, we now add all the portal blocks in.
@@ -356,10 +357,10 @@ public class Stargate {
         final int timeout = ConfigManager.getTimeoutShutdown() * 20;
         if (timeout > 0) {
             setGateShutdownTaskId(WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout));
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" created.");
+            WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" created.");
             if (getGateShutdownTaskId() == -1) {
                 shutdownStargate(true);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
+                WXTLogger.prettyLog(Level.SEVERE, false, "Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
             }
         }
 
@@ -379,7 +380,7 @@ public class Stargate {
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
             }
         } else {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
+            WXTLogger.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
         }
     }
 
@@ -403,7 +404,7 @@ public class Stargate {
             dialStargate();
             
             if (getGateTarget() == null) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Target lost! Closing local wormhole for safety percussions.");
+                WXTLogger.prettyLog(Level.WARNING, false, "Target lost! Closing local wormhole for safety percussions.");
                 shutdownStargate(true);
                 return false;
             }
@@ -413,10 +414,10 @@ public class Stargate {
                 return true;
             } else if ((isGateActive()) && (!getGateTarget().isGateActive())) {
                 shutdownStargate(true);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+                WXTLogger.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
             } else if ((!isGateActive()) && (getGateTarget().isGateActive())) {
                 target.shutdownStargate(true);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+                WXTLogger.prettyLog(Level.WARNING, false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
             }
         }
 
@@ -935,7 +936,7 @@ public class Stargate {
      */
     public void lightStargate(final boolean on) {
         if (on) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Lighting up Order: " + getGateLightingCurrentIteration());
+            WXTLogger.prettyLog(Level.FINE, false, "Lighting up Order: " + getGateLightingCurrentIteration());
             if (getGateLightingCurrentIteration() == 0) {
                 setGateLightsActive(true);
             } else if (!isGateLightsActive()) {
@@ -1001,7 +1002,7 @@ public class Stargate {
      */
     public void resetSign(final boolean teleportSign) {
         if (teleportSign) {
-            getGateDialSignBlock().setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+            getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
             setGateDialSign((Sign) getGateDialSignBlock().getState());
             getGateDialSign().setLine(0, getGateName());
             if (getGateNetwork() != null) {
@@ -1552,7 +1553,7 @@ public class Stargate {
             if (create) {
                 final Block nameSign = getGateNameBlockHolder().getFace(getGateFacing());
                 getGateStructureBlocks().add(nameSign.getLocation());
-                nameSign.setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+                nameSign.setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
                 final Sign sign = (Sign) nameSign.getState();
                 sign.setLine(0, "-" + getGateName() + "-");
 
@@ -1588,9 +1589,9 @@ public class Stargate {
         if (getGateIrisLeverBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateIrisLeverBlock().getLocation());
-                getGateIrisLeverBlock().setTypeIdAndData(69, WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
+                getGateIrisLeverBlock().setTypeIdAndData(Material.LEVER.getId(), WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
             } else {
-                if (getGateIrisLeverBlock().getTypeId() == 69) {
+                if (getGateIrisLeverBlock().getType().equals(Material.LEVER)) {
                     getGateStructureBlocks().remove(getGateIrisLeverBlock().getLocation());
                     getGateIrisLeverBlock().setTypeId(0);
                 }
@@ -1642,9 +1643,9 @@ public class Stargate {
         if (getGateRedstoneGateActivatedBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
-                getGateRedstoneGateActivatedBlock().setTypeIdAndData(69, (byte) 0x5, false);
+                getGateRedstoneGateActivatedBlock().setTypeIdAndData(Material.LEVER.getId(), (byte) 0x5, false);
             } else {
-                if (getGateRedstoneGateActivatedBlock().getTypeId() == 69) {
+                if (getGateRedstoneGateActivatedBlock().equals(Material.LEVER.getId())) {
                     getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
                     getGateRedstoneGateActivatedBlock().setTypeId(0);
                 }
@@ -1680,7 +1681,7 @@ public class Stargate {
      */
     public void shutdownStargate(final boolean timer) {
         if (getGateShutdownTaskId() > 0) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" cancelled.");
+            WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" cancelled.");
             WormholeXTreme.getScheduler().cancelTask(getGateShutdownTaskId());
             setGateShutdownTaskId(-1);
         }
@@ -1726,7 +1727,7 @@ public class Stargate {
 
         final int timeout = ConfigManager.getTimeoutActivate() * 20;
         setGateActivateTaskId(WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout));
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" created.");
+        WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" created.");
     }
 
     /**
@@ -1739,9 +1740,9 @@ public class Stargate {
         }
         final int timeout = 60;
         setGateAfterShutdownTaskId(WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.AFTERSHUTDOWN), timeout));
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" AfterShutdownTaskID \"" + getGateAfterShutdownTaskId() + "\" created.");
+        WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" AfterShutdownTaskID \"" + getGateAfterShutdownTaskId() + "\" created.");
         if (getGateAfterShutdownTaskId() == -1) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to schdule wormhole after shutdown, received task id of -1.");
+            WXTLogger.prettyLog(Level.SEVERE, false, "Failed to schdule wormhole after shutdown, received task id of -1.");
             setGateRecentlyActive(false);
         }
     }
@@ -1752,7 +1753,7 @@ public class Stargate {
      */
     public void stopActivationTimer() {
         if (getGateActivateTaskId() > 0) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" cancelled.");
+            WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" cancelled.");
             WormholeXTreme.getScheduler().cancelTask(getGateActivateTaskId());
             setGateActivateTaskId(-1);
         }
@@ -1763,7 +1764,7 @@ public class Stargate {
      */
     public void stopAfterShutdownTimer() {
         if (getGateAfterShutdownTaskId() > 0) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" AfterShutdownTaskID \"" + getGateAfterShutdownTaskId() + "\" cancelled.");
+            WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" AfterShutdownTaskID \"" + getGateAfterShutdownTaskId() + "\" cancelled.");
             WormholeXTreme.getScheduler().cancelTask(getGateAfterShutdownTaskId());
             setGateAfterShutdownTaskId(-1);
         }
@@ -1775,12 +1776,14 @@ public class Stargate {
      */
     public void teleportSignClicked() {
         synchronized (getGateNetwork().getNetworkGateLock()) {
-            getGateDialSignBlock().setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+            getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
             setGateDialSign((Sign) getGateDialSignBlock().getState());
             getGateDialSign().setLine(0, "-" + getGateName() + "-");
+            
             if (getGateDialSignIndex() == -1) {
                 setGateDialSignIndex(getGateDialSignIndex() + 1);
             }
+            
             if ((getGateNetwork().getNetworkSignGateList().size() == 0) || (getGateNetwork().getNetworkSignGateList().size() == 1)) {
                 getGateDialSign().setLine(1, "");
                 getGateDialSign().setLine(2, "No Other Gates");
@@ -1882,7 +1885,7 @@ public class Stargate {
      */
     public void timeoutStargate(final Player p) {
         if (getGateActivateTaskId() > 0) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" timed out.");
+            WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" timed out.");
             setGateActivateTaskId(-1);
         }
         // Deactivate if player still hasn't picked a target.
@@ -1932,7 +1935,7 @@ public class Stargate {
                 case STONE_BUTTON:
                     getGateDialLeverBlock().setType(Material.LEVER);
                     getGateDialLeverBlock().setData(leverState);
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
+                    WXTLogger.prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
                     getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 case LEVER:
@@ -1946,7 +1949,7 @@ public class Stargate {
                 WorldUtils.scheduleChunkUnload(getGateDialLeverBlock());
             }
             
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + leverState + "\"");
+            WXTLogger.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + leverState + "\"");
         }
     }
 

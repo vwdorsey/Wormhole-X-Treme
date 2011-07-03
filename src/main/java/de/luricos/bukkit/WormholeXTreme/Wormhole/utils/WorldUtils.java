@@ -220,7 +220,7 @@ public class WorldUtils {
             final int cX = c.getX();
             final int cZ = c.getZ();
             if (!w.isChunkLoaded(cX, cZ)) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
+                WXTLogger.prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
                 w.loadChunk(cX, cZ);
             }
         }
@@ -241,7 +241,7 @@ public class WorldUtils {
             final int cX = c.getX();
             final int cZ = c.getZ();
             if (w.isChunkLoaded(cX, cZ)) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
+                WXTLogger.prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
                 w.unloadChunkRequest(cX, cZ);
             }
         }

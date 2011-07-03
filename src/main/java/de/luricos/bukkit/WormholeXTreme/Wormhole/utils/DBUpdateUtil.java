@@ -69,12 +69,12 @@ public class DBUpdateUtil {
             }
             zis.close();
         } catch (final IOException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to open jar file to read SQL Update commands: " + e.getMessage());
+            WXTLogger.prettyLog(Level.SEVERE, false, "Unable to open jar file to read SQL Update commands: " + e.getMessage());
         } finally {
             try {
                 zis.close();
             } catch (final IOException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             }
         }
         return count;
@@ -97,8 +97,8 @@ public class DBUpdateUtil {
             }
             stmt.close();
         } catch (final SQLException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to load WormholeXTremeDB version info, defaulting to 0.");
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "If this is your first time running this plugin, you can ignore this error.");
+            WXTLogger.prettyLog(Level.WARNING, false, "Failed to load WormholeXTremeDB version info, defaulting to 0.");
+            WXTLogger.prettyLog(Level.WARNING, false, "If this is your first time running this plugin, you can ignore this error.");
             return 0;
         } finally {
             try {
@@ -106,14 +106,14 @@ public class DBUpdateUtil {
                     rs.close();
                 }
             } catch (final SQLException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             }
             try {
                 if (stmt != null) {
                     stmt.close();
                 }
             } catch (final SQLException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             }
 
         }
@@ -169,7 +169,7 @@ public class DBUpdateUtil {
             try {
                 dest_dir.mkdir();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
             }
         }
 
@@ -179,21 +179,21 @@ public class DBUpdateUtil {
                 try {
                     f.renameTo(new File(dest_dir, f.getName()));
                 } catch (final Exception e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to rename files: " + e.getMessage());
+                    WXTLogger.prettyLog(Level.SEVERE, false, "Unable to rename files: " + e.getMessage());
                 }
             }
 
             try {
                 dir.delete();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to delete directory: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to delete directory: " + e.getMessage());
             }
         }
 
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (final ClassNotFoundException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             return false;
         }
 
@@ -201,7 +201,7 @@ public class DBUpdateUtil {
             sql_con = DriverManager.getConnection("jdbc:sqlite:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
             sql_con.setAutoCommit(true);
         } catch (final SQLException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             return false;
         }
 
@@ -243,9 +243,9 @@ public class DBUpdateUtil {
                             } catch (final SQLException sql_e) {
                                 final int code = sql_e.getErrorCode();
                                 if ((code == -27) || (code == -21)) {
-                                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "(" + code + ")Continuing after Error:" + sql_e);
+                                    WXTLogger.prettyLog(Level.WARNING, false, "(" + code + ")Continuing after Error:" + sql_e);
                                 } else {
-                                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "(" + code + ")Failure On:" + sql_e);
+                                    WXTLogger.prettyLog(Level.SEVERE, false, "(" + code + ")Failure On:" + sql_e);
                                     success = false;
                                     break;
                                 }
@@ -259,18 +259,18 @@ public class DBUpdateUtil {
                 stmt.close();
                 sql_con.close();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failure to update db:" + e);
+                WXTLogger.prettyLog(Level.SEVERE, false, "Failure to update db:" + e);
             } finally {
                 try {
                     stmt.close();
                 } catch (final SQLException e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                    WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
                 }
             }
             if (success) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Successfully updated database.");
+                WXTLogger.prettyLog(Level.INFO, false, "Successfully updated database.");
             } else {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to update DB.");
+                WXTLogger.prettyLog(Level.SEVERE, false, "Failed to update DB.");
             }
         } else {
             //System.out.println("Database is already up to date.");

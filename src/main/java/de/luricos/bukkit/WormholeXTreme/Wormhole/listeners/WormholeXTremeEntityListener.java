@@ -20,9 +20,9 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -56,7 +56,7 @@ public class WormholeXTremeEntityListener extends EntityListener {
         for (int i = 0; i < eb.size(); i++) {
             if (StargateManager.isBlockInGate(eb.get(i))) {
                 final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.getGateName() + "\"");
+                WXTLogger.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.getGateName() + "\"");
                 return true;
             }
         }
@@ -93,7 +93,7 @@ public class WormholeXTremeEntityListener extends EntityListener {
                     : closest.getGateShape() != null
                     ? closest.getGateShape().getShapeWooshDepth()
                     : 0) != 0)) || (blockDistanceSquared <= 16))) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+                WXTLogger.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                 p.setFireTicks(0);
                 return true;
             }

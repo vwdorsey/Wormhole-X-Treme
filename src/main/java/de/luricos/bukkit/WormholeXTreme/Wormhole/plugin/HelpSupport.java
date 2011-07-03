@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.plugin;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import me.taylorkelly.help.Help;
 
@@ -44,7 +45,7 @@ public class HelpSupport {
      */
     private static void checkHelpVersion(final String version) {
         if (!version.startsWith("0.2")) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2.x");
+            WXTLogger.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2.x");
         }
     }
 
@@ -54,7 +55,7 @@ public class HelpSupport {
     public static void disableHelp() {
         if (WormholeXTreme.getHelp() != null) {
             WormholeXTreme.setHelp(null);
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Help plugin.");
+            WXTLogger.prettyLog(Level.INFO, false, "Detached from Help plugin.");
         }
     }
 
@@ -70,16 +71,16 @@ public class HelpSupport {
                     checkHelpVersion(version);
                     try {
                         WormholeXTreme.setHelp(((Help) helptest));
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Help version " + version);
+                        WXTLogger.prettyLog(Level.INFO, false, "Attached to Help version " + version);
                     } catch (final ClassCastException e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage());
+                        WXTLogger.prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage());
                     }
                 } else {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
+                    WXTLogger.prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
                 }
             }
         } else {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
+            WXTLogger.prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
         }
     }
 

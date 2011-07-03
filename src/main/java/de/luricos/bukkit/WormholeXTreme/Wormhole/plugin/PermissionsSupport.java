@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.plugin;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.plugin.Plugin;
 
@@ -45,7 +46,7 @@ public class PermissionsSupport {
     private static void checkPermissionsVersion(final String version) {
         final String v = version;
         if (!v.startsWith("2.5") && !v.startsWith("2.6") && !v.startsWith("2.7") && !v.startsWith("3.0")) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 3.0.x");
+            WXTLogger.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 3.0.x");
         }
 
     }
@@ -56,7 +57,7 @@ public class PermissionsSupport {
     public static void disablePermissions() {
         if (WormholeXTreme.getPermissions() != null) {
             WormholeXTreme.setPermissions(null);
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Permissions plugin.");
+            WXTLogger.prettyLog(Level.INFO, false, "Detached from Permissions plugin.");
         }
     }
 
@@ -72,21 +73,21 @@ public class PermissionsSupport {
                     checkPermissionsVersion(v);
                     try {
                         WormholeXTreme.setPermissions(((Permissions) test).getHandler());
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+                        WXTLogger.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
                         if (ConfigManager.getSimplePermissions()) {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Simple Permissions Enabled");
+                            WXTLogger.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
                         } else {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Complex Permissions Enabled");
+                            WXTLogger.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
                         }
                     } catch (final ClassCastException e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
                     }
                 } else {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
+                    WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
                 }
             }
         } else {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
+            WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
         }
     }
 }

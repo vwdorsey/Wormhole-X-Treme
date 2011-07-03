@@ -23,6 +23,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -190,7 +191,7 @@ public class StargateManager {
         if (posDupe == null) {
             s.setGateOwner(p.getName());
             s.completeGate(s.getGateName(), "");
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + s.getGateName());
+            WXTLogger.prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + s.getGateName());
             addStargate(s);
             StargateDBManager.stargateToSQL(s);
             return true;
@@ -227,7 +228,7 @@ public class StargateManager {
 
             complete.setGateOwner(p.getName());
             complete.completeGate(name, idc);
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + complete.getGateName());
+            WXTLogger.prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + complete.getGateName());
             addStargate(complete);
             StargateDBManager.stargateToSQL(complete);
             return true;

@@ -37,17 +37,21 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXIDC;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXList;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXRemove;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Wormhole;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXReload;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXStatus;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateUsageManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import me.taylorkelly.help.Help;
 
@@ -63,7 +67,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * WormholeXtreme for Bukkit.
@@ -80,7 +83,7 @@ public class WormholeXTreme extends JavaPlugin {
     private static final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
     private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
-
+    
     /** plugins **/
     private static PermissionHandler permissions = null;
     private static Help help = null;
@@ -90,40 +93,99 @@ public class WormholeXTreme extends JavaPlugin {
     
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
-    
-    /** The log. */
-    private static Logger log = null;
 
     /* (non-Javadoc)
      * @see org.bukkit.plugin.java.JavaPlugin#onLoad()
      */
     @Override
     public void onLoad() {
-        setLog(this.getServer().getLogger());
-        setScheduler(this.getServer().getScheduler());
+        // init the WXTLogger
+        WXTLogger.initLogger(this.getDescription().getName(), this.getDescription().getVersion(), ConfigManager.getLogLevel());        
 
-        prettyLog(Level.INFO, true, "Loading WormholeXTreme ...");
+        // send welcome message
+        WXTLogger.prettyLog(Level.INFO, true, "Loading WormholeXTreme ...");
+        
+        // set scheduler
+        WormholeXTreme.setScheduler(this.getServer().getScheduler());
+        
         // Load our config files and set logging level right away.
         ConfigManager.setupConfigs(this.getDescription());
-        WormholeXTreme.setPrettyLogLevel(ConfigManager.getLogLevel());
+        
+        // set logging level after loading config
+        WXTLogger.setLogLevel(ConfigManager.getLogLevel());
+        
         // Make sure DB is up to date with latest SCHEMA
         DBUpdateUtil.updateDB();
+        
         // Load our shapes, stargates, and internal permissions.
         StargateHelper.loadShapes();
-        prettyLog(Level.INFO, true, "Load Completed.");
+        
+        WXTLogger.prettyLog(Level.INFO, true, "Load complete");
     }
+    
+    public boolean reloadPlugin() {
+        WXTLogger.prettyLog(Level.INFO, true, "Reload in progress...");
+        
+        // save all gates to sql and save config
+        try {
+            Configuration.writeFile(getDescription());
+            final ArrayList<Stargate> gates = StargateManager.getAllGates();
+            // Store all our gates
+            for (final Stargate gate : gates) {
+                if (gate.isGateActive() || gate.isGateLightsActive()) {
+                    gate.shutdownStargate(false);
+                }
+                StargateDBManager.stargateToSQL(gate);
+            }
 
+            WXTLogger.prettyLog(Level.INFO, true, "Configuration written and stargates saved.");
+        } catch (final Exception e) {
+            WXTLogger.prettyLog(Level.SEVERE, false, "Caught exception while reloading: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        
+        // shutdown db
+        StargateDBManager.shutdown();
+        
+        // clear stargate usage
+        StargateUsageManager.clearStargateUsage();
+        
+        // disconnect from Worlds
+        WormholeWorldsSupport.disableWormholeWorlds();
+        
+        // load config
+        ConfigManager.setupConfigs(this.getDescription());
+        
+        // set logging level after loading config
+        WXTLogger.setLogLevel(ConfigManager.getLogLevel());
+        
+        // Try and attach to Permissions and iConomy and Help
+        if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
+            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
+            StargateDBManager.loadStargates(this.getServer());
+        }
+
+        // enable support if configured
+        WormholeWorldsSupport.enableWormholeWorlds(true);
+        
+        WXTLogger.prettyLog(Level.INFO, true, "Reloading complete.");
+        return true;
+    }    
+    
     /* (non-Javadoc)
      * @see org.bukkit.plugin.Plugin#onEnable()
      */
     @Override
     public void onEnable() {
-        prettyLog(Level.INFO, true, "Enable Beginning.");
+       WXTLogger.prettyLog(Level.INFO, true, "Boot sequence initiated...");
+        
         // Try and attach to Permissions and iConomy and Help
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
-            prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
+            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
             StargateDBManager.loadStargates(this.getServer());
         }
+        
         PermissionsManager.loadPermissions();
 
         try {
@@ -133,23 +195,27 @@ public class WormholeXTreme extends JavaPlugin {
                 WormholeWorldsSupport.enableWormholeWorlds();
             }
         } catch (final Exception e) {
-            prettyLog(Level.WARNING, false, "Caught Exception while trying to load support plugins." + e.getMessage());
+            WXTLogger.prettyLog(Level.WARNING, false, "Caught Exception while trying to load support plugins." + e.getMessage());
             e.printStackTrace();
         }
+        
         registerEvents(true);
         HelpSupport.registerHelpCommands();
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
             registerEvents(false);
             registerCommands();
-            prettyLog(Level.INFO, true, "Enable Completed.");
         }
-    }
-
+        
+        WXTLogger.prettyLog(Level.INFO, true, "Boot sequence completed");
+    }   
+    
     /* (non-Javadoc)
      * @see org.bukkit.plugin.Plugin#onDisable()
      */
     @Override
     public void onDisable() {
+        WXTLogger.prettyLog(Level.INFO, true, "Shutdown sequence initiated...");
+        
         try {
             Configuration.writeFile(getDescription());
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
@@ -162,13 +228,13 @@ public class WormholeXTreme extends JavaPlugin {
             }
 
             StargateDBManager.shutdown();
-            prettyLog(Level.INFO, true, "Successfully shutdown.");
+            WXTLogger.prettyLog(Level.INFO, true, "Successfully shutdown WXT.");
         } catch (final Exception e) {
-            prettyLog(Level.SEVERE, false, "Caught exception while shutting down: " + e.getMessage());
+            WXTLogger.prettyLog(Level.SEVERE, false, "Caught exception while shutting down: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Gets the help.
      * 
@@ -176,15 +242,6 @@ public class WormholeXTreme extends JavaPlugin {
      */
     public static Help getHelp() {
         return help;
-    }
-
-    /**
-     * Gets the logger.
-     * 
-     * @return the log
-     */
-    private static Logger getLog() {
-        return log;
     }
 
     /**
@@ -243,6 +300,8 @@ public class WormholeXTreme extends JavaPlugin {
         tp.getCommand("dial").setExecutor(new Dial());
         tp.getCommand("wxbuild").setExecutor(new Build());
         tp.getCommand("wormhole").setExecutor(new Wormhole());
+        tp.getCommand("wxreload").setExecutor(new WXReload());
+        tp.getCommand("wxstatus").setExecutor(new WXStatus());
     }
 
     /**
@@ -294,16 +353,6 @@ public class WormholeXTreme extends JavaPlugin {
     }
 
     /**
-     * Sets the log.
-     * 
-     * @param log
-     *            the new log
-     */
-    private static void setLog(final Logger log) {
-        WormholeXTreme.log = log;
-    }
-
-    /**
      * Sets the permissions.
      * 
      * @param permissions
@@ -314,23 +363,12 @@ public class WormholeXTreme extends JavaPlugin {
     }
 
     /**
-     * Sets the pretty log level.
-     * 
-     * @param level
-     *            the new pretty log level
-     */
-    private static void setPrettyLogLevel(final Level level) {
-        getLog().setLevel(level);
-        getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level);
-    }
-
-    /**
      * Sets the scheduler.
      * 
      * @param scheduler
      *            the new scheduler
      */
-    private static void setScheduler(final BukkitScheduler scheduler) {
+    protected static void setScheduler(final BukkitScheduler scheduler) {
         WormholeXTreme.scheduler = scheduler;
     }
 
@@ -342,29 +380,5 @@ public class WormholeXTreme extends JavaPlugin {
      */
     public static void setWorldHandler(final WorldHandler worldHandler) {
         WormholeXTreme.worldHandler = worldHandler;
-    }
-
-    /**
-     * 
-     * prettyLog: A quick and dirty way to make log output clean, unified, and with versioning as needed.
-     * 
-     * @param severity
-     *            Level of severity in the form of INFO, WARNING, SEVERE, etc.
-     * @param version
-     *            true causes version display in log entries.
-     * @param message
-     *            to prettyLog.
-     * 
-     */
-    public void prettyLog(final Level severity, final boolean version, final String message) {
-        final String prettyName = ("[" + getThisPlugin().getDescription().getName() + "]");
-        final String prettyVersion = ("[v" + getThisPlugin().getDescription().getVersion() + "]");
-        String prettyLogLine = prettyName;
-        if (version) {
-            prettyLogLine += prettyVersion;
-            getLog().log(severity, prettyLogLine + " " + message);
-        } else {
-            getLog().log(severity, prettyLogLine + " " + message);
-        }
     }
 }

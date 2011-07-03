@@ -45,9 +45,10 @@ public class WXRemove implements CommandExecutor {
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String[] a = CommandUtilities.commandEscaper(args);
         if ((a.length >= 1) && (a.length <= 2)) {
-            if (a[0].equals("-all")) {
+            if (a[0].equalsIgnoreCase("-all")) {
                 return false;
             }
+            
             final Stargate s = StargateManager.getStargate(a[0]);
 
             if (s != null) {

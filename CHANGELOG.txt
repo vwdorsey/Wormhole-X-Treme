@@ -1,4 +1,17 @@
-Changes 0.905 - CB #953 compatible build
+Changes 0.907 - CB #953 compatible build
+
+- stargateUsageManager is now more NPE friendly
+- added configureable option SHOW_GATE_WELCOME_MESSAGE true/false
+- added toggle command '/wormhole toggle_gwm' - toggles GATE_WELCOME_MESSAGE, default is true
+- added toggle command '/wormhole toggle_transport' - toggles USE_EVENT_OR_TP_TRANSPORT
+- added configureable option for transporting the player through the gate (USE_EVENT_OR_TP_TRANSPORT: true = EVENT, false = TELEPORT), default is true
+  (this is useful if you have a plugin that canceles the event on a higher queue. in that case set this to false via /wormhole toggle_transport)
+- added alias for wormhole "wxt"
+- refactored Logging instance
+- added new command /wxreload (now); alias /wxre
+- added new command /wxstatus (all); alias /wxs
+
+Changes 0.905
 
 - fixed RedstoneDialing NPE
 - added debug command

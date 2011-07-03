@@ -60,8 +60,9 @@ public class WormholeXTremeServerListener extends ServerListener {
             PermissionsSupport.enablePermissions();
         } else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable()) {
             HelpSupport.enableHelp();
-        } else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
-            WormholeWorldsSupport.enableWormholeWorlds();
-        }
+        } 
+//        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
+//            WormholeWorldsSupport.enableWormholeWorlds();
+//        }
     }
 }

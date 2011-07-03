@@ -20,8 +20,8 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager.ConfigKeys;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -148,13 +148,13 @@ public class ConfigurationFlatFile {
                         }
                     }
                 } catch (final Exception e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Error parsing setting enum:" + e.toString());
+                    WXTLogger.prettyLog(Level.FINE, false, "Error parsing setting enum:" + e.toString());
                 }
             }
             bufferedReader.close();
 
         } catch (final FileNotFoundException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
         } finally {
             bufferedReader.close();
         }

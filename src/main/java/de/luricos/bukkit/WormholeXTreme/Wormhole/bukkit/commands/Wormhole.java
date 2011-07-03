@@ -29,6 +29,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -247,7 +248,7 @@ public class Wormhole implements CommandExecutor {
                         try {
                             m = Material.valueOf(args[2].trim().toUpperCase());
                         } catch (final Exception e) {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
+                            WXTLogger.prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
                         }
 
                         if ((m != null) && ((m == Material.DIAMOND_BLOCK) || (m == Material.GLASS) || (m == Material.IRON_BLOCK) || (m == Material.BEDROCK) || (m == Material.STONE) || (m == Material.LAPIS_BLOCK))) {
@@ -287,7 +288,7 @@ public class Wormhole implements CommandExecutor {
                         try {
                             m = Material.valueOf(args[2].trim().toUpperCase());
                         } catch (final Exception e) {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on light material" + e.getMessage());
+                            WXTLogger.prettyLog(Level.FINE, false, "Caught Exception on light material" + e.getMessage());
                         }
 
                         if ((m != null) && ((m == Material.GLOWSTONE) || (m == Material.GLOWING_REDSTONE_ORE))) {
@@ -381,7 +382,7 @@ public class Wormhole implements CommandExecutor {
                         try {
                             m = Material.valueOf(args[2].trim().toUpperCase());
                         } catch (final Exception e) {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on portal material" + e.getMessage());
+                            WXTLogger.prettyLog(Level.FINE, false, "Caught Exception on portal material" + e.getMessage());
                         }
 
                         if ((m != null) && ((m == Material.STATIONARY_LAVA) || (m == Material.STATIONARY_WATER) || (m == Material.AIR) || (m == Material.PORTAL))) {
@@ -661,7 +662,7 @@ public class Wormhole implements CommandExecutor {
                 HelpSupport.registerHelpCommands();
             }
             if (player != null) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
+                WXTLogger.prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
             }
         } else {
             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Simple Permissions: " + ConfigManager.getSimplePermissions());
@@ -770,23 +771,39 @@ public class Wormhole implements CommandExecutor {
                 stargate.setGateCustom(false);
             }
         } else {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, stargate.getGateName() + " has no valid shape file. Unable to enable custom.");
+            WXTLogger.prettyLog(Level.FINE, false, stargate.getGateName() + " has no valid shape file. Unable to enable custom.");
         }
     }
 
+    /**
+     * Set Logging level
+     * 
+     * @param sender
+     * @param args
+     * @return 
+     */
     public static boolean doLogging(CommandSender sender, String[] args) {
-        if (args.length >= 2) {
-            String logLevel = args[1];
+        if (args.length >= 1) {
+            if (args.length >= 2) {
+                String logLevel = args[1];
 
-            if (logLevel != null || !"".equals(logLevel)) {
-                List<String> allowedArgs = new ArrayList<String>(Arrays.asList("SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"));
-                if (allowedArgs.indexOf(logLevel.toUpperCase()) != -1) {
-                    ConfigManager.setDebugLevel(args[1]);
+                if (logLevel != null || !"".equals(logLevel)) {
+                    List<String> allowedArgs = new ArrayList<String>(Arrays.asList("SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"));
+                    if (allowedArgs.indexOf(logLevel.toUpperCase()) != -1) {
+                        ConfigManager.setDebugLevel(args[1]);
+                        WXTLogger.setLogLevel(Level.parse(args[1]));
+                    }
                 }
+                
+                if (sender instanceof Player) {
+                    ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging set to '" + ConfigManager.getLogLevel().getName() + "'. See server.log for detailed log output.");
+                }
+                
+                return true;
             }
             
             if (sender instanceof Player) {
-                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + " Logging set to '" + ConfigManager.getLogLevel().getName() + "'. Please reload the server to apply this change.");
+                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging is currently set to '" + ConfigManager.getLogLevel().getName() + "'.");
             }
             
             return true;
@@ -794,6 +811,60 @@ public class Wormhole implements CommandExecutor {
         
         return false;
     }
+    
+    /**
+     * Toggle SHOW_GATE_WELCOME_MESSAGE
+     * 
+     * @param sender
+     * @param args
+     * @return 
+     */
+    public static boolean toggleShowGWM(CommandSender sender, String[] args, boolean getValue) {
+        if (args.length >= 1) {
+            if (sender instanceof Player) {
+                if (!getValue) {
+                    if (ConfigManager.isGateArrivalWelcomeMessageEnabled()) {
+                        ConfigManager.setShowGWM(false);
+                    } else {
+                        ConfigManager.setShowGWM(true);
+                    }
+                }
+                
+                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "GATE_WELCOME_MESSAGE '" + (ConfigManager.isGateArrivalWelcomeMessageEnabled() ? "\u00A72enabled" : "\u00A74disabled") + ConfigManager.MessageStrings.messageColor + "'.");
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }    
+    
+    /**
+     * Toggle transportation method
+     * 
+     * @param sender
+     * @param args
+     * @return true EVENT, false TELEPORT
+     */
+    public static boolean toggleTransportMethod(CommandSender sender, String[] args, boolean getValue) {
+        if (args.length >= 1) {
+            if (sender instanceof Player) {
+                if (!getValue) {
+                    if (ConfigManager.getGateTransportMethod()) {
+                        ConfigManager.setGateTransportMethod(false);
+                    } else {
+                        ConfigManager.setGateTransportMethod(true);
+                    }
+                }
+                
+                ((Player) sender).sendMessage(String.format(ConfigManager.MessageStrings.normalHeader.toString() + "Transportation method %s '" + (ConfigManager.getGateTransportMethod() ? "EVENT" : "TELEPORT") + "'.", ((getValue) ? "is" : "changed to")));
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }    
     
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -837,9 +908,17 @@ public class Wormhole implements CommandExecutor {
                 return doRestrict(sender, a);
             } else if (a[0].equalsIgnoreCase("debug")) {
                 return doLogging(sender, a);
+            } else if (a[0].equalsIgnoreCase("toggle_gwm")) {
+                return toggleShowGWM(sender, a, false);
+            } else if (a[0].equalsIgnoreCase("toggle_transport")) {
+                return toggleTransportMethod(sender, a, false);
+            } else if (a[0].equalsIgnoreCase("show_gwm")) {
+                return toggleShowGWM(sender, a, true);
+            } else if (a[0].equalsIgnoreCase("show_transport")) {
+                return toggleTransportMethod(sender, a, true);
             } else {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', & 'custom'.");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', 'toggle_gwm', 'show_gwm', toggle_transport', 'show_transport' & 'custom'.");
             }
         } else {
             sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());

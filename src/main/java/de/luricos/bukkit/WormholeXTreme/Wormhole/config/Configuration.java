@@ -20,9 +20,9 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager.ConfigKeys;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -72,7 +72,7 @@ public class Configuration {
                     bufferedreader.close();
                 }
             } catch (final IOException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage());
+                WXTLogger.prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage());
             }
         }
         return true;
@@ -145,7 +145,7 @@ public class Configuration {
             try {
                 directory.mkdir();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
             }
         }
         final String input = directory.getPath() + File.separator + "Settings.txt";
@@ -156,7 +156,7 @@ public class Configuration {
         try {
             readFile(options, desc);
         } catch (final IOException e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage());
+            WXTLogger.prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage());
         }
         if (invalidFile(options, desc)) {
             writeFile(desc);
@@ -178,7 +178,7 @@ public class Configuration {
             try {
                 file.createNewFile();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to Create File: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to Create File: " + e.getMessage());
             }
             final BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
 
@@ -204,7 +204,7 @@ public class Configuration {
             try {
                 options.createNewFile();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to create new file: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create new file: " + e.getMessage());
             }
             final BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(options));
 

@@ -23,6 +23,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.entity.Player;
 
@@ -156,13 +157,15 @@ enum ComplexPermission {
                     allowed = WormholeXTreme.getPermissions().has(player, complexPermissionNode);
                     break;
             }
+            
             if (allowed) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted complex \"" + toString() + "\" permission" + (networkName != null
+                WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted complex \"" + toString() + "\" permission" + (networkName != null
                         ? " on network \"" + networkName + "\""
                         : "") + ".");
                 return true;
             }
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" denied complex \"" + toString() + "\" permission" + (networkName != null
+            
+            WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" denied complex \"" + toString() + "\" permission" + (networkName != null
                     ? " on network \"" + networkName + "\""
                     : "") + ".");
         }

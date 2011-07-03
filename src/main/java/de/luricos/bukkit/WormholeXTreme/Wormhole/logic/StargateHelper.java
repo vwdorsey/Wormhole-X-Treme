@@ -30,6 +30,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateShape;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateShapeLayer;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DataUtils;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -84,7 +85,7 @@ public class StargateHelper {
                         ? checkStargate3D(buttonBlock, facing, (Stargate3DShape) shape, false)
                         : checkStargate(buttonBlock, facing, shape, false);
                 if (s != null) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Shape: " + shape.getShapeName() + " is found!");
+                    WXTLogger.prettyLog(Level.FINE, false, "Shape: " + shape.getShapeName() + " is found!");
                     break;
                 }
             }
@@ -602,7 +603,7 @@ public class StargateHelper {
             try {
                 directory.mkdir();
             } catch (final Exception e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
             }
         }
 
@@ -636,23 +637,23 @@ public class StargateHelper {
                     is.close();
                 }
             } catch (final IOException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
             } catch (final NullPointerException e) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
             } finally {
                 try {
                     if (br != null) {
                         br.close();
                     }
                 } catch (final IOException e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                    WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
                 }
                 try {
                     if (bw != null) {
                         bw.close();
                     }
                 } catch (final IOException e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                    WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
                 }
             }
         }
@@ -660,7 +661,7 @@ public class StargateHelper {
         final File[] shapeFiles = directory.listFiles(filenameFilter);
         for (final File fi : shapeFiles) {
             if (fi.getName().contains(".shape")) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Loading shape file: \"" + fi.getName() + "\"");
+                WXTLogger.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + fi.getName() + "\"");
                 BufferedReader bufferedReader = null;
                 try {
                     final ArrayList<String> fileLines = new ArrayList<String>();
@@ -673,24 +674,24 @@ public class StargateHelper {
                     final StargateShape shape = StargateShapeFactory.createShapeFromFile(fileLines.toArray(new String[fileLines.size()]));
 
                     if (getStargateShapes().containsKey(shape.getShapeName())) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape File: " + fi.getName() + " contains shape name: " + shape.getShapeName() + " which already exists. This shape will be unavailable.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Shape File: " + fi.getName() + " contains shape name: " + shape.getShapeName() + " which already exists. This shape will be unavailable.");
                     } else {
                         getStargateShapes().put(shape.getShapeName(), shape);
                     }
                 } catch (final FileNotFoundException e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
+                    WXTLogger.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
                 } catch (final IOException e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
+                    WXTLogger.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
                 } finally {
                     try {
                         if (bufferedReader != null) {
                             bufferedReader.close();
                         }
                     } catch (final IOException e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                        WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
                     }
                 }
-                WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + fi.getName() + "\"");
+                WXTLogger.prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + fi.getName() + "\"");
             }
         }
 
@@ -753,7 +754,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -823,7 +824,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -893,7 +894,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -978,7 +979,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -1059,7 +1060,7 @@ public class StargateHelper {
             }
 
             if (byteBuff.remaining() > 0) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
+                WXTLogger.prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
             }
 
             return s;
@@ -1097,7 +1098,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -1177,7 +1178,7 @@ public class StargateHelper {
             }
 
             if (byteBuff.remaining() > 0) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
+                WXTLogger.prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
             }
 
             return s;
@@ -1226,7 +1227,7 @@ public class StargateHelper {
                     try {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                     } catch (final Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                        WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
                     }
                 }
             }
@@ -1341,7 +1342,7 @@ public class StargateHelper {
             }
 
             if (byteBuff.remaining() > 0) {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
+                WXTLogger.prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
             }
 
             return s;
@@ -1390,7 +1391,7 @@ public class StargateHelper {
             utfFaceBytes = s.getGateFacing().toString().getBytes("UTF8");
             utfIdcBytes = s.getGateIrisDeactivationCode().getBytes("UTF8");
         } catch (final Exception e) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to store gate in DB, byte encoding failed: " + e.getMessage());
+            WXTLogger.prettyLog(Level.SEVERE, false, "Unable to store gate in DB, byte encoding failed: " + e.getMessage());
             e.printStackTrace();
             final byte[] b = null;
             return b;
@@ -1642,7 +1643,7 @@ public class StargateHelper {
         }
 
         if (dataArr.remaining() > 0) {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Gate data not filling whole byte array. This could be bad:" + dataArr.remaining());
+            WXTLogger.prettyLog(Level.WARNING, false, "Gate data not filling whole byte array. This could be bad:" + dataArr.remaining());
         }
 
         return dataArr.array();
