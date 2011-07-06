@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
@@ -49,10 +49,8 @@ public class Configuration {
     /**
      * Invalid file.
      * 
-     * @param file
-     *            the file
-     * @param desc
-     *            the desc
+     * @param file the file
+     * @param desc the desc
      * @return true, if successful
      */
     private static boolean invalidFile(final File file, final PluginDescriptionFile desc) {
@@ -81,8 +79,7 @@ public class Configuration {
     /**
      * Load configuration.
      * 
-     * @param desc
-     *            the desc
+     * @param desc the desc
      */
     protected static void loadConfiguration(final PluginDescriptionFile desc) {
         readFile(desc);
@@ -91,12 +88,9 @@ public class Configuration {
     /**
      * Read file.
      * 
-     * @param file
-     *            the file
-     * @param desc
-     *            the desc
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @param file the file
+     * @param desc the desc
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private static void readFile(final File file, final PluginDescriptionFile desc) throws IOException {
 
@@ -136,8 +130,7 @@ public class Configuration {
     /**
      * Read file.
      * 
-     * @param desc
-     *            the desc
+     * @param desc the desc
      */
     private static void readFile(final PluginDescriptionFile desc) {
         final File directory = new File("plugins" + File.separator + desc.getName() + File.separator);
@@ -166,12 +159,9 @@ public class Configuration {
     /**
      * Write file.
      * 
-     * @param file
-     *            the file
-     * @param desc
-     *            the desc
-     * @param config
-     *            the config
+     * @param file the file
+     * @param desc the desc
+     * @param config the config
      */
     private static void writeFile(final File file, final PluginDescriptionFile desc, final Setting[] config) {
         try {
@@ -196,8 +186,7 @@ public class Configuration {
     /**
      * Write file.
      * 
-     * @param desc
-     *            the desc
+     * @param desc the desc
      */
     public static void writeFile(final PluginDescriptionFile desc) {
         try {

@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
@@ -41,16 +41,11 @@ public class ConfigurationFlatFile {
     /**
      * Creates the new header.
      * 
-     * @param output
-     *            the output
-     * @param title
-     *            the title
-     * @param subtitle
-     *            the subtitle
-     * @param firstHeader
-     *            the first header
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @param output the output
+     * @param title the title
+     * @param subtitle the subtitle
+     * @param firstHeader the first header
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     protected static void createNewHeader(final BufferedWriter output, final String title, final String subtitle, final boolean firstHeader) throws IOException {
         final String linebreak = "-------------------------------";
@@ -73,16 +68,11 @@ public class ConfigurationFlatFile {
     /**
      * Creates the new setting.
      * 
-     * @param output
-     *            the output
-     * @param name
-     *            the name
-     * @param value
-     *            the value
-     * @param description
-     *            the description
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @param output the output
+     * @param name the name
+     * @param value the value
+     * @param description the description
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     protected static void createNewSetting(final BufferedWriter output, final ConfigKeys name, final String value, final String description) throws IOException {
         final String linebreak = "---------------";
@@ -116,15 +106,11 @@ public class ConfigurationFlatFile {
     /**
      * Gets the value from setting.
      * 
-     * @param input
-     *            the input
-     * @param name
-     *            the name
-     * @param defaultVal
-     *            the default val
+     * @param input the input
+     * @param name the name
+     * @param defaultVal the default val
      * @return the value from setting
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     protected static String getValueFromSetting(final File input, final ConfigKeys name, final String defaultVal) throws IOException {
 

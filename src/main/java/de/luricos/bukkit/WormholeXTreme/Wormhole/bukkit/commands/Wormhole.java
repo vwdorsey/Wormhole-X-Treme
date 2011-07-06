@@ -1,22 +1,22 @@
-/**
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+/*
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
@@ -52,10 +52,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do activate timeout.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doActivateTimeout(final CommandSender sender, final String[] args) {
@@ -85,10 +83,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do cooldown.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doCooldown(final CommandSender sender, final String[] args) {
@@ -126,12 +122,9 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do cooldown group.
      * 
-     * @param groupName
-     *            the group name
-     * @param set
-     *            the set
-     * @param timeoutValue
-     *            the timeout value
+     * @param groupName the group name
+     * @param set the set
+     * @param timeoutValue the timeout value
      * @return the int
      */
     private static int doCooldownGroup(final String groupName, final boolean set, final int timeoutValue) {
@@ -177,10 +170,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do custom.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doCustom(final CommandSender sender, final String[] args) {
@@ -321,10 +312,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do owner.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doOwner(final CommandSender sender, final String[] args) {
@@ -351,10 +340,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do perms.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      */
     private static void doPerms(final CommandSender sender, final String[] args) {
         if (CommandUtilities.playerCheck(sender)) {
@@ -366,10 +353,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do Portal Material.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doPortalMaterial(final CommandSender sender, final String[] args) {
@@ -415,10 +400,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do redstone.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doRedstone(final CommandSender sender, final String[] args) {
@@ -459,10 +442,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do regenerate.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doRegenerate(final CommandSender sender, final String[] args) {
@@ -500,10 +481,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do restrict.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doRestrict(final CommandSender sender, final String[] args) {
@@ -541,12 +520,9 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do restriction group.
      * 
-     * @param groupName
-     *            the group name
-     * @param set
-     *            the set
-     * @param gateCount
-     *            the gate count
+     * @param groupName the group name
+     * @param set the set
+     * @param gateCount the gate count
      * @return the int
      */
     private static int doRestrictionGroup(final String groupName, final boolean set, final int gateCount) {
@@ -592,10 +568,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do shutdown timeout.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doShutdownTimeout(final CommandSender sender, final String[] args) {
@@ -625,10 +599,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do simple permissions.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doSimplePermissions(final CommandSender sender, final String[] args) {
@@ -674,10 +646,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Do woosh depth.
      * 
-     * @param sender
-     *            the sender
-     * @param args
-     *            the args
+     * @param sender the sender
+     * @param args the args
      * @return true, if successful
      */
     private static boolean doWooshDepth(final CommandSender sender, final String[] args) {
@@ -723,8 +693,7 @@ public class Wormhole implements CommandExecutor {
     /**
      * Checks if is valid group name.
      * 
-     * @param groupName
-     *            the group name
+     * @param groupName the group name
      * @return true, if is valid group name
      */
     private static boolean isValidGroupName(final String groupName) {
@@ -734,10 +703,8 @@ public class Wormhole implements CommandExecutor {
     /**
      * Sets the gate custom all.
      * 
-     * @param stargate
-     *            the stargate
-     * @param customEnabled
-     *            the custom enabled
+     * @param stargate the stargate
+     * @param customEnabled the custom enabled
      */
     private static void setGateCustomAll(final Stargate stargate, final boolean customEnabled) {
         if (stargate.getGateShape() != null) {
@@ -864,6 +831,37 @@ public class Wormhole implements CommandExecutor {
         }
         
         return false;
+    }
+    
+    /**
+     * Toggle transportation method
+     * 
+     * @param sender
+     * @param args
+     * @return true EVENT, false TELEPORT
+     */
+    public static boolean setWormholeKickbackBlockCount(CommandSender sender, String[] args) {
+        if (args.length >= 1) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                
+                if (args.length >= 2) {
+                    int configVal = Integer.parseInt(args[1]);
+                    if (configVal >= 0) {
+                        player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole kickback block count changed from '" + ConfigManager.getWormholeKickbackBlockCount() + "' to '" + configVal + "'");
+                        ConfigManager.setWormholeKickbackBlockCount(configVal);
+                    } else {
+                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Wormhole kickback block count has to be a number. " + args[1].getClass().getName() + " found.");
+                    }
+                } else {
+                    player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole kickback block count: '" + ConfigManager.getWormholeKickbackBlockCount() + "'");
+                }
+            }
+            
+            return true;
+        }
+        
+        return false;
     }    
     
     /* (non-Javadoc)
@@ -916,6 +914,8 @@ public class Wormhole implements CommandExecutor {
                 return toggleShowGWM(sender, a, true);
             } else if (a[0].equalsIgnoreCase("show_transport")) {
                 return toggleTransportMethod(sender, a, true);
+            } else if (a[0].equalsIgnoreCase("kickback_count")) {
+                return setWormholeKickbackBlockCount(sender, a);                
             } else {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', 'toggle_gwm', 'show_gwm', toggle_transport', 'show_transport' & 'custom'.");

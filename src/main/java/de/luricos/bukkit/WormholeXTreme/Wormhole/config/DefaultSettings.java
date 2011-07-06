@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
@@ -50,5 +50,6 @@ public class DefaultSettings {
         new Setting(ConfigKeys.WORLDS_SUPPORT_ENABLED, false, "If set to true, the Wormhole X-Treme will offload all of its Chunk and World loading functionality to Wormhole Extreme Worlds.", "WormholeXTreme"),
         new Setting(ConfigKeys.LOG_LEVEL, "INFO", "Log level to use for minecraft logging purposes. Values are SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST. In order of least to most logging output.", "WormholeXTreme"),
         new Setting(ConfigKeys.SHOW_GATE_WELCOME_MESSAGE, true, "If set to true, the player will receive a welcome message after arrival", "WormholeXTreme"),
-        new Setting(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT, true, "If set to true, the player will be transported via event handling. If you use plugins that can overwrite onPlayerMove() then you may want to change this to false", "WormholeXTreme")};
+        new Setting(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT, true, "If set to true, the player will be transported via event handling. If you use plugins that can overwrite onPlayerMove() then you may want to change this to false", "WormholeXTreme"),
+        new Setting(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT, 2, "Set the amount of blocks the player will be kicked back if the target's gate is active. Default is 2. Set to 0 to disable this feature.", "WormholeXTreme")};
 }

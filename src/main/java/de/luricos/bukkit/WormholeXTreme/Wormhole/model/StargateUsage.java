@@ -1,9 +1,9 @@
-/**
+/*
  * Wormhole X-Treme Plugin for Bukkit
- * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme>
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- * Copyright (C) 2011  Ben Echols
- *                     Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,83 +29,44 @@ import org.bukkit.entity.Player;
  */
 public class StargateUsage {
 
-    private Player player;
-    private Stargate stargate;
-    private boolean hasPlayerUsedStargate = false;
-    private boolean hasPlayerPermission = false;
-    private boolean hasPlayerUseCooldown = false;
-    private boolean hasPlayerReachedDestination = false;
-    private boolean isGateIrisActive = false;
-    private boolean isGateActive = false;
-
-    public StargateUsage() {
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setStargate(Stargate stargate) {
+    private StargateUsageEntity stargateUsageEntity = new StargateUsageEntity();
+    private Stargate stargate = null;
+    
+    /**
+     * Init StargateUsage with Stargate and Player
+     * 
+     * @param stargate
+     * @param player 
+     */
+    public StargateUsage(Player player, Stargate stargate) {
+        this.stargateUsageEntity = new StargateUsageEntity(player);
         this.stargate = stargate;
     }
-
-    public void setPlayerUsedStargate(boolean used) {
-        this.hasPlayerUsedStargate = used;
-    }
-
-    public void setHasPlayerPermission(boolean has) {
-        this.hasPlayerPermission = has;
-    }
-
-    public void setHasPlayerUseCooldown(boolean cooldown) {
-        this.hasPlayerUseCooldown = cooldown;
-    }
-
-    public void  setIsGateIrisActive(boolean active) {
-        this.isGateIrisActive = active;
-    }
-
-    public void setIsGateActive(boolean active) {
-        this.isGateActive = active;
+    
+    /**
+     * Return Entity that has used this stargate
+     * 
+     * @return StargateUsageEntity.class
+     */
+    public StargateUsageEntity getEntity() {
+        return this.stargateUsageEntity;
     }
     
-    public void setPlayerReachedDestination(boolean destinationReached) {
-        this.hasPlayerReachedDestination = destinationReached;
+    /**
+     * Contains an usable entity?
+     * 
+     * @return 
+     */
+    public boolean isHuman() {
+        return (((this.getEntity() != null) && (this.getEntity().isHuman())) ? true : false);
     }
-
-    public Player getPlayer() {
-        return this.player;
-    }
-
+    
+    /**
+     * Get the current stargate object
+     * 
+     * @return Stargate.class
+     */
     public Stargate getStargate() {
         return this.stargate;
-    }
-    
-    public StargateUsage getStargateUsage() {
-        return this;
-    }
-
-    public boolean hasPlayerUsedStargate() {
-        return this.hasPlayerUsedStargate;
-    }
-
-    public boolean hasPlayerPermission() {
-        return this.hasPlayerPermission;
-    }
-
-    public boolean hasPlayerUseCooldown() {
-        return this.hasPlayerUseCooldown;
-    }
-    
-    public boolean hasPlayerReachedDestination() {
-        return this.hasPlayerReachedDestination;
-    }
-
-    public boolean isGateIrisActive() {
-        return this.isGateIrisActive;
-    }
-
-    public boolean isGateActive() {
-        return this.isGateActive;
     }
 }

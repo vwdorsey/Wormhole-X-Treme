@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
@@ -318,27 +318,27 @@ public class WormholeXTreme extends JavaPlugin {
             pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
         } else {
             //Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
-            pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, tp);
-            pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, tp);
-            pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.Normal, tp);
 
             // To handle teleporting when walking into a gate.
-            pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.Normal, tp);
 
-            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
             // Handle minecarts going through portal
-            pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, tp);
-            pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.Normal, tp);
             // Handle player walking through the lava.
-            pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, tp);
             // Handle Creeper explosions damaging Gate components.
-            pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, tp);
         }
     }
 

@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
@@ -86,8 +86,8 @@ public class StargateShape {
      *            the file_data
      */
     public StargateShape(final String[] file_data) {
-        setShapeSignPosition(new int[]{});
-        setShapeEnterPosition(new int[]{});
+        this.setShapeSignPosition(new int[]{});
+        this.setShapeEnterPosition(new int[]{});
 
         final ArrayList<Integer[]> blockPositions = new ArrayList<Integer[]>();
         final ArrayList<Integer[]> portalPositions = new ArrayList<Integer[]>();
@@ -152,10 +152,10 @@ public class StargateShape {
                             }
 
                             if (block.contains("S")) {
-                                setShapeSignPosition(pointI);
+                                this.setShapeSignPosition(pointI);
                             }
                             if (block.contains("E")) {
-                                setShapeEnterPosition(pointI);
+                                this.setShapeEnterPosition(pointI);
                             }
                         }
 
@@ -168,27 +168,27 @@ public class StargateShape {
                     index++;
                 }
             } else if (line.contains("BUTTON_UP")) {
-                getShapeToGateCorner()[1] = Integer.parseInt(line.split("=")[1]);
+                this.getShapeToGateCorner()[1] = Integer.parseInt(line.split("=")[1]);
             } else if (line.contains("BUTTON_RIGHT")) {
-                getShapeToGateCorner()[0] = Integer.parseInt(line.split("=")[1]);
+                this.getShapeToGateCorner()[0] = Integer.parseInt(line.split("=")[1]);
             } else if (line.contains("BUTTON_AWAY")) {
-                getShapeToGateCorner()[2] = Integer.parseInt(line.split("=")[1]);
+                this.getShapeToGateCorner()[2] = Integer.parseInt(line.split("=")[1]);
             } else if (line.contains("WOOSH_DEPTH")) {
                 curWooshDepth = Integer.parseInt(line.split("=")[1]);
             } else if (line.contains("PORTAL_MATERIAL")) {
-                setShapePortalMaterial(Material.valueOf(line.split("=")[1]));
+                this.setShapePortalMaterial(Material.valueOf(line.split("=")[1]));
             } else if (line.contains("IRIS_MATERIAL")) {
-                setShapeIrisMaterial(Material.valueOf(line.split("=")[1]));
+                this.setShapeIrisMaterial(Material.valueOf(line.split("=")[1]));
             } else if (line.contains("STARGATE_MATERIAL")) {
-                setShapeStructureMaterial(Material.valueOf(line.split("=")[1]));
+                this.setShapeStructureMaterial(Material.valueOf(line.split("=")[1]));
             } else if (line.contains("ACTIVE_MATERIAL")) {
-                setShapeLightMaterial(Material.valueOf(line.split("=")[1]));
+                this.setShapeLightMaterial(Material.valueOf(line.split("=")[1]));
             }
         }
         //TODO: debug printout for the materials the gate uses.
         //TODO: debug printout for the redstone_activated
-        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(getShapeSignPosition()) + "\"");
-        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(getShapeEnterPosition()) + "\"");
+        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(this.getShapeSignPosition()) + "\"");
+        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(this.getShapeEnterPosition()) + "\"");
         WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString(getShapeToGateCorner()) + "\"");
 
         final int[][] tempPortalPositions = new int[portalPositions.size()][3];
@@ -199,15 +199,17 @@ public class StargateShape {
             }
             tempPortalPositions[i] = point;
         }
-        setShapePortalPositions(tempPortalPositions);
-        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString(getShapePortalPositions()) + "\"");
+        
+        this.setShapePortalPositions(tempPortalPositions);
+        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString(this.getShapePortalPositions()) + "\"");
 
         final int[] tempLightPositions = new int[lightPositions.size()];
         for (int i = 0; i < lightPositions.size(); i++) {
             tempLightPositions[i] = lightPositions.get(i);
         }
-        setShapeLightPositions(tempLightPositions);
-        WXTLogger.prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + Arrays.toString(getShapeLightPositions()) + "\"");
+        
+        this.setShapeLightPositions(tempLightPositions);
+        WXTLogger.prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + Arrays.toString(this.getShapeLightPositions()) + "\"");
 
         final int[][] tempStructurePositions = new int[blockPositions.size()][3];
         for (int i = 0; i < blockPositions.size(); i++) {
@@ -217,12 +219,13 @@ public class StargateShape {
             }
             tempStructurePositions[i] = point;
         }
-        setShapeStructurePositions(tempStructurePositions);
-        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString(getShapeStructurePositions()) + "\"");
+        
+        this.setShapeStructurePositions(tempStructurePositions);
+        WXTLogger.prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString(this.getShapeStructurePositions()) + "\"");
         WXTLogger.prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + shapeName + "\"");
 
-        setShapeWooshDepth(curWooshDepth);
-        setShapeWooshDepthSquared(curWooshDepth * curWooshDepth);
+        this.setShapeWooshDepth(curWooshDepth);
+        this.setShapeWooshDepthSquared(curWooshDepth * curWooshDepth);
     }
 
     /**
@@ -230,7 +233,7 @@ public class StargateShape {
      * 
      * @return the shape enter position
      */
-    public int[] getShapeEnterPosition() {
+    public final int[] getShapeEnterPosition() {
         return shapeEnterPosition.clone();
     }
 
@@ -257,7 +260,7 @@ public class StargateShape {
      * 
      * @return the shape light positions
      */
-    public int[] getShapeLightPositions() {
+    public final int[] getShapeLightPositions() {
         return shapeLightPositions.clone();
     }
 
@@ -293,7 +296,7 @@ public class StargateShape {
      * 
      * @return the shape water positions
      */
-    public int[][] getShapePortalPositions() {
+    public final int[][] getShapePortalPositions() {
         return shapePortalPositions.clone();
     }
 
@@ -311,7 +314,7 @@ public class StargateShape {
      * 
      * @return the shape sign position
      */
-    public int[] getShapeSignPosition() {
+    public final int[] getShapeSignPosition() {
         return shapeSignPosition.clone();
     }
 
@@ -338,7 +341,7 @@ public class StargateShape {
      * 
      * @return the shape to gate corner
      */
-    public int[] getShapeToGateCorner() {
+    public final int[] getShapeToGateCorner() {
         return shapeToGateCorner.clone();
     }
 
@@ -375,7 +378,7 @@ public class StargateShape {
      * @param shapeEnterPosition
      *            the new shape enter position
      */
-    public void setShapeEnterPosition(final int[] shapeEnterPosition) {
+    public final void setShapeEnterPosition(final int[] shapeEnterPosition) {
         this.shapeEnterPosition = shapeEnterPosition.clone();
     }
 
@@ -385,7 +388,7 @@ public class StargateShape {
      * @param shapeIrisMaterial
      *            the new shape iris material
      */
-    public void setShapeIrisMaterial(final Material shapeIrisMaterial) {
+    public final void setShapeIrisMaterial(final Material shapeIrisMaterial) {
         this.shapeIrisMaterial = shapeIrisMaterial;
     }
 
@@ -395,7 +398,7 @@ public class StargateShape {
      * @param shapeLightMaterial
      *            the new shape light material
      */
-    public void setShapeLightMaterial(final Material shapeLightMaterial) {
+    public final void setShapeLightMaterial(final Material shapeLightMaterial) {
         this.shapeLightMaterial = shapeLightMaterial;
     }
 
@@ -405,7 +408,7 @@ public class StargateShape {
      * @param shapeLightPositions
      *            the new shape light positions
      */
-    public void setShapeLightPositions(final int[] shapeLightPositions) {
+    public final void setShapeLightPositions(final int[] shapeLightPositions) {
         this.shapeLightPositions = shapeLightPositions.clone();
     }
 
@@ -435,7 +438,7 @@ public class StargateShape {
      * @param shapePortalMaterial
      *            the new shape portal material
      */
-    public void setShapePortalMaterial(final Material shapePortalMaterial) {
+    public final void setShapePortalMaterial(final Material shapePortalMaterial) {
         this.shapePortalMaterial = shapePortalMaterial;
     }
 
@@ -445,7 +448,7 @@ public class StargateShape {
      * @param shapePortalPositions
      *            the new shape portal positions
      */
-    public void setShapePortalPositions(final int[][] shapePortalPositions) {
+    public final void setShapePortalPositions(final int[][] shapePortalPositions) {
         this.shapePortalPositions = shapePortalPositions.clone();
     }
 
@@ -465,7 +468,7 @@ public class StargateShape {
      * @param shapeSignPosition
      *            the new shape sign position
      */
-    public void setShapeSignPosition(final int[] shapeSignPosition) {
+    public final void setShapeSignPosition(final int[] shapeSignPosition) {
         this.shapeSignPosition = shapeSignPosition.clone();
     }
 
@@ -475,7 +478,7 @@ public class StargateShape {
      * @param shapeStructureMaterial
      *            the new shape structure material
      */
-    public void setShapeStructureMaterial(final Material shapeStructureMaterial) {
+    public final void setShapeStructureMaterial(final Material shapeStructureMaterial) {
         this.shapeStructureMaterial = shapeStructureMaterial;
     }
 
@@ -485,7 +488,7 @@ public class StargateShape {
      * @param shapeStructurePositions
      *            the new shape structure positions
      */
-    public void setShapeStructurePositions(final int[][] shapeStructurePositions) {
+    public final void setShapeStructurePositions(final int[][] shapeStructurePositions) {
         this.shapeStructurePositions = shapeStructurePositions.clone();
     }
 
@@ -505,7 +508,7 @@ public class StargateShape {
      * @param shapeWooshDepth
      *            the new shape woosh depth
      */
-    public void setShapeWooshDepth(final int shapeWooshDepth) {
+    public final void setShapeWooshDepth(final int shapeWooshDepth) {
         this.shapeWooshDepth = shapeWooshDepth;
     }
 
@@ -515,7 +518,7 @@ public class StargateShape {
      * @param shapeWooshDepthSquared
      *            the new shape woosh depth squared
      */
-    public void setShapeWooshDepthSquared(final int shapeWooshDepthSquared) {
+    public final void setShapeWooshDepthSquared(final int shapeWooshDepthSquared) {
         this.shapeWooshDepthSquared = shapeWooshDepthSquared;
     }
 

@@ -1,6 +1,6 @@
 /*
  * Wormhole X-Treme Plugin for Bukkit
- * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme>
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
  * Copyright (C) 2011 Ben Echols
  *                    Dean Bailey

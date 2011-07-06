@@ -1,3 +1,16 @@
+Changes 0.909
+- fixed dial double activation bug
+- fixed not beeing able to dial after wrong IDC password
+- added javadoc to new StargateUsage's classes
+- removed teleport when iris is locked cause the player would be stucked inside the gate till shutdown
+- fixed a bug where the player would have dialed the old gate when used the iris lever and then the dial lever on another gate
+- changed listen Priority to Normal (was High/Highest)
+- added new feature "The player will be kicked back by n blocks (default 2) if the target's gate iris is activated"
+- added new command "/wormhole kickback_count [number]" omit [number] to view the current value; set to 0 to disable this feature.
+- added new setting WORMHOLE_KICKBACK_BLOCK_COUNT;
+- changed some internal debug level messages to FINER
+- removed reduntant stgusage definitions
+
 Changes 0.907 - CB #953 compatible build
 
 - stargateUsageManager is now more NPE friendly

@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
  */
-class CommandUtilities {
+public class CommandUtilities {
 
     /**
      * Close gate.
@@ -44,7 +44,7 @@ class CommandUtilities {
      * @param iris
      *            the iris
      */
-    static final void closeGate(final Stargate stargate, final boolean iris) {
+    public static void closeGate(final Stargate stargate, final boolean iris) {
         if (stargate != null) {
             if (stargate.isGateActive()) {
                 stargate.shutdownStargate(true);
@@ -66,11 +66,10 @@ class CommandUtilities {
      * Command escaper.
      * Checks for " and escapes it.
      * 
-     * @param args
-     *            The String[] argument list to escape quotes on.
+     * @param args The String[] argument list to escape quotes on.
      * @return String[] with properly escaped quotes.
      */
-    static String[] commandEscaper(final String[] args) {
+    public static String[] commandEscaper(final String[] args) {
         StringBuilder tempString = new StringBuilder();
         boolean startQuoteFound = false;
         boolean endQuoteFound = false;
@@ -107,18 +106,17 @@ class CommandUtilities {
                 }
             }
         }
+        
         return argsPartsList.toArray(new String[argsPartsList.size()]);
     }
 
     /**
      * Gate remove.
      * 
-     * @param stargate
-     *            the stargate
-     * @param destroy
-     *            true to destroy gate blocks
+     * @param stargate the stargate
+     * @param destroy true to destroy gate blocks
      */
-    static void gateRemove(final Stargate stargate, final boolean destroy) {
+    public static void gateRemove(final Stargate stargate, final boolean destroy) {
         stargate.setupGateSign(false);
         stargate.resetTeleportSign();
         if (!stargate.getGateIrisDeactivationCode().equals("")) {
@@ -141,11 +139,10 @@ class CommandUtilities {
     /**
      * Gets the gate network.
      * 
-     * @param stargate
-     *            the stargate
+     * @param stargate the stargate
      * @return the gate network
      */
-    static String getGateNetwork(final Stargate stargate) {
+    public static String getGateNetwork(final Stargate stargate) {
         if (stargate != null) {
             if (stargate.getGateNetwork() != null) {
                 return stargate.getGateNetwork().getNetworkName();
@@ -157,22 +154,20 @@ class CommandUtilities {
     /**
      * Checks if is boolean.
      * 
-     * @param booleanString
-     *            the boolean string
+     * @param booleanString the boolean string
      * @return true, if is boolean
      */
-    static boolean isBoolean(final String booleanString) {
+    public static boolean isBoolean(final String booleanString) {
         return booleanString.equalsIgnoreCase("true") || booleanString.equalsIgnoreCase("false");
     }
 
     /**
      * Player check.
      * 
-     * @param sender
-     *            the sender
+     * @param sender the sender
      * @return true, if successful
      */
-    static boolean playerCheck(final CommandSender sender) {
+    public static boolean playerCheck(final CommandSender sender) {
         if (sender instanceof Player) {
             return true;
         } else {

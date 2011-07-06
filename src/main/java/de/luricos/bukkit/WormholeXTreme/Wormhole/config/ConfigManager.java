@@ -1,22 +1,22 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- *   Copyright (C) 2011 Ben Echols
- *                      Dean Bailey
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
@@ -76,7 +76,9 @@ public class ConfigManager {
         /** The Gate welcome message. */
         SHOW_GATE_WELCOME_MESSAGE,
         /** The transportation method */
-        USE_EVENT_OR_TP_TRANSPORT
+        USE_EVENT_OR_TP_TRANSPORT,
+        /** The kickback blocks */
+        WORMHOLE_KICKBACK_BLOCK_COUNT
     }
 
     /**
@@ -99,7 +101,7 @@ public class ConfigManager {
         /** The gate not active. */
         gateNotActive(errorHeader + "No gate activated to dial."),
         /** The gate remove active. */
-        gateRemoveActive(errorHeader + "Gate remotely activated."),
+        gateRemoteActive(errorHeader + "Gate remotely activated."),
         /** The gate shutdown. */
         gateShutdown(normalHeader + "Gate successfully shutdown."),
         /** The gate activated. */
@@ -270,6 +272,7 @@ public class ConfigManager {
         
         return true;
     }
+    
     /**
      * Set SHOW_GATE_WELCOME_MESSAGE true or false
      * @param g 
@@ -294,6 +297,26 @@ public class ConfigManager {
     
     public static void setGateTransportMethod(boolean tm) {
         ConfigManager.setConfigValue(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT, tm);
+    }
+    
+    /**
+     * Get kick back block count
+     * 
+     * @return
+     */
+    public static int getWormholeKickbackBlockCount() {
+        return isConfigurationKey(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT)
+                ? getSetting(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT).getIntValue()
+                : 2;
+    }
+    
+    /**
+     * Set kick back block count
+     * 
+     * @param wkbCount amount of blocks to kick back the player; relative to gate
+     */
+    public static void setWormholeKickbackBlockCount(int wkbCount) {
+        ConfigManager.setConfigValue(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT, wkbCount);
     }
 
     /**
@@ -398,10 +421,6 @@ public class ConfigManager {
                 : 30;
     }
 
-    /*
-     * Get Built in permissions enabled settings from ConfigKeys. Return sane boolean value.
-     * Return default value if key is missing or broken.
-     */
     /**
      * Gets the wormhole use is teleport.
      * 
