@@ -82,7 +82,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
                     if (stargate.isGateLightsActive()) {
                         stargate.lightStargate(false);
                         stargate.stopActivationTimer();
-                        StargateManager.removeActivatedStargate(player);
+                        
+                        StargateManager.removeActivatedStargate(stargate.getGateName());
                     }
                     stargate.resetTeleportSign();
                     stargate.setupGateSign(false);

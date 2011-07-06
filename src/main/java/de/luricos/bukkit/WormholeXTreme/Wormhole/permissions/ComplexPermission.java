@@ -159,13 +159,13 @@ enum ComplexPermission {
             }
             
             if (allowed) {
-                WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted complex \"" + toString() + "\" permission" + (networkName != null
+                WXTLogger.prettyLog(Level.FINE, false, "Player: '" + player.getName() + "' granted complex \"" + toString() + "\" permission" + (networkName != null
                         ? " on network \"" + networkName + "\""
                         : "") + ".");
                 return true;
             }
             
-            WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" denied complex \"" + toString() + "\" permission" + (networkName != null
+            WXTLogger.prettyLog(Level.FINE, false, "Player: '" + player.getName() + "' denied complex \"" + toString() + "\" permission" + (networkName != null
                     ? " on network \"" + networkName + "\""
                     : "") + ".");
         }

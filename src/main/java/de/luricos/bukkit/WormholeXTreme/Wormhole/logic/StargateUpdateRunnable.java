@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.logic;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.entity.Player;
@@ -53,58 +54,57 @@ public class StargateUpdateRunnable implements Runnable {
         /** Action to iterate over lighting up blocks during activation. */
         LIGHTUP,
         COOLDOWN_REMOVE,
-        DIAL_SIGN_RESET;
+        DIAL_SIGN_RESET,
+        ESTABLISH_WORMHOLE;
     }
     
     /** The stargate. */
     private final Stargate stargate;
-    /** The player. */
-    private final Player player;
     /** The action. */
     private final ActionToTake action;
 
-    public StargateUpdateRunnable(final Player player, final ActionToTake action) {
-        this(null, player, action);
-    }
-
     /**
      * Instantiates a new stargate update runnable.
      * 
-     * @param stargate
-     *            the s
-     * @param action
-     *            the act
+     * @param stargate the s
+     * @param action the act
      */
     public StargateUpdateRunnable(final Stargate stargate, final ActionToTake action) {
-        this(stargate, null, action);
-    }
-
-    /**
-     * Instantiates a new stargate update runnable.
-     * 
-     * @param stargate
-     *            the s
-     * @param player
-     *            the p
-     * @param action
-     *            the act
-     */
-    public StargateUpdateRunnable(final Stargate stargate, final Player player, final ActionToTake action) {
         this.stargate = stargate;
         this.action = action;
-        this.player = player;
     }
 
+    private void runLogger(ActionToTake action) {
+        // set some messages to FINER
+        switch (action) {
+            case ANIMATE_WOOSH:
+            case LIGHTUP:
+                WXTLogger.prettyLog(Level.FINER, false, "Run Action \"" + action.toString() + (stargate != null
+                        ? "\" Stargate \"" + stargate.getGateName()
+                        : "") + "\"");
+                return;
+        }
+        
+        WXTLogger.prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + (stargate != null
+                ? "\" Stargate \"" + stargate.getGateName()
+                : "") + "\"");        
+    }
+    
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
     @Override
     public void run() {
-        WXTLogger.prettyLog(Level.FINER, false, "Run Action \"" + action.toString() + (stargate != null
-                ? "\" Stargate \"" + stargate.getGateName()
-                : "") + "\"");
+        runLogger(action);
+        
+        Player player = null;
+        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()) != null)
+            player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()).getPlayer();
         
         switch (action) {
+            case ESTABLISH_WORMHOLE:
+                stargate.establishWormhole();
+                break;
             case SHUTDOWN:
                 stargate.shutdownStargate(true);
                 break;
@@ -112,13 +112,14 @@ public class StargateUpdateRunnable implements Runnable {
                 stargate.animateOpening();
                 break;
             case DEACTIVATE:
-                stargate.timeoutStargate(player);
+                stargate.timeoutStargate();
                 break;
             case AFTERSHUTDOWN:
                 stargate.stopAfterShutdownTimer();
                 break;
             case DIAL_SIGN_CLICK:
-                stargate.teleportSignClicked();
+                stargate.dialSignClicked();
+                
                 if (player != null) {
                     if (stargate.getGateDialSignTarget() != null) {
                         final String target = stargate.getGateDialSignTarget().getGateName();

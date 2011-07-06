@@ -1,3 +1,12 @@
+Changes 1.0
+- (this release should fix all bugs relating to double dial issues and stalled gates)
+- redesigned layout to "Player contains Stargate scope"
+- refactored StargateUsage to WormholePlayer/WormholePlayerUsageProperties
+- added more Exceptions for PlayerNotFound a.s.o.
+- added more debug messages on Level.FINE
+- removed player instance from stargate as it is totally unneeded to carry the whole player object around
+- wormhole woosh effect is now synchronized and triggered after both gates has been activated (was asynchron)
+
 Changes 0.909
 - fixed dial double activation bug
 - fixed not beeing able to dial after wrong IDC password
@@ -10,6 +19,7 @@ Changes 0.909
 - added new setting WORMHOLE_KICKBACK_BLOCK_COUNT;
 - changed some internal debug level messages to FINER
 - removed reduntant stgusage definitions
+- fixed wxreload issue where gateshapes where not reloaded
 
 Changes 0.907 - CB #953 compatible build
 

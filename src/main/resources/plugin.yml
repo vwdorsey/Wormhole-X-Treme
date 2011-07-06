@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
-version: 0.909
+version: 1.0
 authors: [Lologarithm, alron, lycano]
 softdepend: [Permissions, Help, WormholeXTremeWorlds]
 description: >

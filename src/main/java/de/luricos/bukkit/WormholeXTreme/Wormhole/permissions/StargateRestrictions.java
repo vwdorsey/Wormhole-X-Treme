@@ -27,6 +27,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.Ac
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 
 import org.bukkit.entity.Player;
 
@@ -98,7 +99,7 @@ public class StargateRestrictions {
         if (cooldownGroup != null) {
             getPlayerUseCooldownStart().put(player, System.nanoTime());
             getPlayerUseCooldownGroup().put(player, cooldownGroup);
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(player, ActionToTake.COOLDOWN_REMOVE), cooldownGroup.getGroupValue() * 20);
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(WormholePlayerManager.getRegisteredWormholePlayer(player).getStargate(), ActionToTake.COOLDOWN_REMOVE), cooldownGroup.getGroupValue() * 20);
         }
     }
 

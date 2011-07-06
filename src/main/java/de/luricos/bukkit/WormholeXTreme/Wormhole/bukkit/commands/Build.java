@@ -50,7 +50,7 @@ public class Build implements CommandExecutor {
             if (WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) {
 
                 if (StargateHelper.isStargateShape(args[0])) {
-                    StargateManager.addPlayerBuilderShape(player, StargateHelper.getStargateShape(args[0]));
+                    StargateManager.addPlayerBuilderShape(player.getName(), StargateHelper.getStargateShape(args[0]));
                     player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0]);
                 } else {
                     player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + args[0]);

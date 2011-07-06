@@ -45,7 +45,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateUsageManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
@@ -56,6 +55,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import me.taylorkelly.help.Help;
 
 import com.nijiko.permissions.PermissionHandler;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -148,8 +148,8 @@ public class WormholeXTreme extends JavaPlugin {
         // shutdown db
         StargateDBManager.shutdown();
         
-        // clear stargate usage
-        StargateUsageManager.clearStargateUsage();
+        // clear wormholePlayers
+        WormholePlayerManager.unregisterAllPlayers();
         
         // disconnect from Worlds
         WormholeWorldsSupport.disableWormholeWorlds();
@@ -160,6 +160,9 @@ public class WormholeXTreme extends JavaPlugin {
         // set logging level after loading config
         WXTLogger.setLogLevel(ConfigManager.getLogLevel());
         
+        // reload stargate shapes
+        StargateHelper.reloadShapes();
+        
         // Try and attach to Permissions and iConomy and Help
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
             WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
@@ -168,6 +171,9 @@ public class WormholeXTreme extends JavaPlugin {
 
         // enable support if configured
         WormholeWorldsSupport.enableWormholeWorlds(true);
+        
+        // register all players
+        WormholePlayerManager.registerAllOnlinePlayers();
         
         WXTLogger.prettyLog(Level.INFO, true, "Reloading complete.");
         return true;
@@ -206,6 +212,9 @@ public class WormholeXTreme extends JavaPlugin {
             registerCommands();
         }
         
+        // register all online players onenable/onreload
+        WormholePlayerManager.registerAllOnlinePlayers();
+        
         WXTLogger.prettyLog(Level.INFO, true, "Boot sequence completed");
     }   
     
@@ -228,6 +237,10 @@ public class WormholeXTreme extends JavaPlugin {
             }
 
             StargateDBManager.shutdown();
+            
+            // clear wormholePlayers
+            WormholePlayerManager.unregisterAllPlayers();            
+            
             WXTLogger.prettyLog(Level.INFO, true, "Successfully shutdown WXT.");
         } catch (final Exception e) {
             WXTLogger.prettyLog(Level.SEVERE, false, "Caught exception while shutting down: " + e.getMessage());
@@ -314,10 +327,11 @@ public class WormholeXTreme extends JavaPlugin {
         if (critical) {
             // Listen for enable events.
             pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
+            
             // Listen for disable events.
             pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
         } else {
-            //Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
+            // Listen on Block events
             pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Normal, tp);
@@ -325,18 +339,25 @@ public class WormholeXTreme extends JavaPlugin {
             pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.Normal, tp);
 
-            // To handle teleporting when walking into a gate.
+            // Listen on Player events
             pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.Normal, tp);
-
+            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, tp);
+            pm.registerEvent(Event.Type.PLAYER_KICK, playerListener, Priority.Normal, tp);
+            
+            // redstone listener
             pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
+            
             // Handle minecarts going through portal
             pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.Normal, tp);
             pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.Normal, tp);
+            
             // Handle player walking through the lava.
             pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, tp);
+            
             // Handle Creeper explosions damaging Gate components.
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, tp);
         }
@@ -345,8 +366,7 @@ public class WormholeXTreme extends JavaPlugin {
     /**
      * Sets the help.
      * 
-     * @param help
-     *            the new help
+     * @param help the new help
      */
     public static void setHelp(final Help help) {
         WormholeXTreme.help = help;
@@ -355,8 +375,7 @@ public class WormholeXTreme extends JavaPlugin {
     /**
      * Sets the permissions.
      * 
-     * @param permissions
-     *            the new permissions
+     * @param permissions the new permissions
      */
     public static void setPermissions(final PermissionHandler permissions) {
         WormholeXTreme.permissions = permissions;

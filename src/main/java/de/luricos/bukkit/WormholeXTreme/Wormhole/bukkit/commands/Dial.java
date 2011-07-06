@@ -25,6 +25,8 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayer;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.command.Command;
@@ -49,29 +51,39 @@ public class Dial implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean doDial(final Player player, final String[] args) {
-        final Stargate start = StargateManager.removeActivatedStargate(player);
-        if (start != null) {
-            if (WXPermissions.checkWXPermissions(player, start, PermissionType.DIALER)) {
-                final String startnetwork = CommandUtilities.getGateNetwork(start);
-                if (!start.getGateName().equals(args[0])) {
+        WormholePlayer wormholePlayer = WormholePlayerManager.getRegisteredWormholePlayer(player);
+        Stargate sourceGate = wormholePlayer.getStargate();
+
+        if ((sourceGate != null) && (sourceGate.isGateLightsActive())) {
+            if (WXPermissions.checkWXPermissions(player, sourceGate, PermissionType.DIALER)) {
+                final String startnetwork = CommandUtilities.getGateNetwork(sourceGate);
+                if (!sourceGate.getGateName().equals(args[0])) {
                     final Stargate target = StargateManager.getStargate(args[0]);
                     // No target
                     if (target == null) {
-                        CommandUtilities.closeGate(start, false);
+                        CommandUtilities.closeGate(sourceGate, false);
+                        wormholePlayer.removeStargate(sourceGate);
+                        
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
+                        
                         return true;
                     }
+                    
                     final String targetnetwork = CommandUtilities.getGateNetwork(target);
                     WXTLogger.prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.getGateName() + "\" Network: \"" + targetnetwork + "\"");
                     // Not on same network
                     if (!startnetwork.equals(targetnetwork)) {
-                        CommandUtilities.closeGate(start, false);
+                        CommandUtilities.closeGate(sourceGate, false);
+                        wormholePlayer.removeStargate(sourceGate);
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
+                        
                         return true;
                     }
-                    if (start.isGateIrisActive()) {
-                        start.toggleIrisActive(false);
+                    
+                    if (sourceGate.isGateIrisActive()) {
+                        sourceGate.toggleIrisActive(false);
                     }
+                    
                     if (!target.getGateIrisDeactivationCode().equals("") && target.isGateIrisActive()) {
                         if ((args.length >= 2) && target.getGateIrisDeactivationCode().equals(args[1])) {
                             if (target.isGateIrisActive()) {
@@ -81,22 +93,25 @@ public class Dial implements CommandExecutor {
                         }
                     }
 
-                    if (start.dialStargate(target, false)) {
+                    if (sourceGate.dialStargate(target, false)) {
                         player.sendMessage(ConfigManager.MessageStrings.gateConnected.toString());
                     } else {
-                        CommandUtilities.closeGate(start, false);
-                        player.sendMessage(ConfigManager.MessageStrings.targetIsActive.toString());
+                        player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsActive.toString(), wormholePlayer.getStargate().getGateName()));
+                        CommandUtilities.closeGate(sourceGate, false);
+                        wormholePlayer.removeStargate(sourceGate);
                     }
                 } else {
-                    CommandUtilities.closeGate(start, false);
                     player.sendMessage(ConfigManager.MessageStrings.targetIsSelf.toString());
+                    CommandUtilities.closeGate(sourceGate, false);
+                    wormholePlayer.removeStargate(sourceGate);
                 }
             } else {
                 player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         } else {
-            player.sendMessage(ConfigManager.MessageStrings.gateNotActive.toString());
+            player.sendMessage(String.format(ConfigManager.MessageStrings.gateNotActive.toString(), wormholePlayer.getStargate().getGateName()));
         }
+        
         return true;
     }
 

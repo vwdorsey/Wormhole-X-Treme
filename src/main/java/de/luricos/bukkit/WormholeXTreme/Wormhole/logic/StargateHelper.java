@@ -131,7 +131,6 @@ public class StargateHelper {
         final Block holdingBlock = buttonBlock.getFace(opposite);
 
         if (isStargateMaterial(holdingBlock, shape)) {
-            //System.out.println("");
             // Probably a stargate, lets start checking!
             final Stargate tempGate = new Stargate();
             tempGate.setGateWorld(buttonBlock.getWorld());
@@ -592,9 +591,19 @@ public class StargateHelper {
     public static boolean isStargateShape(final String name) {
         return getStargateShapes().containsKey(name);
     }
+    
+    /**
+     * Reload gate shapes
+     * 
+     */
+    public static void reloadShapes() {
+        stargateShapes.clear();
+        loadShapes();
+    }
 
     /**
      * Load shapes.
+     * 
      */
     public static void loadShapes() {
         final File directory = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator);
