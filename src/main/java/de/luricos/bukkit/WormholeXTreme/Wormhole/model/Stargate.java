@@ -1975,7 +1975,7 @@ public class Stargate {
             setGateActivateTaskId(-1);
         }
 
-        WormholePlayer wormholePlayer = WormholePlayerManager.findPlayerByGateName(this.getGateName());
+        WormholePlayer wormholePlayer = WormholePlayerManager.getRegisteredWormholePlayer(this.getLastUsedBy());
         
         // Only send a message if the gate was still in the remotely activated gates list.
         // Make sure to reset iris if it should be on.
