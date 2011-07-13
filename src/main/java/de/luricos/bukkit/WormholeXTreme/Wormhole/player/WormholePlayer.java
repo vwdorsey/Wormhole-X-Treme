@@ -257,24 +257,27 @@ public class WormholePlayer extends LocalPlayer {
     }
     
     /**
-     * Add a stargate to a player (if gate already exist in keyring nothing will happen)
+     * Add a stargate to a player 
+     * If the gate already exists in keyring currentGate will be set to passed stargate
+     * 
      * @param stargate the stargate instance
      */
     public void addStargate(Stargate stargate) {
         if (this.hasStargate(stargate)) {
             WXTLogger.prettyLog(Level.FINE, false, "Stargate '" + stargate.getGateName() + "' was already added for player '" + getName() + "'");
+            this.setCurrentGateName(stargate.getGateName());
             return;
         }
         
         WXTLogger.prettyLog(Level.FINE, false, "Adding Stargate '" + stargate.getGateName() + "' to player '" + getName() + "'");
         stargateMap.put(stargate.getGateName(), stargate);
-        this.addProperties(stargate);
+        this.addProperties(stargate.getGateName());
         this.setCurrentGateName(stargate.getGateName());
     }
     
-    private void addProperties(Stargate stargate) {
-        WXTLogger.prettyLog(Level.FINE, false, "Adding properties for gate '" + stargate.getGateName() + "' to player '" + getName() + "'");
-        usageProperties.put(stargate.getGateName(), new WormholePlayerUsageProperties());
+    private void addProperties(String stargateName) {
+        WXTLogger.prettyLog(Level.FINE, false, "Adding properties for gate '" + stargateName + "' to player '" + getName() + "'");
+        usageProperties.put(stargateName, new WormholePlayerUsageProperties());
     }
 
     /**

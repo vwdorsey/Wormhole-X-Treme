@@ -65,7 +65,6 @@ public class Dial implements CommandExecutor {
                         wormholePlayer.removeStargate(sourceGate);
                         
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
-                        
                         return true;
                     }
                     
@@ -75,8 +74,8 @@ public class Dial implements CommandExecutor {
                     if (!startnetwork.equals(targetnetwork)) {
                         CommandUtilities.closeGate(sourceGate, false);
                         wormholePlayer.removeStargate(sourceGate);
-                        player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
                         
+                        player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
                         return true;
                     }
                     
@@ -96,7 +95,7 @@ public class Dial implements CommandExecutor {
                     if (sourceGate.dialStargate(target, false)) {
                         player.sendMessage(ConfigManager.MessageStrings.gateConnected.toString());
                     } else {
-                        player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsActive.toString(), wormholePlayer.getStargate().getGateName()));
+                        player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsActive.toString(), target.getGateName()));
                         CommandUtilities.closeGate(sourceGate, false);
                         wormholePlayer.removeStargate(sourceGate);
                     }
@@ -107,9 +106,10 @@ public class Dial implements CommandExecutor {
                 }
             } else {
                 player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                wormholePlayer.removeStargate(sourceGate);
             }
         } else {
-            player.sendMessage(String.format(ConfigManager.MessageStrings.gateNotActive.toString(), wormholePlayer.getStargate().getGateName()));
+            player.sendMessage(ConfigManager.MessageStrings.gateNotActive.toString());
         }
         
         return true;

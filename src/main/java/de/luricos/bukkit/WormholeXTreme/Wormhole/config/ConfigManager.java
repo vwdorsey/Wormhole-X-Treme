@@ -100,7 +100,7 @@ public class ConfigManager {
         targetIsActive(errorHeader + "Target gate '%s' is currently active."),
         /** The gate not active. */
         gateNotActive(errorHeader + "No gate activated to dial."),
-        /** The gate remove active. */
+        /** The gate remote active. */
         gateRemoteActive(errorHeader + "Gate '%s' remotely activated by '%s'."),
         /** The gate shutdown. */
         gateShutdown(normalHeader + "Gate '%s' successfully shutdown."),

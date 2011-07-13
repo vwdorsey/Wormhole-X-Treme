@@ -78,7 +78,6 @@ public class WormholeXTremePlayerListener extends PlayerListener {
             if (WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock) && ((stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) || (!stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER)))) {
                 
                 WormholePlayerManager.getRegisteredWormholePlayer(player).addStargate(stargate);
-                WormholePlayerManager.getRegisteredWormholePlayer(player).setCurrentGateName(stargate.getGateName());
                 WormholePlayer wormholePlayer = handleGateActivationSwitch(player);
                 
                 if (wormholePlayer == null)
@@ -98,7 +97,8 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                     wormholePlayer.getProperties().setHasReceivedRemoteActiveMessage(true);
                 }
                 
-                if ((wormholePlayer.getProperties().hasShutdownGate()) || (wormholePlayer.getProperties().hasReceivedIrisLockMessage()) || (!wormholePlayer.getProperties().hasActivatedStargate())) {
+                if ((wormholePlayer.getProperties().hasShutdownGate()) || (wormholePlayer.getProperties().hasReceivedIrisLockMessage()) ||
+                    (!wormholePlayer.getProperties().hasActivatedStargate()) || (wormholePlayer.getProperties().hasReceivedRemoteActiveMessage())) {
                     wormholePlayer.removeStargate(stargate);
                 }
             } else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock) && (!stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER))) {
@@ -205,14 +205,14 @@ public class WormholeXTremePlayerListener extends PlayerListener {
         if ((wormholePlayer == null) || ((wormholePlayer != null) && (wormholePlayer.getStargate() == null)))
             return null;
         
-        Stargate currentStargate = wormholePlayer.getStargate();
+        Stargate currentGate = wormholePlayer.getStargate();
         
-        if (currentStargate.isGateActive() || currentStargate.isGateLightsActive()) {
+        if (currentGate.isGateActive() || currentGate.isGateLightsActive()) {
             // if the gate has a target shut it down when lever changes state
-            if (currentStargate.getGateTarget() != null) {
+            if (currentGate.getGateTarget() != null) {
                 //Shutdown stargate
-                currentStargate.shutdownStargate(true);
-                player.sendMessage(String.format(ConfigManager.MessageStrings.gateShutdown.toString(), currentStargate.getGateName()));
+                currentGate.shutdownStargate(true);
+                player.sendMessage(String.format(ConfigManager.MessageStrings.gateShutdown.toString(), currentGate.getGateName()));
                 
                 wormholePlayer.getProperties().setHasShutdownGate(true);
                 
@@ -220,31 +220,26 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                 return wormholePlayer;
             } else {
                 // on lever shutdown hit
-                
-                // check if there is an active gate already and remove it from the activated stargate list
-                Stargate targetGate = StargateManager.removeActivatedStargate(currentStargate.getGateName());
-                
-                // if there was an activated gate shut it down and send deactivated message
-                if ((targetGate != null) && (currentStargate.getGateId() == targetGate.getGateId())) {
-                    currentStargate.stopActivationTimer();
-                    currentStargate.setGateActive(false);
-                    currentStargate.toggleDialLeverState(false);
-                    currentStargate.lightStargate(false);
+                if (currentGate.getSourceGateName() == null) {
+                    currentGate.stopActivationTimer();
+                    currentGate.setGateActive(false);
+                    currentGate.toggleDialLeverState(false);
+                    currentGate.lightStargate(false);
                     
                     wormholePlayer.getProperties().setHasActivatedStargate(false);
-                    currentStargate.setLastUsedBy(wormholePlayer.getPlayer());
-                    player.sendMessage(String.format(ConfigManager.MessageStrings.gateDeactivated.toString(), currentStargate.getGateName()));
+                    currentGate.setLastActivatedBy(wormholePlayer.getPlayer());
+                    player.sendMessage(String.format(ConfigManager.MessageStrings.gateDeactivated.toString(), currentGate.getGateName()));
                     
                     //return true;
                     return wormholePlayer;
                 } else {
-                    if (currentStargate.isGateLightsActive() && !currentStargate.isGateActive()) {
-                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate has been activated by '" + currentStargate.getLastUsedBy() + "' already.");
+                    if (currentGate.isGateLightsActive() && !currentGate.isGateActive()) {
+                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate has been activated by '" + currentGate.getLastActivatedBy() + "' already.");
                         wormholePlayer.getProperties().setHasReceivedWasActivatedOther(true);
                     } else {
                         wormholePlayer.getProperties().setHasReceivedRemoteActiveMessage(true);
-                        currentStargate.setLastUsedBy(wormholePlayer.getPlayer().getName());
-                        player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), currentStargate.getGateName(), wormholePlayer.getName()));
+                        currentGate.setLastActivatedBy(wormholePlayer.getPlayer().getName());
+                        player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), currentGate.getGateName(), wormholePlayer.getName()));
                     }
                     
                     // return false;
@@ -252,19 +247,19 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                 }
             }
         } else {
-            if (currentStargate.isGateSignPowered()) {
-                if (WXPermissions.checkWXPermissions(player, currentStargate, PermissionType.SIGN)) {
-                    if ((currentStargate.getGateDialSign() == null) && (currentStargate.getGateDialSignBlock() != null)) {
-                        currentStargate.tryClickTeleportSign(currentStargate.getGateDialSignBlock());
+            if (currentGate.isGateSignPowered()) {
+                if (WXPermissions.checkWXPermissions(player, currentGate, PermissionType.SIGN)) {
+                    if ((currentGate.getGateDialSign() == null) && (currentGate.getGateDialSignBlock() != null)) {
+                        currentGate.tryClickTeleportSign(currentGate.getGateDialSignBlock());
                     }
 
-                    if (currentStargate.getGateDialSignTarget() != null) {
-                        if (currentStargate.dialStargate(currentStargate.getGateDialSignTarget(), false)) {
+                    if (currentGate.getGateDialSignTarget() != null) {
+                        if (currentGate.dialStargate(currentGate.getGateDialSignTarget(), false)) {
                             player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargates connected!");
                             
                             wormholePlayer.getProperties().setHasActivatedStargate(true);
-                            currentStargate.setLastUsedBy(player.getName());
-                            WXTLogger.prettyLog(Level.FINE, false, "Player '" + currentStargate.getLastUsedBy() + "' has activated gate '" + wormholePlayer.getStargate().getGateName() + "'");
+                            currentGate.setLastActivatedBy(player.getName());
+                            WXTLogger.prettyLog(Level.FINE, false, "Player '" + currentGate.getLastActivatedBy() + "' has activated gate '" + wormholePlayer.getStargate().getGateName() + "'");
                             
                             //return true;
                             return wormholePlayer;
@@ -295,17 +290,17 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                 }
             } else {
                 //Activate Stargate
-                player.sendMessage(String.format(ConfigManager.MessageStrings.gateActivated.toString(), currentStargate.getGateName()));
+                player.sendMessage(String.format(ConfigManager.MessageStrings.gateActivated.toString(), currentGate.getGateName()));
                 player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Chevrons locked! \u00A73:: \u00A7B<required> \u00A76[optional]");
                 player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc]\u00A77\'");
                 
-                StargateManager.addActivatedStargate(currentStargate);
-                currentStargate.startActivationTimer(player);
-                currentStargate.lightStargate(true);
+                StargateManager.addActivatedStargate(currentGate);
+                currentGate.startActivationTimer(player);
+                currentGate.lightStargate(true);
                 
                 wormholePlayer.getProperties().setHasActivatedStargate(true);
                 
-                currentStargate.setLastUsedBy(player.getName());
+                currentGate.setLastActivatedBy(player.getName());
                 
                 //return true;
                 return wormholePlayer;
@@ -325,13 +320,14 @@ public class WormholeXTremePlayerListener extends PlayerListener {
         final Player player = event.getPlayer();
 
         if ((clickedBlock != null) && ((clickedBlock.getType().equals(Material.STONE_BUTTON)) || (clickedBlock.getType().equals(Material.LEVER)))) {
-            if (buttonLeverHit(player, clickedBlock, null))
+            if (buttonLeverHit(player, clickedBlock, null)) {
                 return true;
+            }
         } else if ((clickedBlock != null) && (clickedBlock.getType().equals(Material.WALL_SIGN))) {
             final Stargate stargate = StargateManager.getGateFromBlock(clickedBlock);
             if (stargate != null) {
                 if (WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) {
-                    stargate.setLastUsedBy(player.getName());
+                    stargate.setLastActivatedBy(player.getName());
                     if (stargate.tryClickTeleportSign(clickedBlock, player)) {
                         return true;
                     }

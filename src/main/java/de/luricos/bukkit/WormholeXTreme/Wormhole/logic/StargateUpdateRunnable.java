@@ -77,6 +77,7 @@ public class StargateUpdateRunnable implements Runnable {
     private void runLogger(ActionToTake action) {
         // set some messages to FINER
         switch (action) {
+            case ESTABLISH_WORMHOLE:
             case ANIMATE_WOOSH:
             case LIGHTUP:
                 WXTLogger.prettyLog(Level.FINER, false, "Run Action \"" + action.toString() + (stargate != null
@@ -98,8 +99,8 @@ public class StargateUpdateRunnable implements Runnable {
         runLogger(action);
         
         Player player = null;
-        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()) != null)
-            player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()).getPlayer();
+        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastActivatedBy()) != null)
+            player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastActivatedBy()).getPlayer();
         
         switch (action) {
             case ESTABLISH_WORMHOLE:
