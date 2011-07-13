@@ -125,10 +125,8 @@ public class WormholePlayerManager {
         
         WXTLogger.prettyLog(Level.FINE, false, "Unregistering WormholePlayer '" + playerName +"'");
         
-        // set static entries in wpl object
-        for (String pl : wormholePlayers.keySet())
-            wormholePlayers.get(pl).resetPlayer();
-        
+        // reset player first before remove
+        wormholePlayers.get(playerName).resetPlayer();
         wormholePlayers.remove(playerName);
     }
     
@@ -137,9 +135,7 @@ public class WormholePlayerManager {
      */
     public static void unregisterAllPlayers() {
         WXTLogger.prettyLog(Level.FINE, false, "Unregistering all WormholePlayers.");
-        for (String playerName : wormholePlayers.keySet()) {
-            unregisterPlayer(playerName);
-        }
+        wormholePlayers.clear();
     }
     
     public static void registerAllOnlinePlayers() {

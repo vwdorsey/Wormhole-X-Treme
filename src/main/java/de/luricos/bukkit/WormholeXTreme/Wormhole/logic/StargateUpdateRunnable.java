@@ -99,8 +99,8 @@ public class StargateUpdateRunnable implements Runnable {
         runLogger(action);
         
         Player player = null;
-        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastActivatedBy()) != null)
-            player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastActivatedBy()).getPlayer();
+        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()) != null)
+            player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()).getPlayer();
         
         switch (action) {
             case ESTABLISH_WORMHOLE:

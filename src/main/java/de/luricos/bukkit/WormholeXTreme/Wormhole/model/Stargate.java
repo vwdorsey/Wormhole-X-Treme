@@ -61,7 +61,7 @@ public class Stargate {
     /** Name of person who made the gate. */
     private String gateOwner = null;
     /** Last used by player */
-    private String lastActivatedBy = null;
+    private String lastUsedBy = null;
     /** Network gate is connected to. */
     private StargateNetwork gateNetwork;
     /**
@@ -1570,16 +1570,16 @@ public class Stargate {
         this.gateWorld = gateWorld;
     }
     
-    public String getLastActivatedBy() {
-        return this.lastActivatedBy;
+    public String getLastUsedBy() {
+        return this.lastUsedBy;
     }
     
-    public void setLastActivatedBy(Player player) {
-        this.setLastActivatedBy(player.getName());
+    public void setLastUsedBy(Player player) {
+        this.setLastUsedBy(player.getName());
     }
     
-    public void setLastActivatedBy(String playerName) {
-        this.lastActivatedBy = playerName;
+    public void setLastUsedBy(String playerName) {
+        this.lastUsedBy = playerName;
     }
     
     public String getSourceGateName() {
@@ -2007,7 +2007,7 @@ public class Stargate {
             setGateActivateTaskId(-1);
         }
 
-        WormholePlayer wormholePlayer = WormholePlayerManager.getRegisteredWormholePlayer(this.getLastActivatedBy());
+        WormholePlayer wormholePlayer = WormholePlayerManager.getRegisteredWormholePlayer(this.getLastUsedBy());
         
         // Only send a message if the gate was still in the remotely activated gates list.
         // Make sure to reset iris if it should be on.

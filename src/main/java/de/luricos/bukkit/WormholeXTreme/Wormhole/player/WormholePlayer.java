@@ -306,10 +306,14 @@ public class WormholePlayer extends LocalPlayer {
         try {
             WXTLogger.prettyLog(Level.FINE, false, "Removing Stargate '" + stargateName + "' from player '" + getName() + "'");
             if (!"".equals(stargateName)) {
-                stargateMap.remove(stargateName);
+                if (stargateMap.remove(stargateName) == null) {
+                    WXTLogger.prettyLog(Level.FINE, false, "Stargate '" + stargateName + "' wasn't attached to player '" + getName() + "'");
+                } else {
+                    WXTLogger.prettyLog(Level.FINE, false, "StargateMaps count is now: '" + this.getGateCount() + "'");
+                }
+                
                 this.removeProperty(stargateName);
                 
-                WXTLogger.prettyLog(Level.FINE, false, "StargateMaps count is: '" + this.getGateCount() + "'");
                 return;
             }
             
