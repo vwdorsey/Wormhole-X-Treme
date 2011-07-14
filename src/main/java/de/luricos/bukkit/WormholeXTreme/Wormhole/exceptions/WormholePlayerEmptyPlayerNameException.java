@@ -34,6 +34,7 @@ public class WormholePlayerEmptyPlayerNameException extends WormholeXTremeExcept
         this.message = message;
     }
 
+    @Override
     public String getMessage() {
         return this.message;
     }

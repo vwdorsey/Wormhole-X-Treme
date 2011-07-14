@@ -273,7 +273,7 @@ public class DBUpdateUtil {
                 WXTLogger.prettyLog(Level.SEVERE, false, "Failed to update DB.");
             }
         } else {
-            //System.out.println("Database is already up to date.");
+            WXTLogger.prettyLog(Level.FINE, false, "Database is already up to date.");
         }
     }
 }

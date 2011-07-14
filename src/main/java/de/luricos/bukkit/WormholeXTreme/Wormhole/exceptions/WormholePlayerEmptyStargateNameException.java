@@ -34,6 +34,7 @@ public class WormholePlayerEmptyStargateNameException extends WormholeXTremeExce
         this.message = message;
     }
 
+    @Override
     public String getMessage() {
         return this.message;
     }

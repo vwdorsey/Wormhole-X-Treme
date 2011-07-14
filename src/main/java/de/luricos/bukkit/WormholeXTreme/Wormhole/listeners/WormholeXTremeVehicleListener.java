@@ -32,7 +32,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -76,6 +75,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
             } else {
                 gatenetwork = "Public";
             }
+            
             Location target = st.getGateTarget().getGateMinecartTeleportLocation() != null
                     ? st.getGateTarget().getGateMinecartTeleportLocation()
                     : st.getGateTarget().getGatePlayerTeleportLocation();
@@ -125,15 +125,21 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
 
             final double speed = v.length();
             final Vector new_speed = new Vector();
-            if (st.getGateTarget().getGateFacing() == BlockFace.NORTH) {
-                new_speed.setX(-1);
-            } else if (st.getGateTarget().getGateFacing() == BlockFace.SOUTH) {
-                new_speed.setX(1);
-            } else if (st.getGateTarget().getGateFacing() == BlockFace.EAST) {
-                new_speed.setZ(-1);
-            } else if (st.getGateTarget().getGateFacing() == BlockFace.WEST) {
-                new_speed.setZ(1);
+            switch (st.getGateTarget().getGateFacing()) {
+                case NORTH:
+                    new_speed.setX(-1);
+                    break;
+                case SOUTH:
+                    new_speed.setX(1);
+                    break;
+                case EAST:
+                    new_speed.setZ(-1);
+                    break;
+                case WEST:
+                    new_speed.setZ(1);
+                    break;
             }
+            
             // As we all know stargates accelerate matter.
             new_speed.multiply(speed * 5);
             if (st.getGateTarget().isGateIrisActive()) {

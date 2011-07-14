@@ -7,6 +7,7 @@ Changes 1.0
 - removed player instance from stargate as it is totally unneeded to carry the whole player object around
 - wormhole woosh effect is now synchronized and triggered after both gates has been activated (was asynchron)
 - fixed redial bug
+- fixed minecart teleport issue
 
 Changes 0.909
 - fixed dial double activation bug

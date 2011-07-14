@@ -36,10 +36,8 @@ public class DataUtils {
     /**
      * Block from bytes.
      * 
-     * @param bytes
-     *            the bytes
-     * @param w
-     *            the w
+     * @param bytes the bytes
+     * @param w the w
      * @return the block
      */
     public static Block blockFromBytes(final byte[] bytes, final World w) {
@@ -50,8 +48,7 @@ public class DataUtils {
     /**
      * Block location to bytes.
      * 
-     * @param l
-     *            the l
+     * @param l the l
      * @return the byte[]
      */
     public static byte[] blockLocationToBytes(final Location l) {
@@ -67,8 +64,7 @@ public class DataUtils {
     /**
      * Block to bytes.
      * 
-     * @param b
-     *            the b
+     * @param b the b
      * @return the byte[]
      */
     public static byte[] blockToBytes(final Block b) {
@@ -81,25 +77,21 @@ public class DataUtils {
         return bb.array();
     }
 
-// TODO Remove unused code found by UCDetector
-//     /**
-//      * Byte array to int.
-//      * 
-//      * @param b
-//      *            the b
-//      * @param index
-//      *            the index
-//      * @return the int
-//      */
-//     public static final int byteArrayToInt(final byte[] b, final int index)
-//     {
-//         return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
-//     }
+     /**
+      * Byte array to int.
+      * 
+      * @param b the b
+      * @param index the index
+      * @return the int
+      */
+     public static final int byteArrayToInt(final byte[] b, final int index) {
+         return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
+     }
+     
     /**
      * Byte to boolean.
      * 
-     * @param b
-     *            the b
+     * @param b the b
      * @return true, if successful
      */
     public static final boolean byteToBoolean(final byte b) {
@@ -110,18 +102,16 @@ public class DataUtils {
         }
     }
 
-// TODO Remove unused code found by UCDetector
-//     /**
-//      * Int to byte array.
-//      * 
-//      * @param value
-//      *            the value
-//      * @return the byte[]
-//      */
-//     public static final byte[] intToByteArray(final int value)
-//     {
-//         return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
-//     }
+     /**
+      * Int to byte array.
+      * 
+      * @param value the value
+      * @return the byte[]
+      */
+     public static final byte[] intToByteArray(final int value) {
+         return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
+     }
+     
     /**
      * Location from bytes.
      * 
@@ -139,8 +129,7 @@ public class DataUtils {
     /**
      * Location to bytes.
      * 
-     * @param l
-     *            the l
+     * @param l the l
      * @return the byte[]
      */
     public static byte[] locationToBytes(final Location l) {

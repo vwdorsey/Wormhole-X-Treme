@@ -555,7 +555,9 @@ public class StargateManager {
      */
     public static void removeStargate(Stargate s) {
         getStargateList().remove(s.getGateName());
-        WormholePlayerManager.findPlayerByGateName(s.getGateName()).removeStargate(s);
+        
+        if (WormholePlayerManager.findPlayerByGateName(s.getGateName()) != null)
+            WormholePlayerManager.findPlayerByGateName(s.getGateName()).removeStargate(s);
         
         StargateDBManager.removeStargateFromSQL(s);
         if (s.getGateNetwork() != null) {

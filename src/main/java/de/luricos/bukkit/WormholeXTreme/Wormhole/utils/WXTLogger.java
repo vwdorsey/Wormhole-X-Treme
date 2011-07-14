@@ -20,10 +20,11 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
