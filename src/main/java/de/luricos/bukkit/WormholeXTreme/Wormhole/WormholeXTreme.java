@@ -394,7 +394,7 @@ public class WormholeXTreme extends JavaPlugin {
     /**
      * Sets the wormhole x treme worlds.
      * 
-     * @param wormholeXTremeWorlds
+     * @param worldHandler
      *            the new wormhole x treme worlds
      */
     public static void setWorldHandler(final WorldHandler worldHandler) {
