@@ -431,7 +431,7 @@ public class Stargate {
             this.dialStargate();
             this.getGateTarget().dialStargate();
             
-            this.getGateTarget().setSourceGateName(target.getGateName());
+            this.getGateTarget().setSourceGateName(this.getGateName());
             
             this.establishWormhole();
             

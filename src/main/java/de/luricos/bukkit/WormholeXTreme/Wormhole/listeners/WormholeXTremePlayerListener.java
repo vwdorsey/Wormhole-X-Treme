@@ -238,9 +238,8 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                         wormholePlayer.getProperties().setHasReceivedWasActivatedOther(true);
                     } else {
                         wormholePlayer.getProperties().setHasReceivedRemoteActiveMessage(true);
-                        WormholePlayer remotePlayer = WormholePlayerManager.findPlayerByGateName(currentGate.getSourceGateName());
-                        if ((remotePlayer != null) && (!"".equals(remotePlayer.getStargate(currentGate.getSourceGateName()).getGateName())))
-                            player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), currentGate.getGateName(), remotePlayer.getStargate(currentGate.getSourceGateName()).getGateName()));
+                        if (StargateManager.getStargate(currentGate.getSourceGateName()) != null)
+                            player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), currentGate.getGateName(), StargateManager.getStargate(currentGate.getSourceGateName()).getLastUsedBy()));
                     }
                     
                     // return false;
@@ -265,7 +264,9 @@ public class WormholeXTremePlayerListener extends PlayerListener {
                             //return true;
                             return wormholePlayer;
                         } else {
-                            player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), wormholePlayer.getStargate().getGateName(), wormholePlayer.getName()));
+                            if (StargateManager.getStargate(currentGate.getSourceGateName()) != null)
+                                player.sendMessage(String.format(ConfigManager.MessageStrings.gateRemoteActive.toString(), currentGate.getGateName(), StargateManager.getStargate(currentGate.getSourceGateName()).getLastUsedBy()));
+
                             
                             // set has received remote message to true
                             wormholePlayer.getProperties().setHasReceivedRemoteActiveMessage(true);
