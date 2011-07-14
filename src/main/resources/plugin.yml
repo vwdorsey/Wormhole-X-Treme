@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
-version: 1.0
+version: 1.01
 authors: [Lologarithm, alron, lycano]
 softdepend: [Permissions, Help, WormholeXTremeWorlds]
 description: >
@@ -33,6 +33,11 @@ commands:
             /<command> <GateShape>
             <GateShape> The GateShape to build.
             After placing a DHD with a button (and sign if wanted) running this command then pressing the button will cause the specified <GateShape> to be built.
+
+   wxbuildlist:
+     description: List available gate shapes
+     usage: |
+            /<command>
 
    wxremove:
      description: Remove a stargate, optionally destroy its blocks.

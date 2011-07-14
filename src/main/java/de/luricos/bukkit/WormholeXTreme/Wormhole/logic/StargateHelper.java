@@ -51,6 +51,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -575,6 +576,12 @@ public class StargateHelper {
      */
     private static ConcurrentHashMap<String, StargateShape> getStargateShapes() {
         return stargateShapes;
+    }
+
+    public static List<String> getShapeNames() {
+        List<String> shapeNames = new ArrayList<String>();
+        shapeNames.addAll(getStargateShapes().keySet());
+        return shapeNames;
     }
 
     /**

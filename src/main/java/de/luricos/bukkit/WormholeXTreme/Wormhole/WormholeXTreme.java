@@ -20,6 +20,7 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeServerListener;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeRedstoneListener;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeVehicleListener;
@@ -27,18 +28,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeBlockLi
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeEntityListener;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremePlayerListener;
 import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Build;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Compass;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Complete;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Dial;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Force;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Go;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXIDC;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXList;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXRemove;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.Wormhole;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXReload;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.WXStatus;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
@@ -51,11 +40,11 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 
 import me.taylorkelly.help.Help;
 
 import com.nijiko.permissions.PermissionHandler;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -312,6 +301,7 @@ public class WormholeXTreme extends JavaPlugin {
         tp.getCommand("wxgo").setExecutor(new Go());
         tp.getCommand("dial").setExecutor(new Dial());
         tp.getCommand("wxbuild").setExecutor(new Build());
+        tp.getCommand("wxbuildlist").setExecutor(new BuildList());
         tp.getCommand("wormhole").setExecutor(new Wormhole());
         tp.getCommand("wxreload").setExecutor(new WXReload());
         tp.getCommand("wxstatus").setExecutor(new WXStatus());

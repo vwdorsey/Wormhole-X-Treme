@@ -105,6 +105,9 @@ public class HelpSupport {
             String[] wxlist;
             String wxgo;
             String wxbuild;
+            String wxbuildlist;
+            String wxreload;
+            String wxstatus;
             String wormhole;
             if (WormholeXTreme.getPermissions() != null) {
                 if (ConfigManager.getSimplePermissions()) {
@@ -117,6 +120,9 @@ public class HelpSupport {
                     wxlist = new String[]{sp[0], sp[2]};
                     wxgo = sp[2];
                     wxbuild = sp[2];
+                    wxbuildlist = sp[2];
+                    wxstatus = sp[2];
+                    wxreload = sp[2];
                     wormhole = sp[2];
                 } else {
                     dial = cp[1];
@@ -128,6 +134,9 @@ public class HelpSupport {
                     wxlist = new String[]{cp[6], cp[7]};
                     wxgo = cp[8];
                     wxbuild = cp[6];
+                    wxbuildlist = cp[6];
+                    wxstatus = cp[6];
+                    wxreload = cp[6];
                     wormhole = cp[6];
                 }
             } else {
@@ -140,6 +149,9 @@ public class HelpSupport {
                 wxlist = new String[]{"OP"};
                 wxgo = "OP";
                 wxbuild = "OP";
+                wxbuildlist = "OP";
+                wxstatus = "OP";
+                wxreload = "OP";
                 wormhole = "OP";
             }
 
@@ -152,6 +164,9 @@ public class HelpSupport {
             WormholeXTreme.getHelp().registerCommand("wxlist", "List all stargates", WormholeXTreme.getThisPlugin(), wxlist);
             WormholeXTreme.getHelp().registerCommand("wxgo [stargate]", "Teleport to [stargate]", WormholeXTreme.getThisPlugin(), wxgo);
             WormholeXTreme.getHelp().registerCommand("wxbuild [gateshape]", "Automaticially build a stargate in the specified [gateshape]", WormholeXTreme.getThisPlugin(), wxbuild);
+            WormholeXTreme.getHelp().registerCommand("wxbuildlist", "List available gate shapes", WormholeXTreme.getThisPlugin(), wxbuildlist);
+            WormholeXTreme.getHelp().registerCommand("wxreload now", "Reload WormholeXTreme", WormholeXTreme.getThisPlugin(), wxreload);
+            WormholeXTreme.getHelp().registerCommand("wxstatus all", "Show system status", WormholeXTreme.getThisPlugin(), wxstatus);
             WormholeXTreme.getHelp().registerCommand("wormhole", "Wormhole administration and configuration command", WormholeXTreme.getThisPlugin(), true, wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole owner [stargate] <owner>", "Display owner of [stargate], optionally change <owner>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole portalmaterial [stargate] <material>", "Display portalmaterial on [stargate], optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
@@ -162,6 +177,10 @@ public class HelpSupport {
             WormholeXTreme.getHelp().registerCommand("wormhole shutdown_timeout <timeout>", "Display shutdown timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole activate_timeout <timeout>", "Display activation timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole simple <boolean>", "Display simple permissions, optionally change via <boolean>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole toggle_gwm", "Toggle gate welcome message enable/disable", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole show_gwm", "Show current gate welcome message status", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole toggle_transport", "Toggle transportation method TELEPORT/EVENT", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole show_transport", "Show current transportation method", WormholeXTreme.getThisPlugin(), wormhole);
         }
     }
 }
