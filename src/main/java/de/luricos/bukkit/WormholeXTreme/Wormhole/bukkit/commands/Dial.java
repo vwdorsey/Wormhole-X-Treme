@@ -28,7 +28,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.Permi
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayer;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -95,7 +94,8 @@ public class Dial implements CommandExecutor {
                     if (sourceGate.dialStargate(target, false)) {
                         player.sendMessage(ConfigManager.MessageStrings.gateConnected.toString());
                     } else {
-                        player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsActive.toString(), target.getGateName()));
+                        player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsInUseBy.toString(), target.getGateName(), target.getLastUsedBy()));
+
                         CommandUtilities.closeGate(sourceGate, false);
                         wormholePlayer.removeStargate(sourceGate);
                     }

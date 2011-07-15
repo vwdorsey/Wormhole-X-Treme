@@ -97,17 +97,19 @@ public class ConfigManager {
         /** The target invalid. */
         targetInvalid(errorHeader + "Invalid gate target."),
         /** The target is active. */
-        targetIsActive(errorHeader + "Target gate '%s' is currently active."),
+        targetIsActive(errorHeader + "Target gate %sis currently active."),
+        /** The target is active. */
+        targetIsInUseBy(errorHeader + "Target gate %sis currently in use%s."),
         /** The gate not active. */
         gateNotActive(errorHeader + "No gate activated to dial."),
         /** The gate remote active. */
-        gateRemoteActive(errorHeader + "Gate '%s' remotely activated by '%s'."),
+        gateRemoteActive(errorHeader + "Gate %sremotely activated%s."),
         /** The gate shutdown. */
-        gateShutdown(normalHeader + "Gate '%s' successfully shutdown."),
+        gateShutdown(normalHeader + "Gate %ssuccessfully shutdown."),
         /** The gate activated. */
-        gateActivated(normalHeader + "Gate '%s' successfully activated."),
+        gateActivated(normalHeader + "Gate %ssuccessfully activated."),
         /** The gate deactivated. */
-        gateDeactivated(normalHeader + "Gate '%s' successfully deactivated."),
+        gateDeactivated(normalHeader + "Gate %ssuccessfully deactivated."),
         /** The gate dialed. */
         gateConnected(normalHeader + "Stargates connected."),
         /** no GateShape found */

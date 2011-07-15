@@ -1,3 +1,7 @@
+Changes 1.011
+- Fixed dial gate deactivation bug
+- Fine graded error message remoteActive
+
 Changes 1.01
 - Added new command /wxbuildlist - List available gate shapes
 - Synced Help pages with latest plugin.yml
