@@ -25,20 +25,15 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
 
 /**
  * WormholeXtreme StargateDBManager.
@@ -99,13 +94,13 @@ public class StargateDBManager {
                 WXTLogger.prettyLog(Level.FINE, false, "DBLink not available.");
                 return false;
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Gets the all individual permissions.
      * 
@@ -116,7 +111,7 @@ public class StargateDBManager {
         if (!isConnected()) {
             connectDB();
         }
-        
+
         ResultSet perm = null;
         try {
             if (wormholeSQLConnection.isClosed()) {
@@ -154,7 +149,7 @@ public class StargateDBManager {
         if (!isConnected()) {
             connectDB();
         }
-        
+
         final List<World> worlds = server.getWorlds();
         PreparedStatement stmt = null;
         ResultSet gatesData = null;
@@ -220,6 +215,9 @@ public class StargateDBManager {
                         sn.getNetworkGateList().add(s);
                         if (s.isGateSignPowered()) {
                             sn.getNetworkSignGateList().add(s);
+                            if ((s.getGateDialSign() != null) && (s.getGateDialSignBlock() != null)) {
+                                s.tryClickTeleportSign(s.getGateDialSignBlock());
+                            }
                         }
                     }
                     StargateManager.addStargate(s);
@@ -438,7 +436,7 @@ public class StargateDBManager {
         if (!isConnected()) {
             connectDB();
         }
-        
+
         ResultSet perm = null;
         try {
             if (wormholeSQLConnection.isClosed()) {
