@@ -24,8 +24,8 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
 import java.util.logging.Level;
 
@@ -55,7 +55,7 @@ public class StargateUpdateRunnable implements Runnable {
         LIGHTUP,
         COOLDOWN_REMOVE,
         DIAL_SIGN_RESET,
-        ESTABLISH_WORMHOLE;
+        ESTABLISH_WORMHOLE
     }
     
     /** The stargate. */
@@ -63,6 +63,8 @@ public class StargateUpdateRunnable implements Runnable {
     /** The action. */
     private final ActionToTake action;
 
+    private Action eventBlockAction;
+    
     /**
      * Instantiates a new stargate update runnable.
      * 
@@ -70,8 +72,13 @@ public class StargateUpdateRunnable implements Runnable {
      * @param action the act
      */
     public StargateUpdateRunnable(final Stargate stargate, final ActionToTake action) {
+        this(stargate, action, null);
+    }
+    
+    public StargateUpdateRunnable(Stargate stargate, ActionToTake action, Action eventBlockAction) {
         this.stargate = stargate;
         this.action = action;
+        this.eventBlockAction = eventBlockAction;
     }
 
     private void runLogger(ActionToTake action) {
@@ -86,7 +93,7 @@ public class StargateUpdateRunnable implements Runnable {
                 return;
         }
         
-        WXTLogger.prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + (stargate != null
+        WXTLogger.prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + ", ActionType: " + ((this.eventBlockAction != null) ? this.eventBlockAction.toString() : "NULL") + (stargate != null
                 ? "\" Stargate \"" + stargate.getGateName()
                 : "") + "\"");        
     }
@@ -99,9 +106,10 @@ public class StargateUpdateRunnable implements Runnable {
         runLogger(action);
         
         Player player = null;
-        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()) != null)
+        if (WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()) != null) {
             player = WormholePlayerManager.getRegisteredWormholePlayer(stargate.getLastUsedBy()).getPlayer();
-        
+        }
+
         switch (action) {
             case ESTABLISH_WORMHOLE:
                 stargate.establishWormhole();
@@ -119,15 +127,9 @@ public class StargateUpdateRunnable implements Runnable {
                 stargate.stopAfterShutdownTimer();
                 break;
             case DIAL_SIGN_CLICK:
-                stargate.dialSignClicked();
-                
-                if (player != null) {
-                    if (stargate.getGateDialSignTarget() != null) {
-                        final String target = stargate.getGateDialSignTarget().getGateName();
-                        player.sendMessage("Dialer set to: " + target);
-                    } else {
-                        player.sendMessage("No available target to set dialer to.");
-                    }
+                stargate.dialSignClicked(this.eventBlockAction);
+                if ((player != null) && (stargate.getGateDialSignTarget() == null)) {
+                    player.sendMessage("No available target to set dialer to.");
                 }
                 break;
             case DIAL_SIGN_RESET:

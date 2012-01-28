@@ -52,9 +52,7 @@ public class WXRemove implements CommandExecutor {
             final Stargate s = StargateManager.getStargate(a[0]);
 
             if (s != null) {
-                if (CommandUtilities.playerCheck(sender)
-                        ? WXPermissions.checkWXPermissions((Player) sender, s, PermissionType.REMOVE)
-                        : true) {
+                if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, s, PermissionType.REMOVE)) {
                     boolean destroy = false;
                     if ((a.length == 2) && a[1].equalsIgnoreCase("-all")) {
                         destroy = true;

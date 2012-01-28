@@ -24,10 +24,11 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
-
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 
 /**
  * WormholeXTreme Server Listener.
@@ -35,12 +36,12 @@ import org.bukkit.event.server.ServerListener;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeServerListener extends ServerListener {
+public class WormholeXTremeServerListener implements Listener {
 
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
      */
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(final PluginDisableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.disablePermissions();
@@ -54,7 +55,7 @@ public class WormholeXTremeServerListener extends ServerListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
      */
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginEnable(final PluginEnableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.enablePermissions();

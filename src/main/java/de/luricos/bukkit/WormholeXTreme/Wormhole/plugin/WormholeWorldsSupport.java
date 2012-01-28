@@ -25,7 +25,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Level;
@@ -45,10 +44,15 @@ public class WormholeWorldsSupport {
      * @return true, if successful
      */
     private static boolean checkWorldsVersion(final String version) {
-        if (!version.startsWith("0.5")) {
-            WXTLogger.prettyLog(Level.SEVERE, false, "Not a supported version of Wormhole Worlds. Recommended is 0.5");
+        if (version.length() <= 2 || !version.contains("."))
+            return false;
+
+        Integer checkSubVer = Integer.parseInt(version.split("\\.")[1]);
+        if (checkSubVer < 507) {
+            WXTLogger.prettyLog(Level.SEVERE, false, "Not a supported version of WormholeXTreme-Worlds. Recommended is > 0.507");
             return false;
         }
+
         return true;
     }
 
@@ -104,9 +108,6 @@ public class WormholeWorldsSupport {
     }
     
     public static boolean isEnabled() {
-        if (WormholeXTreme.getWorldHandler() != null)
-            return true;
-        
-        return false;
+        return WormholeXTreme.getWorldHandler() != null;
     }
 }

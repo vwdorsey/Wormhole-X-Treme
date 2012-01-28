@@ -29,14 +29,15 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestriction
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.vehicle.VehicleListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
@@ -48,7 +49,7 @@ import java.util.logging.Level;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeVehicleListener extends VehicleListener {
+public class WormholeXTremeVehicleListener implements Listener {
 
     /** The nospeed. */
     private final static Vector nospeed = new Vector();
@@ -185,8 +186,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.vehicle.VehicleListener#onVehicleMove(org.bukkit.event.vehicle.VehicleMoveEvent)
      */
-    @Override
-    public void onVehicleMove(final VehicleMoveEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onVehicleMove(VehicleMoveEvent event) {
         if (event.getVehicle() instanceof Minecart) {
             handleStargateMinecartTeleportEvent(event);
         }

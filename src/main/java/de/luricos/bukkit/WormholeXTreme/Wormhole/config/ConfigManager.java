@@ -21,7 +21,6 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
-
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,7 +98,7 @@ public class ConfigManager {
         /** The target is active. */
         targetIsActive(errorHeader + "Target gate %sis currently active."),
         /** The target is active. */
-        targetIsInUseBy(errorHeader + "Target gate %sis currently in use%s."),
+        targetIsInUseBy(errorHeader + "Target gate %s is currently in use %s."),
         /** The gate not active. */
         gateNotActive(errorHeader + "No gate activated to dial."),
         /** The gate remote active. */
@@ -239,11 +238,7 @@ public class ConfigManager {
      */
     public static boolean getHelpSupportDisable() {
         Setting hsd;
-        if ((hsd = ConfigManager.getConfigurations().get(ConfigKeys.HELP_SUPPORT_DISABLE)) != null) {
-            return hsd.getBooleanValue();
-        } else {
-            return false;
-        }
+        return (hsd = ConfigManager.getConfigurations().get(ConfigKeys.HELP_SUPPORT_DISABLE)) != null && hsd.getBooleanValue();
     }
 
     /**
@@ -256,11 +251,11 @@ public class ConfigManager {
         Setting ll;
         if ((ll = ConfigManager.getConfigurations().get(ConfigKeys.LOG_LEVEL)) != null) {
             return ll.getLevel();
-        } else {
-            return Level.INFO;
         }
+
+        return Level.INFO;
     }
-    
+
     /**
      * get WelcomeMessageEnabled boolean value
      * 
@@ -328,11 +323,7 @@ public class ConfigManager {
      */
     public static boolean getPermissionsSupportDisable() {
         Setting psd;
-        if ((psd = ConfigManager.getConfigurations().get(ConfigKeys.PERMISSIONS_SUPPORT_DISABLE)) != null) {
-            return psd.getBooleanValue();
-        } else {
-            return false;
-        }
+        return (psd = ConfigManager.getConfigurations().get(ConfigKeys.PERMISSIONS_SUPPORT_DISABLE)) != null && psd.getBooleanValue();
     }
 
     /**
@@ -443,9 +434,7 @@ public class ConfigManager {
      * @return true, if is builds the restriction enabled
      */
     public static boolean isBuildRestrictionEnabled() {
-        return ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED) != null
-                ? ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED).getBooleanValue()
-                : false;
+        return ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED) != null && ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED).getBooleanValue();
     }
 
     /**
@@ -465,9 +454,7 @@ public class ConfigManager {
      * @return true, if is use cooldown enabled
      */
     public static boolean isUseCooldownEnabled() {
-        return ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED) != null
-                ? ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED).getBooleanValue()
-                : false;
+        return ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED) != null && ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED).getBooleanValue();
     }
 
     /**

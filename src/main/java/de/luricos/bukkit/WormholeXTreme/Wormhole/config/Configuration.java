@@ -163,7 +163,7 @@ public class Configuration {
      * @param desc the desc
      * @param config the config
      */
-    private static void writeFile(final File file, final PluginDescriptionFile desc, final Setting[] config) {
+    private static void writeFile(final File file, final PluginDescriptionFile desc, Setting[] config) {
         try {
             try {
                 file.createNewFile();

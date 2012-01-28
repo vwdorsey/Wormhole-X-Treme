@@ -49,9 +49,7 @@ public class Force implements CommandExecutor {
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String[] a = CommandUtilities.commandEscaper(args);
         if (a.length == 1) {
-            if (CommandUtilities.playerCheck(sender)
-                    ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)
-                    : true) {
+            if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)) {
                 if (a[0].equalsIgnoreCase("-all")) {
                     for (final Stargate gate : StargateManager.getAllGates()) {
                         CommandUtilities.closeGate(gate, true);
@@ -66,7 +64,7 @@ public class Force implements CommandExecutor {
                 }
 
                 if (CommandUtilities.playerCheck(sender)) {
-                    WXTLogger.prettyLog(Level.INFO, false, "Player: \"" + ((Player) sender).getName() + "\" ran wxforce: " + Arrays.toString(a));
+                    WXTLogger.prettyLog(Level.INFO, false, "Player: \"" + sender.getName() + "\" ran wxforce: " + Arrays.toString(a));
                 }
             } else {
                 sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());

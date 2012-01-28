@@ -22,7 +22,6 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager.ConfigKeys;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
-
 import org.bukkit.Material;
 
 import java.util.logging.Level;
@@ -50,7 +49,7 @@ public class Setting {
      * @param desc the desc
      * @param plugin the plugin
      */
-    protected Setting(final ConfigKeys name, final Object value, final String desc, final String plugin) {
+    protected Setting(final ConfigKeys name, Object value, String desc, String plugin) {
         this.name = name;
         this.desc = desc;
         this.value = value;

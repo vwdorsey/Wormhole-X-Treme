@@ -44,11 +44,9 @@ public class PermissionsSupport {
      *            the version
      */
     private static void checkPermissionsVersion(final String version) {
-        final String v = version;
-        if (!v.startsWith("2.5") && !v.startsWith("2.6") && !v.startsWith("2.7") && !v.startsWith("3.0")) {
+        if (!version.startsWith("2.5") && !version.startsWith("2.6") && !version.startsWith("2.7") && !version.startsWith("3.0")) {
             WXTLogger.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 3.0.x");
         }
-
     }
 
     /**

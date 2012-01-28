@@ -26,17 +26,18 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 
 import java.util.logging.Level;
@@ -47,7 +48,7 @@ import java.util.logging.Level;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeBlockListener extends BlockListener {
+public class WormholeXTremeBlockListener implements Listener {
 
     /**
      * Handle block break.
@@ -112,8 +113,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
      */
-    @Override
-    public void onBlockBreak(final BlockBreakEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockBreak(BlockBreakEvent event) {
         if (!event.isCancelled()) {
             final Block block = event.getBlock();
             final Stargate stargate = StargateManager.getGateFromBlock(block);
@@ -127,8 +128,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockBurn(org.bukkit.event.block.BlockBurnEvent)
      */
-    @Override
-    public void onBlockBurn(final BlockBurnEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockBurn(BlockBurnEvent event) {
         if (!event.isCancelled()) {
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
@@ -158,8 +159,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
      */
-    @Override
-    public void onBlockDamage(final BlockDamageEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockDamage(BlockDamageEvent event) {
         if (!event.isCancelled()) {
             final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
             final Player player = event.getPlayer();
@@ -173,8 +174,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
      */
-    @Override
-    public void onBlockFromTo(final BlockFromToEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockFromTo(BlockFromToEvent event) {
         if (!event.isCancelled()) {
             if (StargateManager.isBlockInGate(event.getToBlock()) || StargateManager.isBlockInGate(event.getBlock())) {
                 event.setCancelled(true);
@@ -185,8 +186,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockIgnite(org.bukkit.event.block.BlockIgniteEvent)
      */
-    @Override
-    public void onBlockIgnite(final BlockIgniteEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockIgnite(BlockIgniteEvent event) {
         if (!event.isCancelled()) {
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
@@ -213,8 +214,8 @@ public class WormholeXTremeBlockListener extends BlockListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockPhysics(org.bukkit.event.block.BlockPhysicsEvent)
      */
-    @Override
-    public void onBlockPhysics(final BlockPhysicsEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockPhysics(BlockPhysicsEvent event) {
         if (!event.isCancelled()) {
             final Block block = event.getBlock();
             if (StargateManager.isBlockInGate(block) && (block.getTypeId() != 55)) {

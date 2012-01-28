@@ -28,10 +28,10 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -75,7 +75,7 @@ public class StargateDBManager {
 
         try {
             if ((wormholeSQLConnection == null) || wormholeSQLConnection.isClosed()) {
-                setWormholeSQLConnection(DriverManager.getConnection("jdbc:sqlite:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", ""));
+                setWormholeSQLConnection(DriverManager.getConnection("jdbc:sqlite:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTreme.sqlite", "sa", ""));
                 wormholeSQLConnection.setAutoCommit(true);
             } else {
                 WXTLogger.prettyLog(Level.SEVERE, false, "WormholeDB already connected.");
@@ -150,7 +150,8 @@ public class StargateDBManager {
             connectDB();
         }
 
-        final List<World> worlds = server.getWorlds();
+        //@TODO: rei-mplement world id search
+//        final List<World> worlds = server.getWorlds();
         PreparedStatement stmt = null;
         ResultSet gatesData = null;
         try {
@@ -170,36 +171,30 @@ public class StargateDBManager {
                     }
                 }
                 // Is this the best way to retrieve a world?
-                final long worldId = gatesData.getLong("World");
+//                final long worldId = gatesData.getLong("World");
                 final String worldName = gatesData.getString("WorldName");
                 final String worldEnvironment = gatesData.getString("WorldEnvironment");
-
+                
                 World w = null;
-                if (worldName.equals("")) {
-                    for (final World possW : worlds) {
-                        if (possW.getId() == worldId) {
-                            w = possW;
-                            break;
-                        }
+//                if (worldName.equals("")) {
+//                    for (final World possW : worlds) {
+//                        if (possW.getId() == worldId) {
+//                            w = possW;
+//                            break;
+//                        }
+//                    }
+//                }
+                
+                if (ConfigManager.isWormholeWorldsSupportEnabled()) {
+                    //@TODO: should throw an exception instead
+                    if ((WormholeXTreme.getWorldHandler() != null) && !WormholeXTreme.getWorldHandler().loadWorld(worldName)) {
+                        WXTLogger.prettyLog(Level.WARNING, true, "World: " + worldName + " is not a Wormhole World, the suggested action is to add it as one. Otherwise disregard this warning.");
                     }
                 } else {
-                    w = server.getWorld(worldName);
+                    // this will create a new world if we run in native mode
+                    server.createWorld(new WorldCreator(worldName).environment(Environment.valueOf(worldEnvironment)));
                 }
-
-                if ((w == null) && !worldName.equals("")) {
-                    if (ConfigManager.isWormholeWorldsSupportEnabled()) {
-                        if ((WormholeXTreme.getWorldHandler() != null) && !WormholeXTreme.getWorldHandler().loadWorld(worldName)) {
-                            server.createWorld(worldName, Environment.valueOf(worldEnvironment));
-                            WXTLogger.prettyLog(Level.WARNING, true, "World: " + worldName + " is not a Wormhole World, the suggested action is to add it as one. Otherwise disregard this warning.");
-                        }
-                    } else {
-                        server.createWorld(worldName, Environment.valueOf(worldEnvironment));
-                    }
-                    w = server.getWorld(worldName);
-                } else if (w == null) {
-                    // Default to first world
-                    w = worlds.get(0);
-                }
+                w = server.getWorld(worldName);
 
                 final Stargate s = StargateHelper.parseVersionedData(gatesData.getBytes("GateData"), w, gatesData.getString("Name"), sn);
                 if (s != null) {
@@ -222,7 +217,7 @@ public class StargateDBManager {
                     }
                     StargateManager.addStargate(s);
                 } else {
-                    WXTLogger.prettyLog(Level.INFO, true, "Failed to load Stargate '" + sn + "' from DB.");
+                    WXTLogger.prettyLog(Level.WARNING, true, "Failed to load Stargate '" + sn + "' from DB.");
                 }
             }
             gatesData.close();

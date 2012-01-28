@@ -165,6 +165,9 @@ public class DBUpdateUtil {
         final File dir = new File("plugins/WormholeXTremeDB/");
         final File dest_dir = new File("plugins/WormholeXTreme/WormholeXTremeDB/");
 
+        File oldFileName = new File(dest_dir.getPath() + File.separator + "WormholeXTremeDB");
+        File newFileName = new File(dest_dir.getPath() + File.separator + "WormholeXTreme.sqlite");
+
         if (!dest_dir.exists()) {
             try {
                 dest_dir.mkdir();
@@ -174,6 +177,7 @@ public class DBUpdateUtil {
         }
 
         if (dir.exists() && dir.isDirectory()) {
+            WXTLogger.prettyLog(Level.WARNING, false, "Old Database found, moving directory.");
             final File[] files = dir.listFiles();
             for (File f : files) {
                 try {
@@ -187,6 +191,25 @@ public class DBUpdateUtil {
                 dir.delete();
             } catch (final Exception e) {
                 WXTLogger.prettyLog(Level.SEVERE, false, "Unable to delete directory: " + e.getMessage());
+                return false;
+            }
+        }
+        
+        if (oldFileName.isFile()) {
+            WXTLogger.prettyLog(Level.WARNING, false, "Old Database File found. Performing Update after failsafe check.");
+            if (newFileName.isFile()) {
+                WXTLogger.prettyLog(Level.SEVERE, false, oldFileName.getName() +" and " + newFileName.getName() + " found both! Deleting failed during update. Please remove the correct file by hand (should be 0 KB).");
+                return false;
+            }
+
+            try {
+                if (!oldFileName.renameTo(newFileName))
+                    throw new Exception("Check your database directory!");
+                
+                WXTLogger.prettyLog(Level.INFO, false, "Successfully moved old Database to new Database.");
+            } catch (Exception e) {
+                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to rename or delete oldFile. This is a serious problem! " + e.getMessage());
+                return false;
             }
         }
 
@@ -198,8 +221,9 @@ public class DBUpdateUtil {
         }
 
         try {
-            sql_con = DriverManager.getConnection("jdbc:sqlite:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
+            sql_con = DriverManager.getConnection("jdbc:sqlite:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTreme.sqlite", "sa", "");
             sql_con.setAutoCommit(true);
+            sql_con.prepareStatement("PRAGMA journal_mode = TRUNCATE;VACUUM;").executeQuery().close();
         } catch (final SQLException e) {
             WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
             return false;
@@ -259,7 +283,7 @@ public class DBUpdateUtil {
                 stmt.close();
                 sql_con.close();
             } catch (final Exception e) {
-                WXTLogger.prettyLog(Level.SEVERE, false, "Failure to update db:" + e);
+                WXTLogger.prettyLog(Level.SEVERE, false, "Failed to update db:" + e);
             } finally {
                 try {
                     stmt.close();

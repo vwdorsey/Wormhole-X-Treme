@@ -23,11 +23,16 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 import java.util.logging.Level;
 
@@ -42,7 +47,7 @@ import java.util.logging.Level;
  * 
  * @see WormholeXTremeRedstoneEvent
  */
-public class WormholeXTremeRedstoneListener extends BlockListener {
+public class WormholeXTremeRedstoneListener implements Listener {
 
     /**
      * Checks if current is new.
@@ -54,10 +59,7 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
      * @return true, if is current new
      */
     private static boolean isCurrentNew(final int oldCurrent, final int newCurrent) {
-        if (((oldCurrent == 0) && (newCurrent > 0)) || ((oldCurrent > 0) && (newCurrent == 0))) {
-            return true;
-        }
-        return false;
+        return ((oldCurrent == 0) && (newCurrent > 0)) || ((oldCurrent > 0) && (newCurrent == 0));
     }
 
     /**
@@ -70,15 +72,13 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
      * @return true, if is current on
      */
     private static boolean isCurrentOn(final int oldCurrent, final int newCurrent) {
-        return (newCurrent > 0) && (oldCurrent == 0)
-                ? true
-                : false;
+        return (newCurrent > 0) && (oldCurrent == 0);
     }
 
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockRedstoneChange(org.bukkit.event.block.BlockRedstoneEvent)
      */
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstoneChange(final BlockRedstoneEvent event) {
         final Block block = event.getBlock();
         
@@ -93,7 +93,7 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
                 ) {
                 
                 if ((stargate.getGateRedstoneSignActivationBlock() != null) && block.equals(stargate.getGateRedstoneSignActivationBlock()) && isCurrentOn(event.getOldCurrent(), event.getNewCurrent())) {
-                    stargate.tryClickTeleportSign(stargate.getGateDialSignBlock());
+                    stargate.tryClickTeleportSign(stargate.getGateDialSignBlock(), Action.PHYSICAL);
                     WXTLogger.prettyLog(Level.FINE, false, "Caught redstone sign event on gate: " + stargate.getGateName() + " block: " + block.toString());
                 } else if ((stargate.getGateRedstoneDialActivationBlock() != null) && block.equals(stargate.getGateRedstoneDialActivationBlock()) && isCurrentOn(event.getOldCurrent(), event.getNewCurrent())) {
                     if (stargate.isGateActive() && (stargate.getGateTarget() != null)) {
@@ -108,5 +108,10 @@ public class WormholeXTremeRedstoneListener extends BlockListener {
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockFromToEvent(BlockFromToEvent event) {
+        WXTLogger.prettyLog(Level.FINE, false, "We got a BlockFromToEvent here: " + event.getToBlock());
     }
 }

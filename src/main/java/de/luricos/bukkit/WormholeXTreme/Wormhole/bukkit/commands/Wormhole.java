@@ -178,9 +178,7 @@ public class Wormhole implements CommandExecutor {
         if ((args.length == 2) || (args.length == 3)) {
             if (args[1].equalsIgnoreCase("-all") && (args.length == 3) && CommandUtilities.isBoolean(args[2])) {
                 for (final Stargate stargate : StargateManager.getAllGates()) {
-                    setGateCustomAll(stargate, args[2].equalsIgnoreCase("true")
-                            ? true
-                            : false);
+                    setGateCustomAll(stargate, args[2].equalsIgnoreCase("true"));
                 }
                 sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All stargates with valid shapes have been set to custom mode: " + args[2]);
                 return true;
@@ -189,9 +187,7 @@ public class Wormhole implements CommandExecutor {
                 if (args.length == 3) {
                     if (CommandUtilities.isBoolean(args[2])) {
                         if (stargate.getGateShape() != null) {
-                            setGateCustomAll(stargate, args[2].equalsIgnoreCase("true")
-                                    ? true
-                                    : false);
+                            setGateCustomAll(stargate, args[2].equalsIgnoreCase("true"));
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate is custom: " + stargate.isGateCustom());
                         } else {
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No gate shape to base custom data off of!");
@@ -763,14 +759,14 @@ public class Wormhole implements CommandExecutor {
                 }
                 
                 if (sender instanceof Player) {
-                    ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging set to '" + ConfigManager.getLogLevel().getName() + "'. See server.log for detailed log output.");
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging set to '" + ConfigManager.getLogLevel().getName() + "'. See server.log for detailed log output.");
                 }
                 
                 return true;
             }
             
             if (sender instanceof Player) {
-                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging is currently set to '" + ConfigManager.getLogLevel().getName() + "'.");
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Logging is currently set to '" + ConfigManager.getLogLevel().getName() + "'.");
             }
             
             return true;
@@ -797,7 +793,7 @@ public class Wormhole implements CommandExecutor {
                     }
                 }
                 
-                ((Player) sender).sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "GATE_WELCOME_MESSAGE '" + (ConfigManager.isGateArrivalWelcomeMessageEnabled() ? "\u00A72enabled" : "\u00A74disabled") + ConfigManager.MessageStrings.messageColor + "'.");
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "GATE_WELCOME_MESSAGE '" + (ConfigManager.isGateArrivalWelcomeMessageEnabled() ? "\u00A72enabled" : "\u00A74disabled") + ConfigManager.MessageStrings.messageColor + "'.");
             }
             
             return true;
@@ -824,7 +820,7 @@ public class Wormhole implements CommandExecutor {
                     }
                 }
                 
-                ((Player) sender).sendMessage(String.format(ConfigManager.MessageStrings.normalHeader.toString() + "Transportation method %s '" + (ConfigManager.getGateTransportMethod() ? "EVENT" : "TELEPORT") + "'.", ((getValue) ? "is" : "changed to")));
+                sender.sendMessage(String.format(ConfigManager.MessageStrings.normalHeader.toString() + "Transportation method %s '" + (ConfigManager.getGateTransportMethod() ? "EVENT" : "TELEPORT") + "'.", ((getValue) ? "is" : "changed to")));
             }
             
             return true;
@@ -869,9 +865,7 @@ public class Wormhole implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (CommandUtilities.playerCheck(sender)
-                ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)
-                : true) {
+        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)) {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0)) {
                 return false;

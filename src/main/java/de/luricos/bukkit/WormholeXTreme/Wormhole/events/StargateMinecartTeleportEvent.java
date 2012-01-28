@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.events;
 
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * The Stargate Minecart Teleport Event Class.
@@ -30,23 +31,18 @@ import org.bukkit.event.Event;
  */
 public class StargateMinecartTeleportEvent extends Event {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 1176071751488327352L;
-    /** The old minecart. */
-    private final Minecart oldMinecart;
-    /** The new minecart. */
-    private final Minecart newMinecart;
+    private static final HandlerList handlers = new HandlerList();
+
+    private Minecart oldMinecart;
+    private Minecart newMinecart;
 
     /**
      * Instantiates a new stargate minecart teleport event.
      * 
-     * @param oldMinecart
-     *            the old minecart
-     * @param newMinecart
-     *            the new minecart
+     * @param oldMinecart the old minecart
+     * @param newMinecart the new minecart
      */
-    public StargateMinecartTeleportEvent(final Minecart oldMinecart, final Minecart newMinecart) {
-        super("StargateMinecartTeleportEvent");
+    public StargateMinecartTeleportEvent(Minecart oldMinecart, Minecart newMinecart) {
         this.oldMinecart = oldMinecart;
         this.newMinecart = newMinecart;
     }
@@ -67,5 +63,14 @@ public class StargateMinecartTeleportEvent extends Event {
      */
     public Minecart getOldMinecart() {
         return oldMinecart;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

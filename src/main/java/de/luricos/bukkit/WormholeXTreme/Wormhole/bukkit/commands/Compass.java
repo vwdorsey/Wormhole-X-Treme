@@ -64,8 +64,6 @@ public class Compass implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        return CommandUtilities.playerCheck(sender)
-                ? doCompass((Player) sender)
-                : true;
+        return !CommandUtilities.playerCheck(sender) || doCompass((Player) sender);
     }
 }

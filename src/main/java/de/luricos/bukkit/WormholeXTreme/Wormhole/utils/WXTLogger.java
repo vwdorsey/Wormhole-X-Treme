@@ -35,7 +35,7 @@ public class WXTLogger {
     private static Logger logger = null;
     private static String logPluginName = null;
     private static String logPluginVersion = null;
-    
+
     public static void initLogger(String pluginName, String pluginVersion, Level logLevel) {
         if (WXTLogger.logger == null) {
             Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(pluginName);

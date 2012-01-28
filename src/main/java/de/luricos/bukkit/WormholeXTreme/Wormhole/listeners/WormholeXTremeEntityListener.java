@@ -23,15 +23,16 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -42,20 +43,18 @@ import java.util.logging.Level;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeEntityListener extends EntityListener {
+public class WormholeXTremeEntityListener implements Listener {
 
     /**
      * Handle entity explode event.
      * 
-     * @param explodeBlocks
-     *            the explode blocks
+     * @param explodeBlocks the explode blocks
      * @return true, if successful
      */
     private static boolean handleEntityExplodeEvent(final List<Block> explodeBlocks) {
-        final List<Block> eb = explodeBlocks;
-        for (int i = 0; i < eb.size(); i++) {
-            if (StargateManager.isBlockInGate(eb.get(i))) {
-                final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
+        for (Block explodeBlock : explodeBlocks) {
+            if (StargateManager.isBlockInGate(explodeBlock)) {
+                final Stargate s = StargateManager.getGateFromBlock(explodeBlock);
                 WXTLogger.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.getGateName() + "\"");
                 return true;
             }
@@ -66,8 +65,7 @@ public class WormholeXTremeEntityListener extends EntityListener {
     /**
      * Handle Player damage event.
      * 
-     * @param event
-     *            the event
+     * @param event the event
      * @return true, if successful
      */
     private static boolean handlePlayerDamageEvent(final EntityDamageEvent event) {
@@ -104,7 +102,7 @@ public class WormholeXTremeEntityListener extends EntityListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
      */
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(final EntityDamageEvent event) {
         if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))) {
             if (event.getEntity() instanceof Player) {
@@ -118,7 +116,7 @@ public class WormholeXTremeEntityListener extends EntityListener {
     /* (non-Javadoc)
      * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
      */
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(final EntityExplodeEvent event) {
         if (!event.isCancelled()) {
             final List<Block> explodeBlocks = event.blockList();

@@ -38,10 +38,8 @@ public abstract class LocalPlayer {
     public abstract String getDisplayName();
     
     public boolean isOnline() {
-        if (this.player.isOnline())
-            return true;
-        
-        return false;
+        return this.player.isOnline();
+
     }
     
     /**

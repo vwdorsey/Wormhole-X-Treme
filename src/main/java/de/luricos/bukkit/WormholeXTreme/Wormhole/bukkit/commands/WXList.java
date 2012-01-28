@@ -45,15 +45,13 @@ public class WXList implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (CommandUtilities.playerCheck(sender)
-                ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.LIST)
-                : true) {
+        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.LIST)) {
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");
             StringBuilder sb = new StringBuilder();
             // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
             for (int i = 0; i < gates.size(); i++) {
-                sb.append("\u00A77" + gates.get(i).getGateName());
+                sb.append("\u00A77").append(gates.get(i).getGateName());
                 if (i != gates.size() - 1) {
                     sb.append("\u00A78, ");
                 }

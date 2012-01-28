@@ -129,7 +129,7 @@ public class StargateHelper {
      */
     private static Stargate checkStargate(final Block buttonBlock, final BlockFace facing, final StargateShape shape, final boolean create) {
         final BlockFace opposite = WorldUtils.getInverseDirection(facing);
-        final Block holdingBlock = buttonBlock.getFace(opposite);
+        final Block holdingBlock = buttonBlock.getRelative(opposite);
 
         if (isStargateMaterial(holdingBlock, shape)) {
             // Probably a stargate, lets start checking!
@@ -293,7 +293,7 @@ public class StargateHelper {
         s.setGateFacing(facing);
 
         final BlockFace opposite = WorldUtils.getInverseDirection(facing);
-        final Block activationBlock = buttonBlock.getFace(opposite);
+        final Block activationBlock = buttonBlock.getRelative(opposite);
         final StargateShapeLayer act_layer = shape.getShapeLayers().get(shape.getShapeActivationLayer());
 
         final int[] facingVector = {0, 0, 0};
@@ -479,7 +479,7 @@ public class StargateHelper {
         // Set the dialer sign up all proper like
         if (layer.getLayerDialSignPosition().length > 0) {
             final Block signBlockHolder = StargateHelper.getBlockFromVector(layer.getLayerDialSignPosition(), directionVector, lowerCorner, w);
-            final Block signBlock = signBlockHolder.getFace(tempGate.getGateFacing());
+            final Block signBlock = signBlockHolder.getRelative(tempGate.getGateFacing());
 
             // If somethign went wrong but the gate is sign powered, we need to error out.
             if (!tryCreateGateSign(signBlock, tempGate) && tempGate.isGateSignPowered()) {
@@ -507,7 +507,7 @@ public class StargateHelper {
         }
 
         if (layer.getLayerIrisActivationPosition().length > 0) {
-            tempGate.setGateIrisLeverBlock(StargateHelper.getBlockFromVector(layer.getLayerIrisActivationPosition(), directionVector, lowerCorner, w).getFace(tempGate.getGateFacing()));
+            tempGate.setGateIrisLeverBlock(StargateHelper.getBlockFromVector(layer.getLayerIrisActivationPosition(), directionVector, lowerCorner, w).getRelative(tempGate.getGateFacing()));
             tempGate.getGateStructureBlocks().add(tempGate.getGateIrisLeverBlock().getLocation());
         }
 
@@ -792,7 +792,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V3] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V3] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -864,7 +865,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V4] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V4] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -936,7 +938,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V5] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V5] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -1023,7 +1026,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V6] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V6] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -1144,7 +1148,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V7] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V7] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -1275,7 +1280,8 @@ public class StargateHelper {
                 try {
                     s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
                 } catch (final Exception e) {
-                    WXTLogger.prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.WARNING, false, "[V8] Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    WXTLogger.prettyLog(Level.FINE, false, "[V8] Stacktrace: " + e.getMessage());
                 }
             }
         }
@@ -1709,8 +1715,8 @@ public class StargateHelper {
      * @return true, if successful
      */
     private static boolean tryCreateGateSign(final Block signBlock, final Stargate tempGate) {
-
-        if (signBlock.getTypeId() == 68) {
+        WXTLogger.prettyLog(Level.FINE, false, "Trying to create GateSign for gate '" + tempGate.getGateName() + "' in '" + tempGate.getGateWorld().getName() + "'");
+        if (signBlock.getType().equals(Material.WALL_SIGN)) {
             tempGate.setGateSignPowered(true);
             tempGate.setGateDialSignBlock(signBlock);
             tempGate.setGateDialSign((Sign) signBlock.getState());
@@ -1722,8 +1728,18 @@ public class StargateHelper {
                 return false;
             }
 
-            if (name.length() > 2) {
-                tempGate.setGateName(name);
+            // filter out fancy indents added during creation to make recreation of gates easier
+            String filteredName = name;
+            if (name.startsWith("-") && name.endsWith("-")) {            
+                for (int i = 0; i < name.length();i++) {
+                    if (name.startsWith("-") && name.endsWith("-")) {
+                        filteredName = name.substring(1, name.length() - 1);
+                    }
+                }
+            }
+
+            if (filteredName.length() > 2) {
+                tempGate.setGateName(filteredName);
             }
 
             return true;

@@ -20,39 +20,28 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeServerListener;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeRedstoneListener;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeVehicleListener;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeBlockListener;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremeEntityListener;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.WormholeXTremePlayerListener;
+import com.nijiko.permissions.PermissionHandler;
 import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
-
 import me.taylorkelly.help.Help;
-
-import com.nijiko.permissions.PermissionHandler;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -72,7 +61,7 @@ public class WormholeXTreme extends JavaPlugin {
     private static final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
     private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
-    
+
     /** plugins **/
     private static PermissionHandler permissions = null;
     private static Help help = null;
@@ -83,13 +72,15 @@ public class WormholeXTreme extends JavaPlugin {
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
 
+    private boolean blockPluginExecution = false;
+
     /* (non-Javadoc)
      * @see org.bukkit.plugin.java.JavaPlugin#onLoad()
      */
     @Override
     public void onLoad() {
         // init the WXTLogger
-        WXTLogger.initLogger(this.getDescription().getName(), this.getDescription().getVersion(), ConfigManager.getLogLevel());        
+        WXTLogger.initLogger(this.getDescription().getName(), this.getDescription().getVersion(), ConfigManager.getLogLevel());
 
         // send welcome message
         WXTLogger.prettyLog(Level.INFO, true, "Loading WormholeXTreme ...");
@@ -102,13 +93,17 @@ public class WormholeXTreme extends JavaPlugin {
         
         // set logging level after loading config
         WXTLogger.setLogLevel(ConfigManager.getLogLevel());
-        
+
         // Make sure DB is up to date with latest SCHEMA
-        DBUpdateUtil.updateDB();
-        
+        if (!DBUpdateUtil.updateDB()) {
+            WXTLogger.prettyLog(Level.SEVERE, false, "Something went wrong during DBUpdate. Please check your server.log for details. Disabling WXT for safety precautions.");
+            blockPluginExecution = true;
+            return;
+        }
+
         // Load our shapes, stargates, and internal permissions.
         StargateHelper.loadShapes();
-        
+
         WXTLogger.prettyLog(Level.INFO, true, "Load complete");
     }
     
@@ -173,8 +168,13 @@ public class WormholeXTreme extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-       WXTLogger.prettyLog(Level.INFO, true, "Boot sequence initiated...");
-        
+        if (blockPluginExecution) {
+            WXTLogger.prettyLog(Level.INFO, true, "Startup is blocked because of a previous database error. Check your server.log");
+            return;
+        }
+
+        WXTLogger.prettyLog(Level.INFO, true, "Boot sequence initiated...");
+
         // Try and attach to Permissions and iConomy and Help
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
             WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
@@ -212,6 +212,11 @@ public class WormholeXTreme extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        if (blockPluginExecution) {
+            WXTLogger.prettyLog(Level.INFO, true, "Disable Functions skipped because of a previous error.");
+            return;
+        }
+
         WXTLogger.prettyLog(Level.INFO, true, "Shutdown sequence initiated...");
         
         try {
@@ -311,45 +316,26 @@ public class WormholeXTreme extends JavaPlugin {
      * Register events.
      */
     public static void registerEvents(final boolean critical) {
-        final WormholeXTreme tp = getThisPlugin();
-        final PluginManager pm = tp.getServer().getPluginManager();
-
+        WormholeXTreme wxt = getThisPlugin();
         if (critical) {
-            // Listen for enable events.
-            pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
-            
-            // Listen for disable events.
-            pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
+            // Listen for enable/disable events (MONITOR)
+            Bukkit.getServer().getPluginManager().registerEvents(serverListener, wxt);
         } else {
-            // Listen on Block events
-            pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.Normal, tp);
+            // Listen on Block events (NORMAL)
+            Bukkit.getServer().getPluginManager().registerEvents(blockListener, wxt);
 
-            // Listen on Player events
-            pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.PLAYER_KICK, playerListener, Priority.Normal, tp);
-            
-            // redstone listener
-            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
-            
-            // Handle minecarts going through portal
-            pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.Normal, tp);
-            pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.Normal, tp);
-            
-            // Handle player walking through the lava.
-            pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, tp);
-            
+            // Listen on Player events (NORMAL)
+            Bukkit.getServer().getPluginManager().registerEvents(playerListener, wxt);
+
+            // redstone listener (NORMAL)
+            Bukkit.getServer().getPluginManager().registerEvents(redstoneListener, wxt);
+
+            // Handle minecarts going through portal (NORMAL)
+            Bukkit.getServer().getPluginManager().registerEvents(vehicleListener, wxt);
+
+            // Handle player walking through the lava (NORMALL)
             // Handle Creeper explosions damaging Gate components.
-            pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, tp);
+            Bukkit.getServer().getPluginManager().registerEvents(entityListener, wxt);
         }
     }
 

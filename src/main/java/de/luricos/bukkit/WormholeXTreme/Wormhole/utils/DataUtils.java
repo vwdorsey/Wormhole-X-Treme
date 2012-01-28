@@ -84,7 +84,7 @@ public class DataUtils {
       * @param index the index
       * @return the int
       */
-     public static final int byteArrayToInt(final byte[] b, final int index) {
+     public static int byteArrayToInt(final byte[] b, final int index) {
          return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
      }
      
@@ -94,12 +94,8 @@ public class DataUtils {
      * @param b the b
      * @return true, if successful
      */
-    public static final boolean byteToBoolean(final byte b) {
-        if (b >= 1) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean byteToBoolean(final byte b) {
+        return b >= 1;
     }
 
      /**
@@ -108,7 +104,7 @@ public class DataUtils {
       * @param value the value
       * @return the byte[]
       */
-     public static final byte[] intToByteArray(final int value) {
+     public static byte[] intToByteArray(final int value) {
          return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
      }
      

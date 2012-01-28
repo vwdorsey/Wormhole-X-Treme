@@ -1,3 +1,23 @@
+Changes v1.015
+- Fixes for 1.1-R1
+- Changed SQLite DB filename to WormholeXTreme.sqlite
+- Database will be moved automatically
+- Added failsafe check during Database move
+- gate removal and recreation fixed
+- Colorized current dial-sign target 
+- changed database journaling to truncate
+- TargetSigns are now bi-directional when clicked left or right
+- fixed possible infinite loop during SignTargetChange
+- removed sign recreate when a player clicks a sign
+- removed "Dialer set to message" when interacting with a sign
+- fixed wxremove bug: sign would be recreated if using remove -all
+- temp-removed world id searching
+- disabled new world creation when a world is not managed or loaded by WormholeXTremeWorlds. Throw a warning instead.
+
+Changes v1.013
+- Fixed Redstone invalid dial block detection routine in setupRedstoneGateActivatedLever()
+- optimized some code parts
+
 Changes v1.011
 - Fixed dial gate deactivation bug
 - Fine graded error message remoteActive

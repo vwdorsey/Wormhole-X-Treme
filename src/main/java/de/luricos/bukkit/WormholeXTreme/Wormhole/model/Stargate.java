@@ -26,9 +26,9 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayer;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -36,6 +36,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -350,7 +351,7 @@ public class Stargate {
      */
     public void deleteTeleportSign() {
         if ((getGateDialSignBlock() != null) && (getGateDialSign() != null)) {
-            final Block teleportSign = getGateDialSignBlock().getFace(getGateFacing());
+            final Block teleportSign = getGateDialSignBlock().getRelative(getGateFacing());
             teleportSign.setType(Material.AIR);
         }
     }
@@ -998,6 +999,7 @@ public class Stargate {
     
     /**
      * Set Wormhole established connection status
+     * @param established
      */
     public void setWormholeEstablished(boolean established) {
         this.gateEstablishedWormhole = established;
@@ -1077,19 +1079,20 @@ public class Stargate {
      *            the teleport sign
      */
     public void resetSign(final boolean teleportSign) {
-        if (teleportSign) {
-            getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
-            setGateDialSign((Sign) getGateDialSignBlock().getState());
-            getGateDialSign().setLine(0, getGateName());
-            if (getGateNetwork() != null) {
-                getGateDialSign().setLine(1, getGateNetwork().getNetworkName());
-            } else {
-                getGateDialSign().setLine(1, "");
-            }
-            getGateDialSign().setLine(2, "");
-            getGateDialSign().setLine(3, "");
-            getGateDialSign().update(true);
+        if (!teleportSign)
+            return;
+
+        getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+        setGateDialSign((Sign) getGateDialSignBlock().getState());
+        getGateDialSign().setLine(0, getGateName());
+        if (getGateNetwork() != null) {
+            getGateDialSign().setLine(1, getGateNetwork().getNetworkName());
+        } else {
+            getGateDialSign().setLine(1, "");
         }
+        getGateDialSign().setLine(2, "");
+        getGateDialSign().setLine(3, "");
+        getGateDialSign().update(true);
     }
 
     /**
@@ -1163,7 +1166,7 @@ public class Stargate {
     /**
      * Sets the gate animation step.
      * 
-     * @param gateAnimationStep
+     * @param gateAnimationStep3D
      *            the new gate animation step
      */
     private void setGateAnimationStep3D(final int gateAnimationStep3D) {
@@ -1233,8 +1236,7 @@ public class Stargate {
     /**
      * Sets the gate custom woosh depth.
      * 
-     * @param gateCustomWooshDepth
-     *            the new gate custom woosh depth
+     * @param gateCustomWooshDepth the new gate custom woosh depth
      */
     public void setGateCustomWooshDepth(final int gateCustomWooshDepth) {
         this.gateCustomWooshDepth = gateCustomWooshDepth;
@@ -1243,8 +1245,7 @@ public class Stargate {
     /**
      * Sets the gate custom woosh depth squared.
      * 
-     * @param gateCustomWooshDepthSquared
-     *            the new gate custom woosh depth squared
+     * @param gateCustomWooshDepthSquared the new gate custom woosh depth squared
      */
     public void setGateCustomWooshDepthSquared(final int gateCustomWooshDepthSquared) {
         this.gateCustomWooshDepthSquared = gateCustomWooshDepthSquared;
@@ -1663,7 +1664,7 @@ public class Stargate {
     public void setupGateSign(final boolean create) {
         if (getGateNameBlockHolder() != null) {
             if (create) {
-                final Block nameSign = getGateNameBlockHolder().getFace(getGateFacing());
+                final Block nameSign = getGateNameBlockHolder().getRelative(getGateFacing());
                 getGateStructureBlocks().add(nameSign.getLocation());
                 nameSign.setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
                 final Sign sign = (Sign) nameSign.getState();
@@ -1679,8 +1680,8 @@ public class Stargate {
                 sign.update(true);
 
             } else {
-                final Block nameSign = getGateNameBlockHolder().getFace(getGateFacing());
-                if (nameSign.getTypeId() == 68) {
+                final Block nameSign = getGateNameBlockHolder().getRelative(getGateFacing());
+                if (nameSign.getType().equals(Material.WALL_SIGN)) {
                     getGateStructureBlocks().remove(nameSign.getLocation());
                     nameSign.setTypeId(0);
                 }
@@ -1696,7 +1697,7 @@ public class Stargate {
      */
     public void setupIrisLever(final boolean create) {
         if ((getGateIrisLeverBlock() == null) && (getGateShape() != null) && !(getGateShape() instanceof Stargate3DShape)) {
-            setGateIrisLeverBlock(getGateDialLeverBlock().getFace(BlockFace.DOWN));
+            setGateIrisLeverBlock(getGateDialLeverBlock().getRelative(BlockFace.DOWN));
         }
         if (getGateIrisLeverBlock() != null) {
             if (create) {
@@ -1757,7 +1758,7 @@ public class Stargate {
                 getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
                 getGateRedstoneGateActivatedBlock().setTypeIdAndData(Material.LEVER.getId(), (byte) 0x5, false);
             } else {
-                if (getGateRedstoneGateActivatedBlock().equals(Material.LEVER.getId())) {
+                if (getGateRedstoneGateActivatedBlock().getType().equals(Material.LEVER)) {
                     getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
                     getGateRedstoneGateActivatedBlock().setTypeId(0);
                 }
@@ -1897,104 +1898,94 @@ public class Stargate {
      * Teleport sign clicked.
      */
     public void dialSignClicked() {
+        this.dialSignClicked(null);
+    }
+
+    public void dialSignClicked(Action eventAction) {
         synchronized (getGateNetwork().getNetworkGateLock()) {
+            //@TODO check if this is still needed
             getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
             setGateDialSign((Sign) getGateDialSignBlock().getState());
             getGateDialSign().setLine(0, "-" + getGateName() + "-");
             
-            if (getGateDialSignIndex() == -1) {
-                setGateDialSignIndex(getGateDialSignIndex() + 1);
-            }
-            
-            if ((getGateNetwork().getNetworkSignGateList().size() == 0) || (getGateNetwork().getNetworkSignGateList().size() == 1)) {
+            String lineMarkerS = ">" + ChatColor.GREEN;
+            String lineMarkerE = ChatColor.BLACK + "<";
+
+            if (getGateNetwork().getNetworkSignGateList().size() == 0) {
                 getGateDialSign().setLine(1, "");
-                getGateDialSign().setLine(2, "No Other Gates");
+                getGateDialSign().setLine(2, ChatColor.DARK_RED + "No Other Gates" + ChatColor.BLACK);
                 getGateDialSign().setLine(3, "");
                 getGateDialSign().update();
                 setGateDialSignTarget(null);
                 return;
             }
 
-            if (getGateDialSignIndex() >= getGateNetwork().getNetworkSignGateList().size()) {
+            if (getGateDialSignIndex() == -1) {
                 setGateDialSignIndex(0);
             }
+            
+            
+            int direction = 1;
+            if ((eventAction != null) && (eventAction.equals(Action.RIGHT_CLICK_BLOCK))) {
+                direction = -1;
+            }
+            
+            getGateSignOrder().clear();
+            int orderIndex = 1;
 
-            if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName())) {
-                setGateDialSignIndex(getGateDialSignIndex() + 1);
+            // fetch only three lines
+            for (int i = 0; i < 3; i++) {
                 if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
                     setGateDialSignIndex(0);
                 }
-            }
 
-            if (getGateNetwork().getNetworkSignGateList().size() == 2) {
-                getGateSignOrder().clear();
-                getGateSignOrder().put(Integer.valueOf(2), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
-
-                getGateDialSign().setLine(1, "");
-                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateDialSign().setLine(3, "");
-                setGateDialSignTarget(getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
-            } else if (getGateNetwork().getNetworkSignGateList().size() == 3) {
-                getGateSignOrder().clear();
-                int orderIndex = 1;
-                //SignIndex++;
-                while (getGateSignOrder().size() < 2) {
-                    if (getGateDialSignIndex() >= getGateNetwork().getNetworkSignGateList().size()) {
-                        setGateDialSignIndex(0);
-                    }
-
-                    if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName())) {
-                        setGateDialSignIndex(getGateDialSignIndex() + 1);
-                        if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
-                            setGateDialSignIndex(0);
-                        }
-                    }
-
-                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
-                    orderIndex++;
-                    if (orderIndex == 4) {
-                        orderIndex = 1;
-                    }
-                    setGateDialSignIndex(getGateDialSignIndex() + 1);
+                if (getGateDialSignIndex() < 0) {
+                    setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().size() - 1);
                 }
 
-                getGateDialSign().setLine(1, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
-                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateDialSign().setLine(3, "");
+                if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName())) {
+                    setGateDialSignIndex(getGateDialSignIndex() + direction);
 
-                setGateDialSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
-                setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
-            } else {
-                getGateSignOrder().clear();
-                int orderIndex = 1;
-                while (getGateSignOrder().size() < 3) {
                     if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
                         setGateDialSignIndex(0);
                     }
-
-                    if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName())) {
-                        setGateDialSignIndex(getGateDialSignIndex() + 1);
-                        if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
-                            setGateDialSignIndex(0);
-                        }
-                    }
-
-                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
-                    orderIndex++;
-
-                    setGateDialSignIndex(getGateDialSignIndex() + 1);
                 }
 
-                getGateDialSign().setLine(1, getGateSignOrder().get(Integer.valueOf(3)).getGateName());
-                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateDialSign().setLine(3, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
+                if (getGateDialSignIndex() >= 0) {
+                    getGateSignOrder().put(orderIndex, getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
+                    orderIndex++;
 
-                setGateDialSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
-                setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
+                    setGateDialSignIndex(getGateDialSignIndex() + direction);
+                }
             }
+
+            String line1 = "";
+            String line2 = lineMarkerS + getGateSignOrder().get(2).getGateName() + lineMarkerE;
+            String line3 = "";
+            String lineTemp = "";
+
+            if (getGateNetwork().getNetworkSignGateList().size() > 2) {
+                line1 = getGateSignOrder().get(1).getGateName();
+                line3 = getGateSignOrder().get(3).getGateName();
+            }
+
+            setGateDialSignTarget(getGateSignOrder().get(2));
+            setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(2)));
+
+            // switch line1 with line3 if order reach end (smooth flip)
+            if (direction == -1) {
+                lineTemp = line1;
+                line1 = line3;
+                line3 = lineTemp;
+            }
+
+            getGateDialSign().setLine(1, line1);
+            getGateDialSign().setLine(2, line2);
+            getGateDialSign().setLine(3, line3);
             getGateDialSign().update(true);
         }
 
+        // deprecated code
         // getGateTeleportSign().setData(getGateTeleportSign().getData());
     }
 
@@ -2094,39 +2085,41 @@ public class Stargate {
     }
 
     /**
-     * Try click teleport sign. This is the same as {@link Stargate#tryClickTeleportSign(Block, Player)} with Player set
-     * to null.
-     * 
-     * @param clicked
-     *            the clicked
-     * @return true, if successful
-     */
-    public boolean tryClickTeleportSign(final Block clicked) {
-        return tryClickTeleportSign(clicked, null);
-    }
-
-    /**
      * Try click teleport sign.
      * 
-     * @param clicked
-     *            the clicked
-     * @param player
-     *            the player
+     * @param clickedBlock the clicked block
      * @return true, if successful
      */
-    public boolean tryClickTeleportSign(final Block clicked, final Player player) {
+    public boolean tryClickTeleportSign(Block clickedBlock) {
+        return this.tryClickTeleportSign(clickedBlock, Action.LEFT_CLICK_BLOCK, null);
+    }
+    
+    public boolean tryClickTeleportSign(Block clickedBlock, Action eventAction) {
+        return this.tryClickTeleportSign(clickedBlock, eventAction, null);
+    }
+    
+    public boolean tryClickTeleportSign(Block clickedBlock, Action eventAction, String triggeredByPlayer) {
         if ((getGateDialSign() == null) && (getGateDialSignBlock() != null)) {
-            if (getGateDialSignBlock().getTypeId() == 68) {
+            if (getGateDialSignBlock().getType().equals(Material.WALL_SIGN)) {
                 setGateDialSignIndex(-1);
-                getGateDialSignBlock().setTypeId(0);
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK));
+
+                //@TODO can be removed after long term test, only nuke sign on load
+                if (eventAction == null) {
+                    getGateDialSignBlock().setTypeId(0); //nuke sign
+                }
+
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK, eventAction));
             }
-        } else if (WorldUtils.isSameBlock(clicked, getGateDialSignBlock())) {
-            getGateDialSignBlock().setTypeId(0);
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK));
+        } else if (WorldUtils.isSameBlock(clickedBlock, getGateDialSignBlock())) {
+            //@TODO can be removed after long term test, only nuke sign on load
+            if (eventAction == null) {
+                getGateDialSignBlock().setTypeId(0); //nuke sign
+            }
+
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK, eventAction));
             return true;
         }
 
-        return false;
+        return false;        
     }
 }

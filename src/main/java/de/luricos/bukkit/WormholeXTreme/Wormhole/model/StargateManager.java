@@ -68,7 +68,7 @@ public class StargateManager {
     /**
      * This method adds a stargate that has been activated but not dialed by a player.
      * 
-     * @param p The player who has activated the gate
+     * @param gateName Stargate's gateName
      * @param s The gate the player has activated.
      */
     public static void addActivatedStargate(String gateName, Stargate s) {
@@ -81,10 +81,8 @@ public class StargateManager {
     }
 
     public static boolean hasActivatedStargate(String gateName) {
-        if (!getActivatedStargates().containsKey(gateName))
-            return false;
-        
-        return true;
+        return getActivatedStargates().containsKey(gateName);
+
     }
     
     public static boolean hasActivatedStargate(Stargate s) {
@@ -132,7 +130,7 @@ public class StargateManager {
     /**
      * Adds a gate indexed by the player that hasn't yet been named and completed.
      * 
-     * @param p The player
+     * @param playerName The player
      * @param stargate The Stargate
      */
     public static void addIncompleteStargate(String playerName, Stargate stargate) {
@@ -142,8 +140,7 @@ public class StargateManager {
     /**
      * Adds the player builder shape.
      * 
-     * @param p
-     *            the p
+     * @param playerName the playerName
      * @param shape
      *            the shape
      */
@@ -330,9 +327,9 @@ public class StargateManager {
     }
 
     /**
-     * Gets the all gate blocks.
+     * Gets all gate blocks.
      * 
-     * @return the all gate blocks
+     * @return all gate blocks
      */
     private static HashMap<Location, Stargate> getAllGateBlocks() {
         return (HashMap<Location, Stargate>) allGateBlocks;
@@ -492,7 +489,17 @@ public class StargateManager {
      *         Also used to stop flow of water, and prevent portal physics
      */
     public static boolean isBlockInGate(Block block) {
-        return getAllGateBlocks().containsKey(block.getLocation()) || getOpeningAnimationBlocks().containsKey(block.getLocation());
+        return isLocationInGate(block.getLocation());
+    }
+
+    /**
+     * Checks if the given location is in gate range
+     *
+     * @param loc
+     * @return same as isBlockInGate; instead of a block the location is used
+     */
+    public static boolean isLocationInGate(Location loc) {
+        return getAllGateBlocks().containsKey(loc) || getOpeningAnimationBlocks().containsKey(loc);
     }
 
     /**
@@ -548,17 +555,16 @@ public class StargateManager {
 
     /**
      * Removes the stargate from the list of stargates.
-     * Also removes all block from this gate from the big list of all blocks.
+     * Also removes all blocks from this gate.
      * 
-     * @param s
-     *            The gate you want removed.
+     * @param s The gate to be removed.
      */
     public static void removeStargate(Stargate s) {
         getStargateList().remove(s.getGateName());
-        
+
         if (WormholePlayerManager.findPlayerByGateName(s.getGateName()) != null)
             WormholePlayerManager.findPlayerByGateName(s.getGateName()).removeStargate(s);
-        
+
         StargateDBManager.removeStargateFromSQL(s);
         if (s.getGateNetwork() != null) {
             synchronized (s.getGateNetwork().getNetworkGateLock()) {
@@ -573,7 +579,6 @@ public class StargateManager {
                         if (s.getGateNetwork().getNetworkSignGateList().size() > 1) {
                             s2.setGateDialSignIndex(0);
                             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2, ActionToTake.DIAL_SIGN_CLICK));
-                            // s2.dialSignClicked();
                         }
                     }
                 }
@@ -586,7 +591,7 @@ public class StargateManager {
 
         for (Location b : s.getGatePortalBlocks()) {
             getAllGateBlocks().remove(b);
-        }
+        }        
     }
     
     /**

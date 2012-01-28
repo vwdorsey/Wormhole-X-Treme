@@ -245,7 +245,7 @@ public class WormholePlayer extends LocalPlayer {
     public boolean hasStargate(String gateName) {
         try {
             if (gateName != null)
-                return (stargateMap.containsKey(gateName)) ? true : false;
+                return (stargateMap.containsKey(gateName));
             
             throw new WormholePlayerNullPointerException("hasStargate checked for null. Can't check for null gateNames!");
         } catch (WormholePlayerNullPointerException e) {

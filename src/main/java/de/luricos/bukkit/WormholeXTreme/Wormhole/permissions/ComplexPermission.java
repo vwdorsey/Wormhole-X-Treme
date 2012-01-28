@@ -146,9 +146,7 @@ enum ComplexPermission {
             switch (this) {
                 case NETWORK_USE:
                 case NETWORK_BUILD:
-                    allowed = networkName != null
-                            ? WormholeXTreme.getPermissions().has(player, complexPermissionNode + networkName)
-                            : false;
+                    allowed = networkName != null && WormholeXTreme.getPermissions().has(player, complexPermissionNode + networkName);
                     break;
                 case REMOVE_OWN:
                     allowed = ((stargate != null) && (stargate.getGateOwner() != null) && stargate.getGateOwner().equals(player.getName()) && WormholeXTreme.getPermissions().has(player, complexPermissionNode));

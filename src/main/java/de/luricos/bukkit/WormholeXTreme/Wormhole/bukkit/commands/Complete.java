@@ -90,9 +90,7 @@ public class Complete implements CommandExecutor {
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String[] arguments = CommandUtilities.commandEscaper(args);
         if ((arguments.length <= 3) && (arguments.length > 0)) {
-            return CommandUtilities.playerCheck(sender)
-                    ? doComplete((Player) sender, arguments)
-                    : true;
+            return !CommandUtilities.playerCheck(sender) || doComplete((Player) sender, arguments);
         }
         return false;
     }

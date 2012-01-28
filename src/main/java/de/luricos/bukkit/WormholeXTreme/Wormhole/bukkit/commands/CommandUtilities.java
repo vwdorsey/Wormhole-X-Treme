@@ -22,7 +22,6 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -118,7 +117,11 @@ public class CommandUtilities {
      */
     public static void gateRemove(final Stargate stargate, final boolean destroy) {
         stargate.setupGateSign(false);
-        stargate.resetTeleportSign();
+        // reset teleport sign for possible recreation when not destroyed
+        if (!destroy) {
+            stargate.resetTeleportSign();
+        }
+
         if (!stargate.getGateIrisDeactivationCode().equals("")) {
             if (stargate.isGateIrisActive()) {
                 stargate.toggleIrisActive(false);
@@ -128,6 +131,7 @@ public class CommandUtilities {
         if (stargate.isGateRedstonePowered()) {
             stargate.setupRedstone(false);
         }
+        
         if (destroy) {
             stargate.deleteGateBlocks();
             stargate.deletePortalBlocks();
@@ -168,10 +172,7 @@ public class CommandUtilities {
      * @return true, if successful
      */
     public static boolean playerCheck(final CommandSender sender) {
-        if (sender instanceof Player) {
-            return true;
-        } else {
-            return false;
-        }
+        return sender instanceof Player;
+
     }
 }
