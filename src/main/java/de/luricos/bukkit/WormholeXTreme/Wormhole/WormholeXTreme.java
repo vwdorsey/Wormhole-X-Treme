@@ -20,7 +20,6 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
-import com.nijiko.permissions.PermissionHandler;
 import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
@@ -42,6 +41,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import ru.tehkode.permissions.PermissionManager;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -63,7 +63,7 @@ public class WormholeXTreme extends JavaPlugin {
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
 
     /** plugins **/
-    private static PermissionHandler permissions = null;
+    private static PermissionManager permissions = null;
     private static Help help = null;
     
     /** The wormhole x treme worlds. */
@@ -256,7 +256,7 @@ public class WormholeXTreme extends JavaPlugin {
      * 
      * @return the permissions
      */
-    public static PermissionHandler getPermissions() {
+    public static PermissionManager getPermissions() {
         return permissions;
     }
 
@@ -315,7 +315,7 @@ public class WormholeXTreme extends JavaPlugin {
     /**
      * Register events.
      */
-    public static void registerEvents(final boolean critical) {
+    public static void registerEvents(boolean critical) {
         WormholeXTreme wxt = getThisPlugin();
         if (critical) {
             // Listen for enable/disable events (MONITOR)
@@ -344,16 +344,16 @@ public class WormholeXTreme extends JavaPlugin {
      * 
      * @param help the new help
      */
-    public static void setHelp(final Help help) {
+    public static void setHelp(Help help) {
         WormholeXTreme.help = help;
     }
 
     /**
      * Sets the permissions.
-     * 
+     *
      * @param permissions the new permissions
      */
-    public static void setPermissions(final PermissionHandler permissions) {
+    public static void setPermissions(PermissionManager permissions) {
         WormholeXTreme.permissions = permissions;
     }
 
@@ -363,7 +363,7 @@ public class WormholeXTreme extends JavaPlugin {
      * @param scheduler
      *            the new scheduler
      */
-    protected static void setScheduler(final BukkitScheduler scheduler) {
+    protected static void setScheduler(BukkitScheduler scheduler) {
         WormholeXTreme.scheduler = scheduler;
     }
 
@@ -373,7 +373,7 @@ public class WormholeXTreme extends JavaPlugin {
      * @param worldHandler
      *            the new wormhole x treme worlds
      */
-    public static void setWorldHandler(final WorldHandler worldHandler) {
+    public static void setWorldHandler(WorldHandler worldHandler) {
         WormholeXTreme.worldHandler = worldHandler;
     }
 }

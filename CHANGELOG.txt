@@ -1,3 +1,6 @@
+Changes v1.016
+- replaced old Permissions with PermissionsEx
+
 Changes v1.015
 - Fixes for 1.1-R1
 - Changed SQLite DB filename to WormholeXTreme.sqlite

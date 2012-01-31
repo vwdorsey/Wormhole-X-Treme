@@ -23,10 +23,9 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.plugin;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
-import com.nijikokun.bukkit.Permissions.Permissions;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import java.util.logging.Level;
 
@@ -44,8 +43,9 @@ public class PermissionsSupport {
      *            the version
      */
     private static void checkPermissionsVersion(final String version) {
-        if (!version.startsWith("2.5") && !version.startsWith("2.6") && !version.startsWith("2.7") && !version.startsWith("3.0")) {
-            WXTLogger.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 3.0.x");
+        Double ver = Double.parseDouble(version);
+        if (ver < 1.8) {
+            WXTLogger.prettyLog(Level.WARNING, false, "Not supported version of PermissionsEx. Recommended is at least 1.8");
         }
     }
 
@@ -65,13 +65,13 @@ public class PermissionsSupport {
     public static void enablePermissions() {
         if (!ConfigManager.getPermissionsSupportDisable()) {
             if (WormholeXTreme.getPermissions() == null) {
-                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Permissions");
-                if (test != null) {
+                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("PermissionsEx");
+                if ((test != null) && (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx"))) {
                     final String v = test.getDescription().getVersion();
                     checkPermissionsVersion(v);
                     try {
-                        WormholeXTreme.setPermissions(((Permissions) test).getHandler());
-                        WXTLogger.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+                        WormholeXTreme.setPermissions(PermissionsEx.getPermissionManager());
+                        WXTLogger.prettyLog(Level.INFO, false, "Attached to PermissionsEx version " + v);
                         if (ConfigManager.getSimplePermissions()) {
                             WXTLogger.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
                         } else {

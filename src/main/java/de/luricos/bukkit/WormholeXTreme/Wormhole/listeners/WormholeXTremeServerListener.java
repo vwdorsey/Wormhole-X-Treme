@@ -43,7 +43,7 @@ public class WormholeXTremeServerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(final PluginDisableEvent event) {
-        if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable()) {
+        if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.disablePermissions();
         } else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable()) {
             HelpSupport.disableHelp();
@@ -57,7 +57,7 @@ public class WormholeXTremeServerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable()) {
+        if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.enablePermissions();
         } else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable()) {
             HelpSupport.enableHelp();

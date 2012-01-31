@@ -218,7 +218,7 @@ public class WormholeXTremeBlockListener implements Listener {
     public void onBlockPhysics(BlockPhysicsEvent event) {
         if (!event.isCancelled()) {
             final Block block = event.getBlock();
-            if (StargateManager.isBlockInGate(block) && (block.getTypeId() != 55)) {
+            if (StargateManager.isBlockInGate(block) && (!block.getType().equals(Material.REDSTONE_WIRE))) {
                 event.setCancelled(true);
             }
         }

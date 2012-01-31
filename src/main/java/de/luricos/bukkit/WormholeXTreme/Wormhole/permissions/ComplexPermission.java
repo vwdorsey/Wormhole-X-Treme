@@ -133,10 +133,9 @@ enum ComplexPermission {
     /**
      * Check permission.
      * 
-     * @param player
-     *            the player
-     * @param networkName
-     *            the network name
+     * @param player the player
+     * @param stargate the gate
+     * @param networkName the network name
      * @return true, if successful
      */
     public boolean checkPermission(final Player player, final Stargate stargate, final String networkName) {

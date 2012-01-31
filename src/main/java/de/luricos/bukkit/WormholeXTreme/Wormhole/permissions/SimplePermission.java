@@ -86,7 +86,7 @@ enum SimplePermission {
      *            the player
      * @return true, if successful
      */
-    protected boolean checkPermission(final Player player) {
+    protected boolean checkPermission(Player player) {
         if ((player != null) && !ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissions() != null) && ConfigManager.getSimplePermissions()) {
             if (WormholeXTreme.getPermissions().has(player, simplePermissionNode)) {
                 WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + "\" granted simple \"" + toString() + "\" permissions.");
