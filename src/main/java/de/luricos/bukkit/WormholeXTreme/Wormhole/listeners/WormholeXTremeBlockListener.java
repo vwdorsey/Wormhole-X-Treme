@@ -78,7 +78,7 @@ public class WormholeXTremeBlockListener implements Listener {
                 } else {
                     if (stargate.isGateActive()) {
                         stargate.setGateActive(false);
-                        stargate.fillGateInterior(0);
+                        stargate.fillGateInterior(Material.AIR);
                     }
                     if (stargate.isGateLightsActive()) {
                         stargate.lightStargate(false);

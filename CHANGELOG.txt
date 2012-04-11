@@ -1,3 +1,12 @@
+Changes v1.017
+- removed Help as its out of date. Will be re-added later.
+- fixed sign-reverse rotation NPE
+- portal material is again visible after animation
+  (since blocks now dont update when changing its data fire an update after changes where made we had to fire an update)
+- fixed self dial bug when creating a fresh gate
+- replaced world.getId() with world.getUID().getMostSignificantBits()
+- fixed NPE when a world is not loaded with WormholeXTreme Worlds
+
 Changes v1.016
 - replaced old Permissions with PermissionsEx
 

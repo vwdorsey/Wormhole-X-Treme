@@ -223,15 +223,14 @@ public class StargateDBManager {
             gatesData.close();
             stmt.close();
 
+            //@TODO optimize this code section (gate initialization)
             final ArrayList<Stargate> gateList = StargateManager.getAllGates();
             for (final Stargate s : gateList) {
-
                 if (s.isGateLightsActive() && !s.isGateActive()) {
                     s.lightStargate(false);
                 }
 
                 if (s.getGateTempTargetId() >= 0) {
-                    // I know this is bad, I am just trying to get this feature out asap.
                     for (final Stargate t : gateList) {
                         if (t.getGateId() == s.getGateTempTargetId()) {
                             s.dialStargate(t, true);
@@ -241,7 +240,6 @@ public class StargateDBManager {
                 }
 
                 if (s.getGateTempSignTarget() >= 0) {
-                    // I know this is bad, I am just trying to get this feature out asap.
                     for (final Stargate t : gateList) {
                         if (t.getGateId() == s.getGateTempSignTarget()) {
                             s.setGateDialSignTarget(t);
@@ -314,7 +312,7 @@ public class StargateDBManager {
             if ((wormholeSQLConnection != null) && (!wormholeSQLConnection.isClosed())) {
                 wormholeSQLConnection.close();
                 wormholeSQLConnection = null;
-                WXTLogger.prettyLog(Level.INFO, false, "WormholeDB shutdown successfull.");
+                WXTLogger.prettyLog(Level.INFO, false, "WormholeDB shutdown successful.");
             }
         } catch (final SQLException e) {
             WXTLogger.prettyLog(Level.SEVERE, false, " Failed to shutdown:" + e.getMessage());
@@ -365,7 +363,7 @@ public class StargateDBManager {
                 } else {
                     updateGateStatement.setString(2, "");
                 }
-                updateGateStatement.setLong(3, s.getGateWorld().getId());
+                updateGateStatement.setLong(3, s.getGateWorld().getUID().getMostSignificantBits());
                 updateGateStatement.setString(4, s.getGateWorld().getName());
                 updateGateStatement.setString(5, s.getGateWorld().getEnvironment().toString());
                 updateGateStatement.setString(6, s.getGateOwner());
@@ -393,7 +391,7 @@ public class StargateDBManager {
                     storeStatement.setString(3, "");
                 }
 
-                storeStatement.setLong(4, s.getGateWorld().getId());
+                storeStatement.setLong(4, s.getGateWorld().getUID().getMostSignificantBits());
                 storeStatement.setString(5, s.getGateWorld().getName());
                 storeStatement.setString(6, s.getGateWorld().getEnvironment().toString());
                 storeStatement.setString(7, s.getGateOwner());

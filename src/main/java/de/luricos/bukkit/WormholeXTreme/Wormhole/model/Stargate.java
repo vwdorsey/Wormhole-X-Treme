@@ -220,13 +220,10 @@ public class Stargate {
             } else {
                 // remove in reverse order, if block is not a portal block!
                 if (wooshBlockStep != null) {
-                    for (final Location l : wooshBlockStep) {
-                        final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                    for (final Location loc : wooshBlockStep) {
+                        final Block b = getGateWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
-                        //@TODO: oldcode
-                        //StargateManager.getOpeningAnimationBlocks().remove(l, b);
-                        
-                        StargateManager.getOpeningAnimationBlocks().remove(l);
+                        StargateManager.getOpeningAnimationBlocks().remove(loc);
                         getGateAnimatedBlocks().remove(b);
                         if (!StargateManager.isBlockInGate(b)) {
                             b.setType(Material.AIR);
@@ -239,7 +236,7 @@ public class Stargate {
                 if (getGateAnimationStep3D() == 1) {
                     setGateAnimationRemoving(false);
                     if (isGateLightsActive() && isGateActive()) {
-                        fillGateInterior(wooshMaterial.getId());
+                        fillGateInterior(wooshMaterial);
                     }
                 } else {
                     setGateAnimationStep3D(getGateAnimationStep3D() - 1);
@@ -292,7 +289,7 @@ public class Stargate {
                 } else {
                     setGateAnimationStep2D(0);
                     if (isGateActive()) {
-                        fillGateInterior(wooshMaterial.getId());
+                        fillGateInterior(wooshMaterial);
                     }
                 }
             }
@@ -478,13 +475,22 @@ public class Stargate {
     /**
      * Fill gate interior.
      * 
-     * @param typeId
-     *            the type id
+     * @param mat Material
      */
-    public void fillGateInterior(final int typeId) {
-        for (final Location bc : getGatePortalBlocks()) {
-            final Block b = getGateWorld().getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-            b.setTypeId(typeId, false);
+    public void fillGateInterior(Material mat) {
+        fillGateInterior(mat.getId());
+    }
+
+    /**
+     * Fill gate interior
+     *
+     * @param typeId Material's ID
+     */
+    public void fillGateInterior(int typeId) {
+        for (Location loc : getGatePortalBlocks()) {
+            final Block blk = getGateWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            blk.setTypeId(typeId, false);
+            blk.getState().update();
         }
     }
 
@@ -1629,17 +1635,17 @@ public class Stargate {
         setGateIrisActive(irisactive);
         fillGateInterior(isGateIrisActive()
                 ? isGateCustom()
-                ? getGateCustomIrisMaterial().getId()
+                ? getGateCustomIrisMaterial()
                 : getGateShape() != null
-                ? getGateShape().getShapeIrisMaterial().getId()
-                : 1
+                ? getGateShape().getShapeIrisMaterial()
+                : Material.STONE
                 : isGateActive()
                 ? isGateCustom()
-                ? getGateCustomPortalMaterial().getId()
+                ? getGateCustomPortalMaterial()
                 : getGateShape() != null
-                ? getGateShape().getShapePortalMaterial().getId()
-                : 9
-                : 0);
+                ? getGateShape().getShapePortalMaterial()
+                : Material.STATIONARY_WATER
+                : Material.AIR);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getTypeId() == 69)) {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
         }
@@ -1822,7 +1828,7 @@ public class Stargate {
         if (this.isGateIrisDefaultActive()) {
             this.setIrisState(isGateIrisDefaultActive());
         } else if (!this.isGateIrisActive()) {
-            this.fillGateInterior(0);
+            this.fillGateInterior(Material.AIR);
         }
 
         if (timer) {
@@ -1911,7 +1917,8 @@ public class Stargate {
             String lineMarkerS = ">" + ChatColor.GREEN;
             String lineMarkerE = ChatColor.BLACK + "<";
 
-            if (getGateNetwork().getNetworkSignGateList().size() == 0) {
+            // the interacting gate is always index 0
+            if (getGateNetwork().getNetworkSignGateList().size() <= 1) {
                 getGateDialSign().setLine(1, "");
                 getGateDialSign().setLine(2, ChatColor.DARK_RED + "No Other Gates" + ChatColor.BLACK);
                 getGateDialSign().setLine(3, "");
@@ -1923,8 +1930,8 @@ public class Stargate {
             if (getGateDialSignIndex() == -1) {
                 setGateDialSignIndex(0);
             }
-            
-            
+
+
             int direction = 1;
             if ((eventAction != null) && (eventAction.equals(Action.RIGHT_CLICK_BLOCK))) {
                 direction = -1;
@@ -1933,8 +1940,8 @@ public class Stargate {
             getGateSignOrder().clear();
             int orderIndex = 1;
 
-            // fetch only three lines
-            for (int i = 0; i < 3; i++) {
+            // fetch only four gates of a network (the gate itself is index:0)
+            for (int i = 0; i < 4; i++) {
                 if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
                     setGateDialSignIndex(0);
                 }
@@ -1959,10 +1966,22 @@ public class Stargate {
                 }
             }
 
+            //@TODO: remove debug
+            //System.out.println(getGateNetwork().getNetworkName() + " size: " + getGateNetwork().getNetworkSignGateList().size());
+            //for (Stargate s: getGateNetwork().getNetworkSignGateList()) {
+            //    System.out.println(s.getGateDialSignIndex() + ": " + s.getGateName());
+            //}
+
             String line1 = "";
-            String line2 = lineMarkerS + getGateSignOrder().get(2).getGateName() + lineMarkerE;
+            String line2 = "";
             String line3 = "";
             String lineTemp = "";
+
+            if (getGateNetwork().getNetworkSignGateList().size() >= 2) {
+                line2 = lineMarkerS + getGateSignOrder().get(2).getGateName() + lineMarkerE;
+            } else {
+                line2 = lineMarkerS + getGateSignOrder().get(1).getGateName() + lineMarkerE;
+            }
 
             if (getGateNetwork().getNetworkSignGateList().size() > 2) {
                 line1 = getGateSignOrder().get(1).getGateName();
@@ -1984,9 +2003,6 @@ public class Stargate {
             getGateDialSign().setLine(3, line3);
             getGateDialSign().update(true);
         }
-
-        // deprecated code
-        // getGateTeleportSign().setData(getGateTeleportSign().getData());
     }
 
     /**

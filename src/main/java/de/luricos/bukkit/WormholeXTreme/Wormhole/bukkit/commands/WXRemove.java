@@ -58,6 +58,7 @@ public class WXRemove implements CommandExecutor {
                         destroy = true;
                     }
                     CommandUtilities.gateRemove(s, destroy);
+
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.getGateName());
                 } else {
                     sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());

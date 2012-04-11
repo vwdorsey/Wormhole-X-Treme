@@ -37,19 +37,6 @@ import java.util.logging.Level;
 public class PermissionsSupport {
 
     /**
-     * Check permissions version.
-     * 
-     * @param version
-     *            the version
-     */
-    private static void checkPermissionsVersion(final String version) {
-        Double ver = Double.parseDouble(version);
-        if (ver < 1.8) {
-            WXTLogger.prettyLog(Level.WARNING, false, "Not supported version of PermissionsEx. Recommended is at least 1.8");
-        }
-    }
-
-    /**
      * Disable permissions.
      */
     public static void disablePermissions() {
@@ -87,5 +74,37 @@ public class PermissionsSupport {
         } else {
             WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
         }
+    }
+
+    /**
+     * Check permissions version.
+     *
+     * @param version
+     *            the version
+     */
+    private static void checkPermissionsVersion(String version) {
+        if (!isSupportedVersion(version)) {
+            WXTLogger.prettyLog(Level.WARNING, false, "Not supported version of PermissionsEx. Recommended is at least 1.8");
+        }
+    }
+
+    public static boolean isSupportedVersion(String verIn) {
+        return isSupportedVersion(verIn, 1.18);
+    }
+
+    public static boolean isSupportedVersion(String verIn, Double checkVer) {
+        String comp1 = verIn.replaceAll("\\.", "");
+        int subVCount = verIn.length() - comp1.length();
+
+        if ((subVCount < 2) && (Double.parseDouble(verIn) >= checkVer))
+            return true;
+
+        if ((subVCount < 2) && (Double.parseDouble(verIn) < checkVer))
+            return false;
+
+        int firstMatch = verIn.indexOf(".");
+        String verOut = verIn.substring(0, firstMatch) + "." + comp1.substring(firstMatch);
+
+        return Double.parseDouble(verOut) >= checkVer;
     }
 }

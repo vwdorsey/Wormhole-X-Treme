@@ -31,12 +31,10 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-import me.taylorkelly.help.Help;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -64,8 +62,7 @@ public class WormholeXTreme extends JavaPlugin {
 
     /** plugins **/
     private static PermissionManager permissions = null;
-    private static Help help = null;
-    
+
     /** The wormhole x treme worlds. */
     private static WorldHandler worldHandler = null;
     
@@ -177,7 +174,7 @@ public class WormholeXTreme extends JavaPlugin {
 
         // Try and attach to Permissions and iConomy and Help
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
-            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
+            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds by our self.");
             StargateDBManager.loadStargates(this.getServer());
         }
         
@@ -185,23 +182,24 @@ public class WormholeXTreme extends JavaPlugin {
 
         try {
             PermissionsSupport.enablePermissions();
-            HelpSupport.enableHelp();
             if (ConfigManager.isWormholeWorldsSupportEnabled()) {
                 WormholeWorldsSupport.enableWormholeWorlds();
             }
         } catch (final Exception e) {
-            WXTLogger.prettyLog(Level.WARNING, false, "Caught Exception while trying to load support plugins." + e.getMessage());
+            // @TODO change this behavior to be more error friendly (skip gate instead)
+            // Catched when a world is not loaded but a gate is in that world.
+            // The plugin would stop working to prevent data corruption (safe-mode)
+            WXTLogger.prettyLog(Level.SEVERE, false, "Caught Exception while trying to load support plugins. {" + e.getMessage() + "}");
             e.printStackTrace();
         }
         
         registerEvents(true);
-        HelpSupport.registerHelpCommands();
         if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
             registerEvents(false);
             registerCommands();
         }
         
-        // register all online players onenable/onreload
+        // register all online players onEnable/onReload
         WormholePlayerManager.registerAllOnlinePlayers();
         
         WXTLogger.prettyLog(Level.INFO, true, "Boot sequence completed");
@@ -222,6 +220,7 @@ public class WormholeXTreme extends JavaPlugin {
         try {
             Configuration.writeFile(getDescription());
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
+
             // Store all our gates
             for (final Stargate gate : gates) {
                 if (gate.isGateActive() || gate.isGateLightsActive()) {
@@ -242,15 +241,6 @@ public class WormholeXTreme extends JavaPlugin {
         }
     }
     
-    /**
-     * Gets the help.
-     * 
-     * @return the help
-     */
-    public static Help getHelp() {
-        return help;
-    }
-
     /**
      * Gets the permissions.
      * 
@@ -333,19 +323,10 @@ public class WormholeXTreme extends JavaPlugin {
             // Handle minecarts going through portal (NORMAL)
             Bukkit.getServer().getPluginManager().registerEvents(vehicleListener, wxt);
 
-            // Handle player walking through the lava (NORMALL)
+            // Handle player walking through the lava (NORMAL)
             // Handle Creeper explosions damaging Gate components.
             Bukkit.getServer().getPluginManager().registerEvents(entityListener, wxt);
         }
-    }
-
-    /**
-     * Sets the help.
-     * 
-     * @param help the new help
-     */
-    public static void setHelp(Help help) {
-        WormholeXTreme.help = help;
     }
 
     /**

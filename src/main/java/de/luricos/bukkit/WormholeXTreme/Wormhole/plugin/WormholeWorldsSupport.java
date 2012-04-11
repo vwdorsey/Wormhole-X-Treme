@@ -25,6 +25,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Level;
@@ -35,26 +36,6 @@ import java.util.logging.Level;
  * @author alron
  */
 public class WormholeWorldsSupport {
-
-    /**
-     * Check worlds version.
-     * 
-     * @param version
-     *            the version
-     * @return true, if successful
-     */
-    private static boolean checkWorldsVersion(final String version) {
-        if (version.length() <= 2 || !version.contains("."))
-            return false;
-
-        Integer checkSubVer = Integer.parseInt(version.split("\\.")[1]);
-        if (checkSubVer < 507) {
-            WXTLogger.prettyLog(Level.SEVERE, false, "Not a supported version of WormholeXTreme-Worlds. Recommended is > 0.507");
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * Disable wormhole worlds.
@@ -76,15 +57,16 @@ public class WormholeWorldsSupport {
     public static void enableWormholeWorlds(boolean reload) {
         if (ConfigManager.isWormholeWorldsSupportEnabled()) {
             if (!WormholeWorldsSupport.isEnabled()) {
-                final Plugin worldsTest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("WormholeXTremeWorlds");
+                final Plugin worldsTest = Bukkit.getServer().getPluginManager().getPlugin("WormholeXTremeWorlds");
                 if (worldsTest != null) {
                     final String version = worldsTest.getDescription().getVersion();
                     if (checkWorldsVersion(version)) {
                         try {
                             WormholeXTreme.setWorldHandler(WormholeXTremeWorlds.getWorldHandler());
                             WXTLogger.prettyLog(Level.INFO, false, "Attached to Wormhole Worlds version " + version);
+
                             // Worlds support means we can continue our load.
-                            StargateDBManager.loadStargates(WormholeXTreme.getThisPlugin().getServer());
+                            StargateDBManager.loadStargates(Bukkit.getServer());
                             
                             if (!reload) {
                                 WormholeXTreme.registerEvents(false);
@@ -105,6 +87,41 @@ public class WormholeWorldsSupport {
         } else {
             WXTLogger.prettyLog(Level.INFO, false, "Wormhole X-Treme Worlds Plugin support disabled via settings.txt.");
         }
+    }
+
+    /**
+     * Check worlds version.
+     *
+     * @param version the version
+     * @return true, if successful
+     */
+    private static boolean checkWorldsVersion(String version) {
+        if (!isSupportedVersion(version)) {
+            WXTLogger.prettyLog(Level.SEVERE, false, "Not a supported version of WormholeXTreme-Worlds. Recommended is > 0.507");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean isSupportedVersion(String verIn) {
+        return isSupportedVersion(verIn, 0.507);
+    }
+
+    public static boolean isSupportedVersion(String verIn, Double checkVer) {
+        String comp1 = verIn.replaceAll("\\.", "");
+        int subVCount = verIn.length() - comp1.length();
+
+        if ((subVCount < 2) && (Double.parseDouble(verIn) >= checkVer))
+            return true;
+
+        if ((subVCount < 2) && (Double.parseDouble(verIn) < checkVer))
+            return false;
+
+        int firstMatch = verIn.indexOf(".");
+        String verOut = verIn.substring(0, firstMatch) + "." + comp1.substring(firstMatch);
+
+        return Double.parseDouble(verOut) >= checkVer;
     }
     
     public static boolean isEnabled() {

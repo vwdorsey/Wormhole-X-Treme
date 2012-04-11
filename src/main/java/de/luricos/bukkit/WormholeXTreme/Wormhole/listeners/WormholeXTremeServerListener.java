@@ -21,7 +21,6 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.HelpSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -45,8 +44,6 @@ public class WormholeXTremeServerListener implements Listener {
     public void onPluginDisable(final PluginDisableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.disablePermissions();
-        } else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable()) {
-            HelpSupport.disableHelp();
         } else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
             WormholeWorldsSupport.disableWormholeWorlds();
         }
@@ -59,9 +56,7 @@ public class WormholeXTremeServerListener implements Listener {
     public void onPluginEnable(final PluginEnableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
             PermissionsSupport.enablePermissions();
-        } else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable()) {
-            HelpSupport.enableHelp();
-        } 
+        }
 //        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
 //            WormholeWorldsSupport.enableWormholeWorlds();
 //        }
