@@ -60,7 +60,7 @@ public class Complete implements CommandExecutor {
                     network = key_value_string[1];
                 }
             }
-            if (WXPermissions.checkWXPermissions(player, network, PermissionType.BUILD)) {
+            if (WXPermissions.checkPermission(player, network, PermissionType.BUILD)) {
                 if (!StargateRestrictions.isPlayerBuildRestricted(player)) {
                     if (StargateManager.getStargate(name) == null) {
                         if (StargateManager.completeStargate(player, name, idc, network)) {

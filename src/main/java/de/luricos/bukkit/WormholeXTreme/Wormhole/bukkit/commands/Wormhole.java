@@ -444,7 +444,7 @@ public class Wormhole implements CommandExecutor {
         if (args.length >= 2) {
             final Stargate s = StargateManager.getStargate(args[1]);
             if (s != null) {
-                if ((s.getGateShape() != null) && StargateHelper.isStargateShape(s.getGateShape().getShapeName())) {
+                if ((s.getGateShape() != null) && StargateHelper.isStargateShape(s.getGateShape().getShapeNameKey())) {
                     //TODO: regenerate and upgrade stargates from 2d shape to 3d shape here.
                     // Handle the breaking out of shapes into multiple names for things like sign dial 
                     // by checking all the shape names for occurances of the shapeName then test from the longest
@@ -610,13 +610,13 @@ public class Wormhole implements CommandExecutor {
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid options: true/yes, false/no");
                 return false;
             }
-            if ((WormholeXTreme.getPermissions() != null) && CommandUtilities.playerCheck(sender)) {
+            if ((WormholeXTreme.getPermissionManager() != null) && CommandUtilities.playerCheck(sender)) {
                 player = (Player) sender;
-                if (simple && !WormholeXTreme.getPermissions().has(player, "wormhole.simple.config")) {
+                if (simple && !WormholeXTreme.getPermissionManager().has(player, "wormhole.simple.config")) {
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.simple.config' permission.");
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
                     return true;
-                } else if (!simple && !WormholeXTreme.getPermissions().has(player, "wormhole.config")) {
+                } else if (!simple && !WormholeXTreme.getPermissionManager().has(player, "wormhole.config")) {
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.config' permission.");
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
                     return true;
@@ -861,7 +861,7 @@ public class Wormhole implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)) {
+        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG)) {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0)) {
                 return false;

@@ -24,14 +24,17 @@ import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholeNotAvailable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.listeners.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionBackend;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.BukkitPermissionsSupport;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.PermissionsExSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
@@ -39,7 +42,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import ru.tehkode.permissions.PermissionManager;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -60,8 +62,8 @@ public class WormholeXTreme extends JavaPlugin {
     private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
 
-    /** plugins **/
-    private static PermissionManager permissions = null;
+    protected PermissionManager permissionManager;
+    protected ConfigManager configManager;
 
     /** The wormhole x treme worlds. */
     private static WorldHandler worldHandler = null;
@@ -87,6 +89,9 @@ public class WormholeXTreme extends JavaPlugin {
         
         // Load our config files and set logging level right away.
         ConfigManager.setupConfigs(this.getDescription());
+
+        // prepare for later usage (non-static calls)
+        this.configManager = null;
         
         // set logging level after loading config
         WXTLogger.setLogLevel(ConfigManager.getLogLevel());
@@ -150,6 +155,9 @@ public class WormholeXTreme extends JavaPlugin {
             StargateDBManager.loadStargates(this.getServer());
         }
 
+        // reload permission backend
+        this.permissionManager.reset();
+
         // enable support if configured
         WormholeWorldsSupport.enableWormholeWorlds(true);
         
@@ -177,11 +185,17 @@ public class WormholeXTreme extends JavaPlugin {
             WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds by our self.");
             StargateDBManager.loadStargates(this.getServer());
         }
-        
-        PermissionsManager.loadPermissions();
 
         try {
-            PermissionsSupport.enablePermissions();
+            // register Permission backends
+            PermissionBackend.registerBackendAlias("pex", PermissionsExSupport.class);
+            PermissionBackend.registerBackendAlias("bukkit", BukkitPermissionsSupport.class);
+
+            // init permissionManager; backend is set via config static call
+            if (this.permissionManager == null) {
+                this.permissionManager = new PermissionManager(this.configManager);
+            }
+
             if (ConfigManager.isWormholeWorldsSupportEnabled()) {
                 WormholeWorldsSupport.enableWormholeWorlds();
             }
@@ -230,7 +244,12 @@ public class WormholeXTreme extends JavaPlugin {
             }
 
             StargateDBManager.shutdown();
-            
+
+            // remove permissionManager instance
+            if (this.permissionManager != null) {
+                this.permissionManager.end();
+            }
+
             // clear wormholePlayers
             WormholePlayerManager.unregisterAllPlayers();            
             
@@ -242,12 +261,20 @@ public class WormholeXTreme extends JavaPlugin {
     }
     
     /**
-     * Gets the permissions.
+     * Get the permissionManager.
      * 
-     * @return the permissions
+     * @return the PermissionManager
      */
-    public static PermissionManager getPermissions() {
-        return permissions;
+    public static PermissionManager getPermissionManager() {
+        try {
+            if (!isPluginAvailable()) {
+                throw new WormholeNotAvailable("This plugin is not ready yet." + ((!getThisPlugin().isEnabled()) ? " Loading sequence is still in progress." : ""));
+            }
+        } catch (WormholeNotAvailable e) {
+            WXTLogger.prettyLog(Level.WARNING, false, e.getMessage());
+        }
+
+        return ((WormholeXTreme) getThisPlugin()).permissionManager;
     }
 
     /**
@@ -330,15 +357,6 @@ public class WormholeXTreme extends JavaPlugin {
     }
 
     /**
-     * Sets the permissions.
-     *
-     * @param permissions the new permissions
-     */
-    public static void setPermissions(PermissionManager permissions) {
-        WormholeXTreme.permissions = permissions;
-    }
-
-    /**
      * Sets the scheduler.
      * 
      * @param scheduler
@@ -356,5 +374,16 @@ public class WormholeXTreme extends JavaPlugin {
      */
     public static void setWorldHandler(WorldHandler worldHandler) {
         WormholeXTreme.worldHandler = worldHandler;
+    }
+
+    public static boolean isPluginAvailable() {
+        Plugin plugin = getThisPlugin();
+        if ((plugin instanceof WormholeXTreme)) {
+            if (((WormholeXTreme) plugin).permissionManager != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

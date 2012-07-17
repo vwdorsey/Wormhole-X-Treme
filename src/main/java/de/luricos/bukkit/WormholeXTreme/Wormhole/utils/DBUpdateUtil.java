@@ -278,6 +278,7 @@ public class DBUpdateUtil {
                             sb = new StringBuilder();
                         }
                     }
+                    //@TODO this will pause the main thread! Check if this is really needed
                     Thread.sleep(250);
                 }
                 stmt.close();

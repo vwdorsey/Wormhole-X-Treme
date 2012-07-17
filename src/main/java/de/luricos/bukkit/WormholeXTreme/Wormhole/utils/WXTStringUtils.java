@@ -1,9 +1,9 @@
 /*
- * Wormhole X-Treme Plugin for Bukkit
+ * Wormhole X-Treme Worlds Plugin for Bukkit
  * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
  *
- * Copyright (C) 2011 Ben Echols
- *                    Dean Bailey
+ * Wormhole X-Treme Worlds Plugin for Bukkit
+ * Copyright (C) 2011 Dean Bailey <https://github.com/alron/Wormhole-X-Treme-Worlds>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,17 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
 /**
- *
  * @author lycano
  */
-public abstract class WormholeXTremeException extends RuntimeException {
-    protected WormholeXTremeException() {
-    }
+public class WXTStringUtils {
 
-    protected WormholeXTremeException(String msg) {
-        super(msg);
+    public static boolean isIntNumber(String num) {
+        try{
+            Integer.parseInt(num);
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }

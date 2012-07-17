@@ -54,7 +54,7 @@ public class Dial implements CommandExecutor {
         Stargate sourceGate = wormholePlayer.getStargate();
 
         if ((sourceGate != null) && (sourceGate.isGateLightsActive())) {
-            if (WXPermissions.checkWXPermissions(player, sourceGate, PermissionType.DIALER)) {
+            if (WXPermissions.checkPermission(player, sourceGate, PermissionType.DIALER)) {
                 final String startnetwork = CommandUtilities.getGateNetwork(sourceGate);
                 if (!sourceGate.getGateName().equals(args[0])) {
                     final Stargate target = StargateManager.getStargate(args[0]);

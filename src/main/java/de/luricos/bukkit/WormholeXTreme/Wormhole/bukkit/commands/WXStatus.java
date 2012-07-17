@@ -39,7 +39,7 @@ public class WXStatus implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)) {
+        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG)) {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0))
                 return false;

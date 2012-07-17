@@ -89,11 +89,11 @@ public class StargateRestrictions {
      */
     public static void addPlayerUseCooldown(final Player player) {
         RestrictionGroup cooldownGroup = null;
-        if (WXPermissions.checkWXPermissions(player, PermissionType.USE_COOLDOWN_GROUP_ONE)) {
+        if (WXPermissions.checkPermission(player, PermissionType.USE_COOLDOWN_GROUP_ONE)) {
             cooldownGroup = RestrictionGroup.CD_GROUP_ONE;
-        } else if (WXPermissions.checkWXPermissions(player, PermissionType.USE_COOLDOWN_GROUP_TWO)) {
+        } else if (WXPermissions.checkPermission(player, PermissionType.USE_COOLDOWN_GROUP_TWO)) {
             cooldownGroup = RestrictionGroup.CD_GROUP_TWO;
-        } else if (WXPermissions.checkWXPermissions(player, PermissionType.USE_COOLDOWN_GROUP_THREE)) {
+        } else if (WXPermissions.checkPermission(player, PermissionType.USE_COOLDOWN_GROUP_THREE)) {
             cooldownGroup = RestrictionGroup.CD_GROUP_THREE;
         }
         if (cooldownGroup != null) {
@@ -150,11 +150,11 @@ public class StargateRestrictions {
     public static boolean isPlayerBuildRestricted(final Player player) {
         if (ConfigManager.isBuildRestrictionEnabled()) {
             RestrictionGroup restrictionGroup = null;
-            if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_ONE)) {
+            if (WXPermissions.checkPermission(player, PermissionType.BUILD_RESTRICTION_GROUP_ONE)) {
                 restrictionGroup = RestrictionGroup.BR_GROUP_ONE;
-            } else if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_TWO)) {
+            } else if (WXPermissions.checkPermission(player, PermissionType.BUILD_RESTRICTION_GROUP_TWO)) {
                 restrictionGroup = RestrictionGroup.BR_GROUP_TWO;
-            } else if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_THREE)) {
+            } else if (WXPermissions.checkPermission(player, PermissionType.BUILD_RESTRICTION_GROUP_THREE)) {
                 restrictionGroup = RestrictionGroup.BR_GROUP_THREE;
             }
             int gateCount = 0;

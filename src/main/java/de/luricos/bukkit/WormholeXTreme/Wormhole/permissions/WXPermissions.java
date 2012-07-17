@@ -76,8 +76,8 @@ public class WXPermissions {
      *            the permissiontype
      * @return true, if successful
      */
-    public static boolean checkWXPermissions(final Player player, final PermissionType permissiontype) {
-        return checkWXPermissions(player, null, null, permissiontype);
+    public static boolean checkPermission(final Player player, final PermissionType permissiontype) {
+        return checkPermission(player, null, null, permissiontype);
     }
 
     /**
@@ -87,12 +87,12 @@ public class WXPermissions {
      *            the player
      * @param stargate
      *            the stargate
-     * @param permissionstype
-     *            the permissionstype
+     * @param permissionType
+     *            the permissionType
      * @return true, if successful
      */
-    public static boolean checkWXPermissions(final Player player, final Stargate stargate, final PermissionType permissionstype) {
-        return checkWXPermissions(player, stargate, null, permissionstype);
+    public static boolean checkPermission(final Player player, final Stargate stargate, final PermissionType permissionType) {
+        return checkPermission(player, stargate, null, permissionType);
     }
 
     /**
@@ -104,16 +104,16 @@ public class WXPermissions {
      *            the stargate
      * @param network
      *            the network
-     * @param permissiontype
-     *            the permissiontype
+     * @param permissionType
+     *            the permissionType
      * @return true, if successful
      */
-    private static boolean checkWXPermissions(final Player player, final Stargate stargate, final String network, final PermissionType permissiontype) {
+    private static boolean checkPermission(final Player player, final Stargate stargate, final String network, final PermissionType permissionType) {
         if (player == null) {
             return false;
         }
         if (player.isOp()) {
-            switch (permissiontype) {
+            switch (permissionType) {
                 case DAMAGE:
                 case REMOVE:
                 case CONFIG:
@@ -128,57 +128,57 @@ public class WXPermissions {
                 default:
                     return false;
             }
-        } else if (!ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissions() != null)) {
+        } else if (!ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissionManager() != null)) {
 
             if (ConfigManager.getSimplePermissions()) {
-                switch (permissiontype) {
+                switch (permissionType) {
                     case LIST:
-                        return (SimplePermission.CONFIG.checkPermission(player) || SimplePermission.USE.checkPermission(player));
+                        return (SimplePermissionType.CONFIG.checkPermission(player) || SimplePermissionType.USE.checkPermission(player));
                     case GO:
                     case CONFIG:
-                        return SimplePermission.CONFIG.checkPermission(player);
+                        return SimplePermissionType.CONFIG.checkPermission(player);
                     case DAMAGE:
                     case REMOVE:
-                        return (SimplePermission.REMOVE.checkPermission(player) || SimplePermission.CONFIG.checkPermission(player));
+                        return (SimplePermissionType.REMOVE.checkPermission(player) || SimplePermissionType.CONFIG.checkPermission(player));
                     case COMPASS:
                     case SIGN:
                     case DIALER:
                     case USE:
-                        return SimplePermission.USE.checkPermission(player);
+                        return SimplePermissionType.USE.checkPermission(player);
                     case BUILD:
-                        return SimplePermission.BUILD.checkPermission(player);
+                        return SimplePermissionType.BUILD.checkPermission(player);
                     default:
                         return false;
                 }
             } else {
                 String networkName = "Public";
-                switch (permissiontype) {
+                switch (permissionType) {
                     case LIST:
-                        return (ComplexPermission.LIST.checkPermission(player) || ComplexPermission.CONFIG.checkPermission(player));
+                        return (ComplexPermissionType.LIST.checkPermission(player) || ComplexPermissionType.CONFIG.checkPermission(player));
                     case CONFIG:
-                        return ComplexPermission.CONFIG.checkPermission(player);
+                        return ComplexPermissionType.CONFIG.checkPermission(player);
                     case GO:
-                        return ComplexPermission.GO.checkPermission(player);
+                        return ComplexPermissionType.GO.checkPermission(player);
                     case COMPASS:
-                        return ComplexPermission.USE_COMPASS.checkPermission(player);
+                        return ComplexPermissionType.USE_COMPASS.checkPermission(player);
                     case DAMAGE:
                     case REMOVE:
-                        return (ComplexPermission.CONFIG.checkPermission(player) || ComplexPermission.REMOVE_ALL.checkPermission(player) || ComplexPermission.REMOVE_OWN.checkPermission(player, stargate));
+                        return (ComplexPermissionType.CONFIG.checkPermission(player) || ComplexPermissionType.REMOVE_ALL.checkPermission(player) || ComplexPermissionType.REMOVE_OWN.checkPermission(player, stargate));
                     case SIGN:
                         if ((stargate != null) && (stargate.getGateNetwork() != null)) {
                             networkName = stargate.getGateNetwork().getNetworkName();
                         }
-                        return ((ComplexPermission.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))));
+                        return ((ComplexPermissionType.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermissionType.NETWORK_USE.checkPermission(player, networkName)))));
                     case DIALER:
                         if ((stargate != null) && (stargate.getGateNetwork() != null)) {
                             networkName = stargate.getGateNetwork().getNetworkName();
                         }
-                        return ((ComplexPermission.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))));
+                        return ((ComplexPermissionType.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermissionType.NETWORK_USE.checkPermission(player, networkName)))));
                     case USE:
                         if ((stargate != null) && (stargate.getGateNetwork() != null)) {
                             networkName = stargate.getGateNetwork().getNetworkName();
                         }
-                        return (((ComplexPermission.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))) || (ComplexPermission.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName))))));
+                        return (((ComplexPermissionType.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermissionType.NETWORK_USE.checkPermission(player, networkName)))) || (ComplexPermissionType.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermissionType.NETWORK_USE.checkPermission(player, networkName))))));
                     case BUILD:
                         if (stargate != null) {
                             if (stargate.getGateNetwork() != null) {
@@ -189,19 +189,19 @@ public class WXPermissions {
                                 networkName = network;
                             }
                         }
-                        return ((ComplexPermission.BUILD.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermission.NETWORK_BUILD.checkPermission(player, networkName)))));
+                        return ((ComplexPermissionType.BUILD.checkPermission(player) && (networkName.equals("Public") || (!networkName.equals("Public") && ComplexPermissionType.NETWORK_BUILD.checkPermission(player, networkName)))));
                     case USE_COOLDOWN_GROUP_ONE:
-                        return ComplexPermission.USE_COOLDOWN_GROUP_ONE.checkPermission(player);
+                        return ComplexPermissionType.USE_COOLDOWN_GROUP_ONE.checkPermission(player);
                     case USE_COOLDOWN_GROUP_TWO:
-                        return ComplexPermission.USE_COOLDOWN_GROUP_TWO.checkPermission(player);
+                        return ComplexPermissionType.USE_COOLDOWN_GROUP_TWO.checkPermission(player);
                     case USE_COOLDOWN_GROUP_THREE:
-                        return ComplexPermission.USE_COOLDOWN_GROUP_THREE.checkPermission(player);
+                        return ComplexPermissionType.USE_COOLDOWN_GROUP_THREE.checkPermission(player);
                     case BUILD_RESTRICTION_GROUP_ONE:
-                        return ComplexPermission.BUILD_RESTRICTION_GROUP_ONE.checkPermission(player);
+                        return ComplexPermissionType.BUILD_RESTRICTION_GROUP_ONE.checkPermission(player);
                     case BUILD_RESTRICTION_GROUP_TWO:
-                        return ComplexPermission.BUILD_RESTRICTION_GROUP_TWO.checkPermission(player);
+                        return ComplexPermissionType.BUILD_RESTRICTION_GROUP_TWO.checkPermission(player);
                     case BUILD_RESTRICTION_GROUP_THREE:
-                        return ComplexPermission.BUILD_RESTRICTION_GROUP_THREE.checkPermission(player);
+                        return ComplexPermissionType.BUILD_RESTRICTION_GROUP_THREE.checkPermission(player);
                     default:
                         return false;
                 }
@@ -209,7 +209,7 @@ public class WXPermissions {
         } else {
             if (stargate != null) {
                 PermissionLevel lvl = null;
-                switch (permissiontype) {
+                switch (permissionType) {
                     case DAMAGE:
                     case REMOVE:
                     case CONFIG:
@@ -246,7 +246,7 @@ public class WXPermissions {
      *            the permissiontype
      * @return true, if successful
      */
-    public static boolean checkWXPermissions(final Player player, final String network, final PermissionType permissiontype) {
-        return checkWXPermissions(player, null, network, permissiontype);
+    public static boolean checkPermission(final Player player, final String network, final PermissionType permissiontype) {
+        return checkPermission(player, null, network, permissiontype);
     }
 }

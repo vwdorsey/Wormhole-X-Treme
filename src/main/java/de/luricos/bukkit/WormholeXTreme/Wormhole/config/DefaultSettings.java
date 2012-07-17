@@ -51,5 +51,6 @@ public class DefaultSettings {
         new Setting(ConfigKeys.LOG_LEVEL, "INFO", "Log level to use for minecraft logging purposes. Values are SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST. In order of least to most logging output.", "WormholeXTreme"),
         new Setting(ConfigKeys.SHOW_GATE_WELCOME_MESSAGE, true, "If set to true, the player will receive a welcome message after arrival", "WormholeXTreme"),
         new Setting(ConfigKeys.USE_EVENT_OR_TP_TRANSPORT, true, "If set to true, the player will be transported via event handling. If you use plugins that can overwrite onPlayerMove() then you may want to change this to false", "WormholeXTreme"),
-        new Setting(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT, 2, "Set the amount of blocks the player will be kicked back if the target's gate is active. Default is 2. Set to 0 to disable this feature.", "WormholeXTreme")};
+        new Setting(ConfigKeys.WORMHOLE_KICKBACK_BLOCK_COUNT, 2, "Set the amount of blocks the player will be kicked back if the target's gate is active. Default is 2. Set to 0 to disable this feature.", "WormholeXTreme"),
+        new Setting(ConfigKeys.PERMISSIONS_BACKEND, "pex", "Set used PermissionsBackend. See documentation for possible values", "WormholeXTreme")};
 }
