@@ -62,7 +62,7 @@ public class WormholeXTremeBlockListener implements Listener {
      * @return true, if successful
      */
     private static boolean handleBlockBreak(final Player player, final Stargate stargate, final Block block) {
-        final boolean allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
+        final boolean allowed = WXPermissions.checkPermission(player, stargate, PermissionType.DAMAGE);
         if (allowed) {
             if (!WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), block)) {
                 if ((stargate.getGateDialSignBlock() != null) && WorldUtils.isSameBlock(stargate.getGateDialSignBlock(), block)) {
@@ -164,7 +164,7 @@ public class WormholeXTremeBlockListener implements Listener {
         if (!event.isCancelled()) {
             final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
             final Player player = event.getPlayer();
-            if ((stargate != null) && (player != null) && !WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE)) {
+            if ((stargate != null) && (player != null) && !WXPermissions.checkPermission(player, stargate, PermissionType.DAMAGE)) {
                 event.setCancelled(true);
                 WXTLogger.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.getGateName());
             }

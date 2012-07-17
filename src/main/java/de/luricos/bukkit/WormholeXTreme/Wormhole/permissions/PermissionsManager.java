@@ -21,10 +21,8 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager.ConfigKeys;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
-
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +39,7 @@ public class PermissionsManager {
      */
     public enum PermissionLevel {
 
-        /** The N o_ permissio n_ set. */
+        /** no permission level (op. */
         NO_PERMISSION_SET,
         /** The WORMHOL e_ ful l_ permission. */
         WORMHOLE_FULL_PERMISSION,
@@ -126,59 +124,61 @@ public class PermissionsManager {
      *            the message_parts
      */
     public static void handlePermissionRequest(final Player p, final String[] message_parts) {
-        if (p.isOp()) {
-            if (message_parts.length > 2) {
-                if (message_parts[2].equalsIgnoreCase("active")) {
-                    if (message_parts.length == 4) {
-                        try {
-                            final boolean active = Boolean.parseBoolean(message_parts[3]);
-                            ConfigManager.setConfigValue(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, active);
-                        } catch (final Exception e) {
-                            p.sendMessage("Invalid format - only true and false allowed.");
-                        }
-                    }
-                    p.sendMessage("Permissions active is: " + ConfigManager.getBuiltInPermissionsEnabled());
-                } else if (message_parts[2].equalsIgnoreCase("indiv")) {
-                    if (message_parts.length == 5) {
-                        try {
-                            PermissionsManager.setIndividualPermissionLevel(message_parts[3].toLowerCase(), PermissionsManager.PermissionLevel.valueOf(message_parts[4]));
-                        } catch (final Exception e) {
-                            p.sendMessage("Invalid format - /wormhole perms indiv <username> <perm>.");
-                            p.sendMessage("Valid Permission Levels: ");
-                            for (final PermissionsManager.PermissionLevel level : PermissionsManager.PermissionLevel.values()) {
-                                p.sendMessage(" " + level.toString());
-                            }
-                        }
-                    }
+        p.sendMessage("This system is currently under development and thus disabled");
 
-                    p.sendMessage("Permissions for " + message_parts[3] + ": " + PermissionsManager.getIndividualPermissionLevel(message_parts[3].toLowerCase()));
-                } else if (message_parts[2].equalsIgnoreCase("default")) {
-                    if (message_parts.length == 4) {
-                        try {
-                            ConfigManager.setConfigValue(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, PermissionLevel.valueOf(message_parts[3]));
-                            p.sendMessage("Default Permission is now: " + ConfigManager.getBuiltInDefaultPermissionLevel());
-                        } catch (final NullPointerException e) {
-                            p.sendMessage("Invalid format - /wormhole perms default <perm>");
-                            p.sendMessage("Valid Permission Levels: ");
-                            for (final PermissionsManager.PermissionLevel level : PermissionsManager.PermissionLevel.values()) {
-                                p.sendMessage(" " + level.toString());
-                            }
-                        }
-                    }
-                }
-            } else {
-                // /stargate perms indiv    <USERNAME>     <OPTIONAL_SET> (else its a get)
-                // /stargate perms group    <GROUPNAME>    <OPTIONAL_SET> (else its a get)
-                // /stargate perms default <OPTIONAL_SET> (else a get)
-                // /stargate perms active  <OPTIONAL_SET> (else a get)
-                p.sendMessage("/wormhole perms indiv    <USERNAME>     <OPTIONAL_SET>");
-                //p.sendMessage("/stargate perms indiv    <USERNAME>     <OPTIONAL_SET>");
-                p.sendMessage("/wormhole perms default <OPTIONAL_SET>");
-                p.sendMessage("/wormhole perms active  <OPTIONAL_SET> (else a get)");
-            }
-        } else {
-            p.sendMessage("Unable to set permissions unless you are OP. Try \"op <name>\"");
-        }
+//        if (p.isOp()) {
+//            if (message_parts.length > 2) {
+//                if (message_parts[2].equalsIgnoreCase("active")) {
+//                    if (message_parts.length == 4) {
+//                        try {
+//                            final boolean active = Boolean.parseBoolean(message_parts[3]);
+//                            ConfigManager.setConfigValue(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, active);
+//                        } catch (final Exception e) {
+//                            p.sendMessage("Invalid format - only true and false allowed.");
+//                        }
+//                    }
+//                    p.sendMessage("Permissions active is: " + ConfigManager.getBuiltInPermissionsEnabled());
+//                } else if (message_parts[2].equalsIgnoreCase("indiv")) {
+//                    if (message_parts.length == 5) {
+//                        try {
+//                            PermissionsManager.setIndividualPermissionLevel(message_parts[3].toLowerCase(), PermissionsManager.PermissionLevel.valueOf(message_parts[4]));
+//                        } catch (final Exception e) {
+//                            p.sendMessage("Invalid format - /wormhole perms indiv <username> <perm>.");
+//                            p.sendMessage("Valid Permission Levels: ");
+//                            for (final PermissionsManager.PermissionLevel level : PermissionsManager.PermissionLevel.values()) {
+//                                p.sendMessage(" " + level.toString());
+//                            }
+//                        }
+//                    }
+//
+//                    p.sendMessage("Permissions for " + message_parts[3] + ": " + PermissionsManager.getIndividualPermissionLevel(message_parts[3].toLowerCase()));
+//                } else if (message_parts[2].equalsIgnoreCase("default")) {
+//                    if (message_parts.length == 4) {
+//                        try {
+//                            ConfigManager.setConfigValue(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, PermissionLevel.valueOf(message_parts[3]));
+//                            p.sendMessage("Default Permission is now: " + ConfigManager.getBuiltInDefaultPermissionLevel());
+//                        } catch (final NullPointerException e) {
+//                            p.sendMessage("Invalid format - /wormhole perms default <perm>");
+//                            p.sendMessage("Valid Permission Levels: ");
+//                            for (final PermissionsManager.PermissionLevel level : PermissionsManager.PermissionLevel.values()) {
+//                                p.sendMessage(" " + level.toString());
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//                // /stargate perms indiv    <USERNAME>     <OPTIONAL_SET> (else its a get)
+//                // /stargate perms group    <GROUPNAME>    <OPTIONAL_SET> (else its a get)
+//                // /stargate perms default <OPTIONAL_SET> (else a get)
+//                // /stargate perms active  <OPTIONAL_SET> (else a get)
+//                p.sendMessage("/wormhole perms indiv    <USERNAME>     <OPTIONAL_SET>");
+//                //p.sendMessage("/stargate perms indiv    <USERNAME>     <OPTIONAL_SET>");
+//                p.sendMessage("/wormhole perms default <OPTIONAL_SET>");
+//                p.sendMessage("/wormhole perms active  <OPTIONAL_SET> (else a get)");
+//            }
+//        } else {
+//            p.sendMessage("Unable to set permissions unless you are OP. Try \"op <name>\"");
+//        }
     }
 
     /**

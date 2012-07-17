@@ -557,16 +557,31 @@ public class StargateHelper {
     /**
      * Returns a shape based on name.
      * 
-     * @param name
-     *            Name of stargate shape
+     * @param shapeName Name of stargate shape
      * @return The shape associated with that name. Null if not in list.
      */
-    public static StargateShape getStargateShape(final String name) {
-        if (getStargateShapes().containsKey(name)) {
-            return getStargateShapes().get(name);
+    public static StargateShape getStargateShape(String shapeName) {
+        shapeName = shapeName.toLowerCase();
+        if (!getStargateShapes().containsKey(shapeName)) {
+            return null;
         }
 
-        return null;
+        return getStargateShapes().get(shapeName);
+    }
+
+    /**
+     * Get case-sensitive shape name
+     *
+     * @param shapeName
+     * @return real shapeName
+     */
+    public static String getStargateShapeName(String shapeName) {
+        shapeName = shapeName.toLowerCase();
+        if (!getStargateShapes().containsKey(shapeName)) {
+            return null;
+        }
+
+        return getStargateShapes().get(shapeName).getShapeName();
     }
 
     /**
@@ -580,7 +595,9 @@ public class StargateHelper {
 
     public static List<String> getShapeNames() {
         List<String> shapeNames = new ArrayList<String>();
-        shapeNames.addAll(getStargateShapes().keySet());
+        for (String shapeName: getStargateShapes().keySet()) {
+            shapeNames.add(getStargateShapeName(shapeName));
+        }
         return shapeNames;
     }
 
@@ -597,8 +614,8 @@ public class StargateHelper {
         return b.getTypeId() == s.getShapeStructureMaterial().getId();
     }
 
-    public static boolean isStargateShape(final String name) {
-        return getStargateShapes().containsKey(name);
+    public static boolean isStargateShape(String name) {
+        return getStargateShapes().containsKey(name.toLowerCase());
     }
     
     /**
@@ -694,7 +711,7 @@ public class StargateHelper {
                     if (getStargateShapes().containsKey(shape.getShapeName())) {
                         WXTLogger.prettyLog(Level.WARNING, false, "Shape File: " + fi.getName() + " contains shape name: " + shape.getShapeName() + " which already exists. This shape will be unavailable.");
                     } else {
-                        getStargateShapes().put(shape.getShapeName(), shape);
+                        getStargateShapes().put(shape.getShapeNameKey(), shape);
                     }
                 } catch (final FileNotFoundException e) {
                     WXTLogger.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());

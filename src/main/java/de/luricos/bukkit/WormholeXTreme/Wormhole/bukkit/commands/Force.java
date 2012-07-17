@@ -49,7 +49,7 @@ public class Force implements CommandExecutor {
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String[] a = CommandUtilities.commandEscaper(args);
         if (a.length == 1) {
-            if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)) {
+            if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG)) {
                 if (a[0].equalsIgnoreCase("-all")) {
                     for (final Stargate gate : StargateManager.getAllGates()) {
                         CommandUtilities.closeGate(gate, true);

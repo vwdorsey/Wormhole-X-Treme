@@ -20,14 +20,14 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
+import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.PermissionsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
-import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 
 /**
  * WormholeXTreme Server Listener.
@@ -43,7 +43,7 @@ public class WormholeXTremeServerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(final PluginDisableEvent event) {
         if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
-            PermissionsSupport.disablePermissions();
+            WormholeXTreme.getPermissionManager().end();
         } else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
             WormholeWorldsSupport.disableWormholeWorlds();
         }
@@ -54,11 +54,5 @@ public class WormholeXTremeServerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
-            PermissionsSupport.enablePermissions();
-        }
-//        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
-//            WormholeWorldsSupport.enableWormholeWorlds();
-//        }
     }
 }

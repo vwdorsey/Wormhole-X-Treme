@@ -71,7 +71,7 @@ public class WormholeXTremePlayerListener implements Listener {
 
         if (stargate != null) {
             // Dial, SignPowered gates logic
-            if (WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock) && ((stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) || (!stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER)))) {
+            if (WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock) && ((stargate.isGateSignPowered() && WXPermissions.checkPermission(player, stargate, PermissionType.SIGN)) || (!stargate.isGateSignPowered() && WXPermissions.checkPermission(player, stargate, PermissionType.DIALER)))) {
 
                 WormholePlayerManager.getRegisteredWormholePlayer(player).addStargate(stargate);
                 WormholePlayer wormholePlayer = handleGateActivationSwitch(player);
@@ -97,7 +97,7 @@ public class WormholeXTremePlayerListener implements Listener {
                     (!wormholePlayer.getProperties().hasActivatedStargate()) || (wormholePlayer.getProperties().hasReceivedRemoteActiveMessage())) {
                     wormholePlayer.removeStargate(stargate);
                 }
-            } else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock) && (!stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER))) {
+            } else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock) && (!stargate.isGateSignPowered() && WXPermissions.checkPermission(player, stargate, PermissionType.DIALER))) {
                 Lever lever = new Lever(clickedBlock.getType(), clickedBlock.getData());
                 WXTLogger.prettyLog(Level.FINE, false, "Player '" + player.getName() + "' has triggered the iris lever of gate '" + stargate.getGateName() + "' status is now " + (!lever.isPowered()));
                 stargate.toggleIrisActive(true);
@@ -144,7 +144,7 @@ public class WormholeXTremePlayerListener implements Listener {
             }
 
             if (newGate != null) {
-                if (WXPermissions.checkWXPermissions(player, newGate, PermissionType.BUILD) && !StargateRestrictions.isPlayerBuildRestricted(player)) {
+                if (WXPermissions.checkPermission(player, newGate, PermissionType.BUILD) && !StargateRestrictions.isPlayerBuildRestricted(player)) {
                     if (newGate.isGateSignPowered()) {
                         player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate Design Valid with Sign Nav.");
                         if (newGate.getGateName().equals("")) {
@@ -256,7 +256,7 @@ public class WormholeXTremePlayerListener implements Listener {
             }
         } else {
             if (currentGate.isGateSignPowered()) {
-                if (WXPermissions.checkWXPermissions(player, currentGate, PermissionType.SIGN)) {
+                if (WXPermissions.checkPermission(player, currentGate, PermissionType.SIGN)) {
                     if ((currentGate.getGateDialSign() == null) && (currentGate.getGateDialSignBlock() != null)) {
                         currentGate.tryClickTeleportSign(currentGate.getGateDialSignBlock());
                     }
@@ -332,19 +332,26 @@ public class WormholeXTremePlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if ((clickedBlock != null) && ((clickedBlock.getType().equals(Material.STONE_BUTTON)) || (clickedBlock.getType().equals(Material.LEVER)))) {
+            // check Basic Permission first before doing anything
+            if (((clickedBlock.getType().equals(Material.LEVER)) && (!WXPermissions.checkPermission(player, PermissionType.USE))) ||
+                ((clickedBlock.getType().equals(Material.STONE_BUTTON)) && (!WXPermissions.checkPermission(player, PermissionType.BUILD)))) {
+                return false;
+            }
+
             if (buttonLeverHit(player, clickedBlock, null)) {
                 return true;
             }
         } else if ((clickedBlock != null) && (clickedBlock.getType().equals(Material.WALL_SIGN))) {
+            //@TODO refactor permission levels to be able to check for permissions first
             Stargate stargate = StargateManager.getGateFromBlock(clickedBlock);
             if (stargate != null) {
-                if (WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) {
-                    stargate.setLastUsedBy(player.getName());
-                    if (stargate.tryClickTeleportSign(clickedBlock, clickedBlockAction)) {
-                        return true;
-                    }
-                } else {
+                if (!WXPermissions.checkPermission(player, stargate, PermissionType.SIGN)) {
                     player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                    return true;
+                }
+
+                stargate.setLastUsedBy(player.getName());
+                if (stargate.tryClickTeleportSign(clickedBlock, clickedBlockAction)) {
                     return true;
                 }
             }
@@ -392,7 +399,7 @@ public class WormholeXTremePlayerListener implements Listener {
 
             // Teleport logic
             if (!wormholePlayer.getProperties().hasReceivedIrisLockMessage()) {
-                if (ConfigManager.getWormholeUseIsTeleport() && ((stargate.isGateSignPowered() && !WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) || (!stargate.isGateSignPowered() && !WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER)))) {
+                if (ConfigManager.getWormholeUseIsTeleport() && ((stargate.isGateSignPowered() && !WXPermissions.checkPermission(player, stargate, PermissionType.SIGN)) || (!stargate.isGateSignPowered() && !WXPermissions.checkPermission(player, stargate, PermissionType.DIALER)))) {
                     player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
 
                     wormholePlayer.getProperties().setHasPermission(false);
@@ -556,7 +563,7 @@ public class WormholeXTremePlayerListener implements Listener {
                 WXTLogger.prettyLog(Level.FINE, false, "Cancelled Player: \"" + event.getPlayer().getName() + "\" Event Name: \"" + event.getEventName() + "\" Action Type: \"" + event.getAction().toString() + "\" Event Block Type: \"" + event.getClickedBlock().getType().toString() + "\" Event World: \"" + event.getClickedBlock().getWorld().toString() + "\" Event Block: " + event.getClickedBlock().toString() + "\"");
             }
         } else {
-            WXTLogger.prettyLog(Level.FINE, false, "Caught and ignored Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\"");
+            WXTLogger.prettyLog(Level.FINE, false, "Caught and ignored Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getEventName() + "\"");
         }
     }
 

@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
-version: 1.017
+version: 1.021
 authors: [Lologarithm, alron, lycano]
 softdepend: [PermissionsEx, WormholeXTremeWorlds, Help]
 description: >
@@ -20,7 +20,7 @@ commands:
      aliases: [wxt]
      usage: |
             /<command> <commandtype> [ARG1] [ARG2]
-            Valid commandtypes - owner, perms, portalmaterial, irismaterial, lightmaterial, shutdown_timeout, activate_timeout, simple, regenerate, redstone, toggle_gwm, show_gwm, toggle_transport, show_transport and custom.
+            Valid commandtypes - owner, perms, portalmaterial, irismaterial, lightmaterial, shutdown_timeout, activate_timeout, simple, regenerate, redstone, toggle_gwm, show_gwm, toggle_transport, show_transport, permissions and custom.
 
    wxlist:
      description: List all Stargates.

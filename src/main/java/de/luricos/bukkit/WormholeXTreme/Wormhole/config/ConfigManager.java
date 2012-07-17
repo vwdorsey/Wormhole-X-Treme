@@ -77,7 +77,9 @@ public class ConfigManager {
         /** The transportation method */
         USE_EVENT_OR_TP_TRANSPORT,
         /** The kickback blocks */
-        WORMHOLE_KICKBACK_BLOCK_COUNT
+        WORMHOLE_KICKBACK_BLOCK_COUNT,
+        /** The PermissionsBackend */
+        PERMISSIONS_BACKEND
     }
 
     /**
@@ -159,6 +161,13 @@ public class ConfigManager {
     /** The Constant configurations. */
     private static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>();
 
+    public static String getPermissionBackend() {
+        return isConfigurationKey(ConfigKeys.PERMISSIONS_BACKEND)
+                ? getSetting(ConfigKeys.PERMISSIONS_BACKEND).getStringValue()
+                : "pex";
+    }
+
+
     /**
      * Gets the builds the restriction group one.
      * 
@@ -227,7 +236,7 @@ public class ConfigManager {
      * 
      * @return the configurations
      */
-    protected static ConcurrentHashMap<ConfigKeys, Setting> getConfigurations() {
+    public static ConcurrentHashMap<ConfigKeys, Setting> getConfigurations() {
         return configurations;
     }
 
@@ -612,5 +621,14 @@ public class ConfigManager {
      */
     public static void setDebugLevel(final String level) {
         setConfigValue(ConfigKeys.LOG_LEVEL, level.toUpperCase());
+    }
+
+    /**
+     * Set the PERMISSIONS_BACKEND
+     *
+     * @param backendName - Bukkit, PermissionsEx
+     */
+    public static void setPermissionBackend(String backendName) {
+        setConfigValue(ConfigKeys.PERMISSIONS_BACKEND, backendName);
     }
 }

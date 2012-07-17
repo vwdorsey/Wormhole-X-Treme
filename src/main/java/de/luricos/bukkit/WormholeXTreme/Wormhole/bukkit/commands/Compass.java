@@ -45,7 +45,7 @@ public class Compass implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean doCompass(final Player player) {
-        if (WXPermissions.checkWXPermissions(player, PermissionType.COMPASS)) {
+        if (WXPermissions.checkPermission(player, PermissionType.COMPASS)) {
             final Stargate closest = StargateManager.findClosestStargate(player.getLocation());
             if (closest != null) {
                 player.setCompassTarget(closest.getGatePlayerTeleportLocation());

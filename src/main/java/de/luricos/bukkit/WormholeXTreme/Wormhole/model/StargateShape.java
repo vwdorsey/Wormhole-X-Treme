@@ -282,6 +282,14 @@ public class StargateShape {
         return shapeName;
     }
 
+    /** Gets the shape key name.
+     *
+     *  @return the shape name lowered
+     */
+    public String getShapeNameKey() {
+        return shapeName.toLowerCase();
+    }
+
     /**
      * Gets the shape portal material.
      * 

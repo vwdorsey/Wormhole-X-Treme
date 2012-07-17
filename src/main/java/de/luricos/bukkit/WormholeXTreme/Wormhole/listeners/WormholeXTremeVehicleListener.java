@@ -87,7 +87,7 @@ public class WormholeXTremeVehicleListener implements Listener {
             if ((e != null) && (e instanceof Player)) {
                 final Player p = (Player) e;
                 WXTLogger.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
-                if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || (!st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER)))) {
+                if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.SIGN)) || (!st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.DIALER)))) {
                     p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                     return false;
                 }

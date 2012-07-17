@@ -46,7 +46,7 @@ public class Go implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean doGo(final Player player, final String[] args) {
-        if (WXPermissions.checkWXPermissions(player, PermissionType.GO)) {
+        if (WXPermissions.checkPermission(player, PermissionType.GO)) {
             if (args.length == 1) {
                 final String goGate = args[0].trim().replace("\n", "").replace("\r", "");
                 final Stargate s = StargateManager.getStargate(goGate);

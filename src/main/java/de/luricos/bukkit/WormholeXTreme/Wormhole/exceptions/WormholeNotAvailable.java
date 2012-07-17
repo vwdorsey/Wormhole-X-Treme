@@ -1,10 +1,11 @@
 /*
  * Wormhole X-Treme Plugin for Bukkit
  * Copyright (C) 2011 Lycano <https://github.com/lycano/Wormhole-X-Treme/>
- *
+ * 
+ * Wormhole X-Treme Plugin for Bukkit
  * Copyright (C) 2011 Ben Echols
  *                    Dean Bailey
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -24,11 +25,17 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions;
  *
  * @author lycano
  */
-public abstract class WormholeXTremeException extends RuntimeException {
-    protected WormholeXTremeException() {
+
+@SuppressWarnings("serial")
+public class WormholeNotAvailable extends WormholeXTremeException {
+    private String message;
+
+    public WormholeNotAvailable(String message) {
+        this.message = message;
     }
 
-    protected WormholeXTremeException(String msg) {
-        super(msg);
+    @Override
+    public String getMessage() {
+        return this.message;
     }
 }
