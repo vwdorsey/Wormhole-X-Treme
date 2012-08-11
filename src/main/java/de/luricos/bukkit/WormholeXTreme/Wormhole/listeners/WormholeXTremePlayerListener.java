@@ -359,15 +359,12 @@ public class WormholeXTremePlayerListener implements Listener {
 
         return false;
     }
-    
+
     private boolean hasChangedBlockCoordinates(final Location fromLoc, final Location toLoc) {
-        if (fromLoc.getWorld().equals(toLoc.getWorld())
+        return !(fromLoc.getWorld().equals(toLoc.getWorld())
                 && fromLoc.getBlockX() == toLoc.getBlockX()
                 && fromLoc.getBlockY() == toLoc.getBlockY()
-                && fromLoc.getBlockZ() == toLoc.getBlockZ()) {
-            return false;
-        }
-        return true;
+                && fromLoc.getBlockZ() == toLoc.getBlockZ());
     }
 
     /**
@@ -378,9 +375,6 @@ public class WormholeXTremePlayerListener implements Listener {
      * @return true, if successful
      */
     protected WormholePlayer handlePlayerMoveEvent(PlayerMoveEvent event) {
-        if (!this.hasChangedBlockCoordinates(event.getFrom(), event.getTo())) {
-            return;
-        }
         Player player = event.getPlayer();
         Location toLocFinal = event.getTo();
         Block gateBlockFinal = toLocFinal.getWorld().getBlockAt(toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
@@ -585,6 +579,12 @@ public class WormholeXTremePlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
+        // do nothing if player hasn't moved a block or world.
+        // This will also filter out any player that only moves his mouse
+        if (!this.hasChangedBlockCoordinates(event.getFrom(), event.getTo())) {
+            return;
+        }
+
         WormholePlayer wormholePlayer = handlePlayerMoveEvent(event);
         Player player = event.getPlayer();
 

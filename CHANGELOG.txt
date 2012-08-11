@@ -1,3 +1,17 @@
+Changes v1.021
+- added numeric wxbuild feature
+
+- removed case sensitivity when autobuilding gates
+
+- implemented pluggable permission backend (Inspired by PermissionsEx)
+
+- default permission backend is pex
+
+- Changed PlayerInteractEvent handling
+
+- added Command /wxt permission (will show the current permission backend)
+- merged pull #20 from dumptruckman (filter out non moving players, like moving mouse)
+
 Changes v1.017
 - removed Help as its out of date. Will be re-added later.
 - fixed sign-reverse rotation NPE
