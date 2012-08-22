@@ -32,7 +32,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionBackend;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.BukkitPermissionsSupport;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.BukkitSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.PermissionsExSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
@@ -189,7 +189,10 @@ public class WormholeXTreme extends JavaPlugin {
         try {
             // register Permission backends
             PermissionBackend.registerBackendAlias("pex", PermissionsExSupport.class);
-            PermissionBackend.registerBackendAlias("bukkit", BukkitPermissionsSupport.class);
+            PermissionBackend.registerBackendAlias("bukkit", BukkitSupport.class);
+
+            // resolve currently used PermissionPlugin
+            this.resolvePermissionBackends();
 
             // init permissionManager; backend is set via config static call
             if (this.permissionManager == null) {
@@ -268,13 +271,36 @@ public class WormholeXTreme extends JavaPlugin {
     public static PermissionManager getPermissionManager() {
         try {
             if (!isPluginAvailable()) {
-                throw new WormholeNotAvailable("This plugin is not ready yet." + ((!getThisPlugin().isEnabled()) ? " Loading sequence is still in progress." : ""));
+                if (WXTLogger.getLogLevel().intValue() < Level.WARNING.intValue())
+                    throw new WormholeNotAvailable("This plugin is not ready yet." + ((!getThisPlugin().isEnabled()) ? " Loading sequence is still in progress." : ""));
             }
         } catch (WormholeNotAvailable e) {
             WXTLogger.prettyLog(Level.WARNING, false, e.getMessage());
         }
 
         return ((WormholeXTreme) getThisPlugin()).permissionManager;
+    }
+
+    /**
+     * Resolve permissions plugin
+     *
+     * first enabled will be used.
+     * Config node permissions.backend will be set to linked backend
+     */
+    private void resolvePermissionBackends() {
+        for (String providerAlias : PermissionBackend.getRegisteredAliases()) {
+            String pluginName = PermissionBackend.getBackendPluginName(providerAlias);
+            WXTLogger.prettyLog(Level.INFO, false, "Attempting to use supported permissions plugin '" + pluginName + "'");
+
+            Plugin permToLoad = Bukkit.getPluginManager().getPlugin(pluginName);
+            if ((pluginName.equals(PermissionBackend.getDefaultBackend().getProviderName())) || ((permToLoad != null) && (permToLoad.isEnabled()))) {
+                ConfigManager.setPermissionBackend(providerAlias);
+                WXTLogger.prettyLog(Level.INFO, false, "Config node PERMISSIONS_BACKEND changed to '" + providerAlias + "'");
+                return;
+            } else {
+                WXTLogger.prettyLog(Level.FINE, false, "Permission backend '" + providerAlias + "' was not found as plugin or not enabled!");
+            }
+        }
     }
 
     /**
@@ -378,12 +404,7 @@ public class WormholeXTreme extends JavaPlugin {
 
     public static boolean isPluginAvailable() {
         Plugin plugin = getThisPlugin();
-        if ((plugin instanceof WormholeXTreme)) {
-            if (((WormholeXTreme) plugin).permissionManager != null) {
-                return true;
-            }
-        }
 
-        return false;
+        return (plugin instanceof WormholeXTreme) && ((WormholeXTreme) plugin).permissionManager != null;
     }
 }

@@ -330,7 +330,7 @@ public class StargateShapeLayer {
     /**
      * Sets the layer dialer position.
      * 
-     * @param layerDialerPosition
+     * @param layerDialSignPosition
      *            the new layer dialer position
      */
     public void setLayerDialSignPosition(final int[] layerDialSignPosition) {
@@ -370,7 +370,7 @@ public class StargateShapeLayer {
     /**
      * Sets the layer sign position.
      * 
-     * @param layerSignPosition
+     * @param layerNameSignPosition
      *            the new layer sign position
      */
     public void setLayerNameSignPosition(final int[] layerNameSignPosition) {
@@ -410,7 +410,7 @@ public class StargateShapeLayer {
     /**
      * Sets the layer redstone activation position.
      * 
-     * @param layerRedstoneActivationPosition
+     * @param layerRedstoneGateActivatedPosition
      *            the new layer redstone activation position
      */
     public void setLayerRedstoneGateActivatedPosition(final int[] layerRedstoneGateActivatedPosition) {

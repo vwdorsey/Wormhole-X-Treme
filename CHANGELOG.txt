@@ -1,3 +1,9 @@
+Changes v1.022
+- added BukkitPerms Support
+
+- added auto-permissions resolver
+
+
 Changes v1.021
 - added numeric wxbuild feature
 

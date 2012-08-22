@@ -42,47 +42,38 @@ import java.util.logging.Level;
 
 public class PermissionsExSupport extends PermissionBackend {
 
-    protected PermissionManager pexManager;
+    protected PermissionManager provider = null;
 
-    public PermissionsExSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager configManager) {
-        super(manager, configManager);
+    public PermissionsExSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager config, String providerName) {
+        super(manager, config, providerName);
     }
 
     @Override
     public void initialize() {
-        if (!ConfigManager.getPermissionsSupportDisable()) {
-            if (WormholeXTreme.getPermissionManager() == null) {
-                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin(this.getName());
-                if ((test != null) && (Bukkit.getServer().getPluginManager().isPluginEnabled(this.getName()))) {
-                    final String v = test.getDescription().getVersion();
-                    checkPermissionsVersion(v);
-                    try {
-                        pexManager = PermissionsEx.getPermissionManager();
-                        WXTLogger.prettyLog(Level.INFO, false, "Attached to " + this.getName() + " version " + v);
-                        if (ConfigManager.getSimplePermissions()) {
-                            WXTLogger.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
-                        } else {
-                            WXTLogger.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
-                        }
-                    } catch (final ClassCastException e) {
-                        WXTLogger.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
-                    }
-                } else {
-                    WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
-                }
+        if (!(WormholeXTreme.getPermissionManager() == null)) {
+            return;
+        }
+
+        Plugin testPlugin = Bukkit.getServer().getPluginManager().getPlugin(getProviderName());
+        if ((testPlugin != null) && (Bukkit.getServer().getPluginManager().isPluginEnabled(getProviderName()))) {
+            final String version = testPlugin.getDescription().getVersion();
+            checkPermissionsVersion(version);
+
+            try {
+                provider = PermissionsEx.getPermissionManager();
+                WXTLogger.prettyLog(Level.INFO, false, "Attached to " + providerName + " version " + version);
+            } catch (final ClassCastException e) {
+                WXTLogger.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
             }
         } else {
-            WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
+            WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
         }
     }
 
     @Override
     public void reload() {
-        WXTLogger.prettyLog(Level.INFO, false, "Detached from Permissions plugin '" + this.getName() + "'.");
-    }
-
-    public String getName() {
-        return "PermissionsEx";
+        provider = null;
+        WXTLogger.prettyLog(Level.INFO, false, "Detached from Permissions plugin '" + getProviderName() + "'.");
     }
 
     /**
@@ -119,6 +110,6 @@ public class PermissionsExSupport extends PermissionBackend {
 
     @Override
     public boolean hasPermission(Player player, String permissionString) {
-        return pexManager.has(player, permissionString);
+        return provider.has(player, permissionString);
     }
 }

@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
-version: 1.021
+version: 1.022
 authors: [Lologarithm, alron, lycano]
 softdepend: [PermissionsEx, WormholeXTremeWorlds, Help]
 description: >
@@ -89,3 +89,104 @@ commands:
      usage: |
             /<command> <commandType> - Show status
             Valid commandtypes - a(ll)
+            
+permissions:
+  wormhole.use.sign:
+    description: Player is able to use the dialer sign
+    default: true
+  wormhole.use.dialer:
+    description: Player is able to use the dialer
+    default: true
+  wormhole.use.compass:
+    description: Can use the wormhole compass
+    default: true
+  wormhole.use.*:
+    description: Can use all wormhole use nodes
+    children:
+      wormhole.use.sign: true
+      wormhole.use.dialer: true
+      wormhole.use.compass: true
+  wormhole.cooldown.groupone:
+    description: Use cooldown group one
+    default: false
+  wormhole.cooldown.grouptwo:
+    description: Use cooldown group two
+    default: false
+  wormhole.cooldown.groupthree:
+    description: Use cooldown group three
+    default: false
+  wormhole.cooldown.*:
+    description: Can use all cooldown nodes
+    children:
+      wormhole.cooldown.groupone: true
+      wormhole.cooldown.grouptwo: true
+      wormhole.cooldown.groupthree: true
+  wormhole.remove.own:
+    description: Can remove own gates
+    default: op
+  wormhole.remove.all:
+    description: Can remove a gate using -all command
+    default: op
+  wormhole.remove.*:
+    description: Can use all remove permissions
+    children:
+      wormhole.remove.own: true
+      wormhole.remove.all: true
+  wormhole.build:
+    description: Can build Wormhole
+    default: op
+  wormhole.build.groupone:
+    description: Build restriction for groupone
+    default: false
+  wormhole.build.grouptwo:
+    description: Build restriction for grouptwo
+    default: false
+  wormhole.build.groupthree:
+    description: Build restriction for groupthree
+    default: false
+  wormhole.build.*:
+    description: Can use all build permissions
+    children:
+      wormhole.build: true
+      wormhole.build.groupone: true
+      wormhole.build.grouptwo: true
+      wormhole.build.groupthree: true
+  wormhole.config:
+    description: Can modify Wormhole config
+    default: op
+  wormhole.list:
+    description: Can list wormhole gates
+    default: true
+  wormhole.network.use:
+    description: Can use gate network
+    default: true
+  wormhole.network.build:
+    description: Can build networks
+    default: op
+  wormhole.network.*:
+    description: Can use all network permissions
+    children:
+      wormhole.network.use: true
+      wormhole.network.build: true
+  wormhole.go:
+    description: Can teleport to a wormhole location
+    default: op
+  wormhole.simple.use:
+    description: Can use wormhole
+    default: true
+  wormhole.simple.config:
+    description: Can modify configuration
+    default: op
+  wormhole.simple.build:
+    description: Can build a wormhole
+    default: op
+  wormhole.simple.remove:
+    description: Can remove a wormhole
+    default: op
+  wormhole.simple.*:
+    description: Can use all simple wormhole nodes
+    children:
+      wormhole.simple.config: true
+      wormhole.simple.build: true
+      wormhole.simple.remove: true
+      wormhole.simple.use: true

@@ -164,7 +164,7 @@ public class ConfigManager {
     public static String getPermissionBackend() {
         return isConfigurationKey(ConfigKeys.PERMISSIONS_BACKEND)
                 ? getSetting(ConfigKeys.PERMISSIONS_BACKEND).getStringValue()
-                : "pex";
+                : "bukkit";
     }
 
 

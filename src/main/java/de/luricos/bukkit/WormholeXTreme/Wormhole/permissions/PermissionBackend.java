@@ -27,7 +27,9 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -36,14 +38,16 @@ import java.util.logging.Level;
  */
 public abstract class PermissionBackend {
 
-    protected final static String defaultBackend = "pex";
+    protected final static String defaultBackend = "bukkit";
     protected static Map<String, Class<? extends PermissionBackend>> registeredBackendAliases = new HashMap<String, Class<? extends PermissionBackend>>();
     protected PermissionManager manager;
     protected ConfigManager configManager;
+    protected String providerName;
 
-    protected PermissionBackend(PermissionManager manager, ConfigManager configManager) {
+    protected PermissionBackend(PermissionManager manager, ConfigManager configManager, String providerName) {
         this.manager = manager;
         this.configManager = configManager;
+        this.providerName = providerName;
     }
 
     /**
@@ -57,11 +61,13 @@ public abstract class PermissionBackend {
     public abstract void reload();
 
     /**
-     * Get Backend Name
+     * Get ProviderName
      *
-     * @return String backendName
+     * @return String ProviderName
      */
-    public abstract String getName();
+    public String getProviderName() {
+        return providerName;
+    }
 
     /**
      * Return class name for backendAlias
@@ -75,6 +81,20 @@ public abstract class PermissionBackend {
         }
 
         return alias;
+    }
+
+    /**
+     * Return PluginName from ClassName
+     *
+     * @param alias
+     * @return pluginName
+     */
+    public static String getBackendPluginName(String alias) {
+        String pluginName = getBackendClassName(alias);
+        if (pluginName.lastIndexOf('.') > 0) {
+            pluginName = pluginName.substring(pluginName.lastIndexOf('.'));
+        }
+        return pluginName.substring(1, pluginName.length() - "Support".length());
     }
 
     /**
@@ -131,6 +151,16 @@ public abstract class PermissionBackend {
     }
 
     /**
+     * Returns the default Backend class instance
+     *
+     * @return new instance of PermissionBackend default object
+     */
+    public static PermissionBackend getDefaultBackend() {
+        return getBackend(null, WormholeXTreme.getPermissionManager(), null, defaultBackend);
+    }
+
+
+    /**
      * Returns new backend class instance for specified backendName
      *
      * @param backendName Class name or alias of backend
@@ -175,8 +205,8 @@ public abstract class PermissionBackend {
 
             WXTLogger.prettyLog(Level.INFO, false, "Initializing " + backendName + " backend");
 
-            Constructor<? extends PermissionBackend> constructor = backendClass.getConstructor(PermissionManager.class, ConfigManager.class);
-            return (PermissionBackend) constructor.newInstance(manager, configManager);
+            Constructor<? extends PermissionBackend> constructor = backendClass.getConstructor(PermissionManager.class, ConfigManager.class, String.class);
+            return (PermissionBackend) constructor.newInstance(manager, configManager, getBackendPluginName(backendName));
         } catch (ClassNotFoundException e) {
 
             WXTLogger.prettyLog(Level.WARNING, false, "Backend \"" + backendName + "\" not found");
@@ -193,6 +223,14 @@ public abstract class PermissionBackend {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<String> getRegisteredAliases() {
+        return new ArrayList<String>(registeredBackendAliases.keySet());
+    }
+
+    public static List<Class<? extends PermissionBackend>> getRegisteredClasses() {
+        return new ArrayList<Class<? extends PermissionBackend>>(registeredBackendAliases.values());
     }
 
     /**
