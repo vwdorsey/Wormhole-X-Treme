@@ -89,7 +89,7 @@ public class WormholeXTremePlayerListener implements Listener {
                         WXTLogger.prettyLog(Level.FINE, false, "New gate for player '" + player.getName() + "' was set to stargate '" + wormholePlayer.getStargate().getGateName() + "'");
                     }
                 } else {
-                    WXTLogger.prettyLog(Level.FINE, false, "Gate '" + wormholePlayer.getStargate().getGateName() + "' was remote active for player '" + player.getName() + "': no permission, invalid gate target");
+                    WXTLogger.prettyLog(Level.FINE, false, "Gate '" + stargate.getGateName() + "' was remote active for player '" + player.getName() + "': no permission, invalid gate target");
                     wormholePlayer.getProperties().setHasReceivedRemoteActiveMessage(true);
                 }
 

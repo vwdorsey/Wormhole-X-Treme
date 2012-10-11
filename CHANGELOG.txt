@@ -1,3 +1,7 @@
+Changes v1.025
+- fixed dial bug that caused the main thread to freeze
+- fixed wormhole shutdown warning message
+
 Changes v1.022
 - added BukkitPerms Support
 
