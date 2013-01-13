@@ -216,6 +216,8 @@ public class StargateDBManager {
                         }
                     }
                     StargateManager.addStargate(s);
+
+                    WXTLogger.prettyLog(Level.FINE, false, "Loading Stargate: '" + s.getGateName() + "', GateFace: '" + s.getGateFacing().name() +"' from DB");
                 } else {
                     WXTLogger.prettyLog(Level.WARNING, true, "Failed to load Stargate '" + sn + "' from DB.");
                 }
@@ -353,11 +355,14 @@ public class StargateDBManager {
 
             gatesData = getGateStatement.executeQuery();
             if (gatesData.next()) {
+                gatesData.close();
+
                 if (updateGateStatement == null) {
-                    updateGateStatement = wormholeSQLConnection.prepareStatement("UPDATE Stargates SET GateData = ?, Network = ?, World = ?, WorldName = ?, WorldEnvironment = ?, Owner = ?, GateShape = ? WHERE Id = ?");
+                    updateGateStatement = wormholeSQLConnection.prepareStatement("UPDATE Stargates SET GateData = ?, Network = ?, World = ?, WorldName = ?, WorldEnvironment = ?, Owner = ?, GateShape = ? WHERE Name = ?");
                 }
 
-                updateGateStatement.setBytes(1, StargateHelper.stargatetoBinary(s));
+                final byte[] data = StargateHelper.stargatetoBinary(s);
+                updateGateStatement.setBytes(1, data);
                 if (s.getGateNetwork() != null) {
                     updateGateStatement.setString(2, s.getGateNetwork().getNetworkName());
                 } else {
@@ -373,8 +378,10 @@ public class StargateDBManager {
                     updateGateStatement.setString(7, s.getGateShape().getShapeName());
                 }
 
-                updateGateStatement.setLong(8, s.getGateId());
+                updateGateStatement.setString(8, s.getGateName());
                 updateGateStatement.executeUpdate();
+
+                WXTLogger.prettyLog(Level.FINE,  false, "Saved gate '" + s.getGateName() + "', GateFace: '" + s.getGateFacing().name() + "' to DB");
             } else {
                 gatesData.close();
 
@@ -399,6 +406,7 @@ public class StargateDBManager {
 
                 storeStatement.executeUpdate();
 
+                //@TODO Id is currently unused. When rewriting import with id and change WHERE clause in update stmt.
                 getGateStatement.setString(1, s.getGateName());
                 gatesData = getGateStatement.executeQuery();
                 if (gatesData.next()) {

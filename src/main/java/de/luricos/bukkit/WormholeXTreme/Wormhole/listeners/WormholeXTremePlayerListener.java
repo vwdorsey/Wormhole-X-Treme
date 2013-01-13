@@ -43,6 +43,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
+import org.bukkit.material.Button;
 import org.bukkit.material.Lever;
 
 import java.util.logging.Level;
@@ -111,22 +112,10 @@ public class WormholeXTremePlayerListener implements Listener {
             return true;
         } else {
             if (direction == null) {
-                switch (clickedBlock.getData()) {
-                    case 1:
-                        direction = BlockFace.SOUTH;
-                        break;
-                    case 2:
-                        direction = BlockFace.NORTH;
-                        break;
-                    case 3:
-                        direction = BlockFace.WEST;
-                        break;
-                    case 4:
-                        direction = BlockFace.EAST;
-                        break;
-                    default:
-                        break;
-                }
+                Button directionButton = new Button(Material.STONE_BUTTON);
+                directionButton.setData(clickedBlock.getData());
+
+                direction = directionButton.getFacing();
 
                 if (direction == null) {
                     return false;
@@ -457,20 +446,20 @@ public class WormholeXTremePlayerListener implements Listener {
                         // if needed move them far away
                         switch (direction) {
                             case NORTH:
-                                WXTLogger.prettyLog(Level.FINE, false, "NORTH: " + pLocX + " - 2 = " + (pLocX-2d));
-                                pLocX -= (double) wkbCount;
-                                break;
-                            case SOUTH:
-                                WXTLogger.prettyLog(Level.FINE, false, "SOUTH: " + pLocX + " + 2 = " + (pLocX+2d));
-                                pLocX += (double) wkbCount;
-                                break;                        
-                            case EAST:
-                                WXTLogger.prettyLog(Level.FINE, false, "EAST: " + pLocZ + " - 2 = " + (pLocZ-2d));
+                                WXTLogger.prettyLog(Level.FINE, false, "NORTH: " + pLocZ + " - 2 = " + (pLocX-2d));
                                 pLocZ -= (double) wkbCount;
                                 break;
+                            case SOUTH:
+                                WXTLogger.prettyLog(Level.FINE, false, "SOUTH: " + pLocZ + " + 2 = " + (pLocX+2d));
+                                pLocZ += (double) wkbCount;
+                                break;                        
+                            case EAST:
+                                WXTLogger.prettyLog(Level.FINE, false, "EAST: " + pLocX + " + 2 = " + (pLocZ-2d));
+                                pLocX += (double) wkbCount;
+                                break;
                             case WEST:
-                                WXTLogger.prettyLog(Level.FINE, false, "WEST: " + pLocZ + " + 2 = " + (pLocZ+2d));
-                                pLocY += (double) wkbCount;
+                                WXTLogger.prettyLog(Level.FINE, false, "WEST: " + pLocX + " - 2 = " + (pLocZ+2d));
+                                pLocX -= (double) wkbCount;
                                 break;
                         }
 

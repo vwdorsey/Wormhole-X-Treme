@@ -21,11 +21,13 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.material.Button;
+import org.bukkit.material.Sign;
 
 import java.util.logging.Level;
 
@@ -46,13 +48,13 @@ public class WorldUtils {
     public static Float getDegreesFromBlockFace(final BlockFace blockFace) {
         switch (blockFace) {
             case NORTH:
-                return (float) 90;
-            case EAST:
                 return (float) 180;
-            case SOUTH:
+            case EAST:
                 return (float) 270;
-            case WEST:
+            case SOUTH:
                 return (float) 0;
+            case WEST:
+                return (float) 90;
             default:
                 return (float) 0;
         }
@@ -61,57 +63,31 @@ public class WorldUtils {
     /**
      * Gets the inverse direction.
      * 
-     * @param bf
-     *            the bf
+     * @param blockFace
+     *            the blockFace
      * @return the inverse direction
      */
-    public static BlockFace getInverseDirection(final BlockFace bf) {
-        switch (bf) {
-            case NORTH:
-                return BlockFace.SOUTH;
-            case SOUTH:
-                return BlockFace.NORTH;
-            case EAST:
-                return BlockFace.WEST;
-            case WEST:
-                return BlockFace.EAST;
-            case NORTH_EAST:
-                return BlockFace.SOUTH_WEST;
-            case SOUTH_WEST:
-                return BlockFace.NORTH_EAST;
-            case NORTH_WEST:
-                return BlockFace.SOUTH_EAST;
-            case SOUTH_EAST:
-                return BlockFace.NORTH_WEST;
-            case UP:
-                return BlockFace.DOWN;
-            case DOWN:
-                return BlockFace.UP;
-            default:
-                return bf;
-        }
+    public static BlockFace getInverseDirection(final BlockFace blockFace) {
+        return blockFace.getOppositeFace();
     }
 
     /**
      * Lever facing data from block face.
+     *
+     * use button facings for facing calculation because we have a block face here.
      * 
-     * @param bf
-     *            the bf
+     * @param blockFace the BlockFace
      * @return the byte
      */
     public static byte getLeverFacingByteFromBlockFace(final BlockFace blockFace) {
-        switch (blockFace) {
-            case SOUTH:
-                return (byte) 0x1;
-            case NORTH:
-                return (byte) 0x2;
-            case WEST:
-                return (byte) 0x3;
-            case EAST:
-                return (byte) 0x4;
-            default:
-                return (byte) 0x0;
-        }
+        return getButtonFacingByteFromBlockFace(blockFace);
+    }
+
+    public static byte getButtonFacingByteFromBlockFace(final BlockFace blockFace) {
+        Button buttonFacing = new Button(Material.STONE_BUTTON);
+        buttonFacing.setFacingDirection(blockFace);
+
+        return buttonFacing.getData();
     }
 
     /**
@@ -136,12 +112,12 @@ public class WorldUtils {
     /**
      * Gets the perpendicular right direction.
      * 
-     * @param bf
-     *            the bf
+     * @param blockFace
+     *            the blockFace
      * @return the perpendicular right direction
      */
-    public static BlockFace getPerpendicularRightDirection(final BlockFace bf) {
-        switch (bf) {
+    public static BlockFace getPerpendicularRightDirection(final BlockFace blockFace) {
+        switch (blockFace) {
             case NORTH:
             case UP:
                 return BlockFace.EAST;
@@ -161,7 +137,39 @@ public class WorldUtils {
             case SOUTH_EAST:
                 return BlockFace.SOUTH_WEST;
             default:
-                return bf;
+                return blockFace;
+        }
+    }
+
+    /**
+     * Gets the perpendicular left direction.
+     *
+     * @param blockFace
+     *            the blockFace
+     * @return the perpendicular left direction
+     */
+    public static BlockFace getPerpendicularLeftDirection(final BlockFace blockFace) {
+        switch (blockFace) {
+            case NORTH:
+            case UP:
+                return BlockFace.WEST;
+            case SOUTH:
+            case DOWN:
+                return BlockFace.EAST;
+            case EAST:
+                return BlockFace.NORTH;
+            case WEST:
+                return BlockFace.SOUTH;
+            case NORTH_EAST:
+                return BlockFace.NORTH_WEST;
+            case SOUTH_WEST:
+                return BlockFace.SOUTH_EAST;
+            case NORTH_WEST:
+                return BlockFace.SOUTH_WEST;
+            case SOUTH_EAST:
+                return BlockFace.NORTH_EAST;
+            default:
+                return blockFace;
         }
     }
 
@@ -169,22 +177,15 @@ public class WorldUtils {
      * Get the Sign facing byte data from block face.
      * If no face is up or down we default to south (same as bukkit).
      * 
-     * @param bf
-     *            the bf
+     * @param blockFace
+     *            the BlockFace
      * @return the byte
      */
     public static byte getSignFacingByteFromBlockFace(final BlockFace blockFace) {
-        switch (blockFace) {
-            case EAST:
-                return (byte) 0x2;
-            case WEST:
-                return (byte) 0x3;
-            case NORTH:
-                return (byte) 0x4;
-            case SOUTH:
-            default:
-                return (byte) 0x5;
-        }
+        Sign signFacing = new Sign(Material.WALL_SIGN);
+        signFacing.setFacingDirection(blockFace);
+
+        return signFacing.getData();
     }
 
     /**

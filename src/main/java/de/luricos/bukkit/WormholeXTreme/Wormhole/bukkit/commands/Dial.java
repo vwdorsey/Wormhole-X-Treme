@@ -92,6 +92,7 @@ public class Dial implements CommandExecutor {
                     }
 
                     if (sourceGate.dialStargate(target, false)) {
+                        target.setLastUsedBy(player);
                         player.sendMessage(ConfigManager.MessageStrings.gateConnected.toString());
                     } else {
                         player.sendMessage(String.format(ConfigManager.MessageStrings.targetIsInUseBy.toString(), target.getGateName(), target.getLastUsedBy()));

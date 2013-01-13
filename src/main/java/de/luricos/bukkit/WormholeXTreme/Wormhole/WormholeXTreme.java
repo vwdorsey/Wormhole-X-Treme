@@ -243,6 +243,9 @@ public class WormholeXTreme extends JavaPlugin {
                 if (gate.isGateActive() || gate.isGateLightsActive()) {
                     gate.shutdownStargate(false);
                 }
+
+                WXTLogger.prettyLog(Level.FINE, false, "Saving gate: '" + gate.getGateName() + "', GateFace: '" + gate.getGateFacing().name() + "'");
+
                 StargateDBManager.stargateToSQL(gate);
             }
 

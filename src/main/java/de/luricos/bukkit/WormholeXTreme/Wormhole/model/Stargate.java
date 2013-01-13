@@ -1942,7 +1942,6 @@ public class Stargate {
                 setGateDialSignIndex(0);
             }
 
-
             int direction = 1;
             if ((eventAction != null) && (eventAction.equals(Action.RIGHT_CLICK_BLOCK))) {
                 direction = -1;
@@ -1952,6 +1951,10 @@ public class Stargate {
             int orderIndex = 1;
 
             // fetch only four gates of a network (the gate itself is index:0)
+            if (getGateDialSignIndex() > getGateNetwork().getNetworkSignGateList().size()) {
+                setGateDialSignIndex(0);
+            }
+
             for (int i = 0; i < 4; i++) {
                 if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size()) {
                     setGateDialSignIndex(0);

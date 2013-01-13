@@ -24,11 +24,13 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -187,6 +189,8 @@ public class Wormhole implements CommandExecutor {
                         if (stargate.getGateShape() != null) {
                             setGateCustomAll(stargate, args[2].equalsIgnoreCase("true"));
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate is custom: " + stargate.isGateCustom());
+
+                            StargateDBManager.stargateToSQL(stargate);
                         } else {
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No gate shape to base custom data off of!");
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Make sure the proper shape file is available!");
@@ -239,6 +243,8 @@ public class Wormhole implements CommandExecutor {
                         if ((m != null) && ((m == Material.DIAMOND_BLOCK) || (m == Material.GLASS) || (m == Material.IRON_BLOCK) || (m == Material.BEDROCK) || (m == Material.STONE) || (m == Material.LAPIS_BLOCK))) {
                             stargate.setGateCustomIrisMaterial(m);
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + args[1] + " iris material set to: " + stargate.getGateCustomIrisMaterial());
+
+                            StargateDBManager.stargateToSQL(stargate);
                         } else {
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Iris Material: " + args[2]);
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
@@ -317,6 +323,9 @@ public class Wormhole implements CommandExecutor {
                 if (args.length == 3) {
                     s.setGateOwner(args[2]);
                     s.setupGateSign(true);
+
+                    StargateDBManager.stargateToSQL(s);
+
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Now owned by: " + s.getGateOwner());
                 } else if (args.length == 2) {
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Owned by: " + s.getGateOwner());
@@ -367,6 +376,8 @@ public class Wormhole implements CommandExecutor {
                         if ((m != null) && ((m == Material.STATIONARY_LAVA) || (m == Material.STATIONARY_WATER) || (m == Material.AIR) || (m == Material.PORTAL))) {
                             stargate.setGateCustomPortalMaterial(m);
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + args[1] + " portal material set to: " + stargate.getGateCustomPortalMaterial());
+
+                            StargateDBManager.stargateToSQL(stargate);
                         } else {
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Portal Material: " + args[2]);
                             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
@@ -729,6 +740,8 @@ public class Wormhole implements CommandExecutor {
             } else {
                 stargate.setGateCustom(false);
             }
+
+            StargateDBManager.stargateToSQL(stargate);
         } else {
             WXTLogger.prettyLog(Level.FINE, false, stargate.getGateName() + " has no valid shape file. Unable to enable custom.");
         }
@@ -859,6 +872,65 @@ public class Wormhole implements CommandExecutor {
         return false;
     }
 
+    public static boolean doFixGates(CommandSender sender, String[] args) {
+        if ((sender instanceof Player) && (!(sender.isOp()))) {
+            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + ConfigManager.MessageStrings.permissionNo);
+            return false;
+        }
+
+        final ArrayList<Stargate> gates = StargateManager.getAllGates();
+        if (args.length >= 2) {
+            Stargate gate = StargateManager.getStargate(args[1]);
+            if (gate != null) {
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Set GateFace of '" + args[1] + "' to " + WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
+                gate.setGateFacing(WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
+                StargateDBManager.stargateToSQL(gate);
+            } else {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate '" + args[0] + "' not found in database");
+            }
+        } else {
+            // fix all gates
+            for (final Stargate gate : gates) {
+                WXTLogger.prettyLog(Level.INFO,false,"Fixing saved gate '" + gate.getGateName() + "', Current GateFace: " + gate.getGateFacing().name());
+                if (gate.isGateActive() || gate.isGateLightsActive()) {
+                    gate.shutdownStargate(false);
+                }
+                gate.setGateFacing(WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
+                WXTLogger.prettyLog(Level.INFO, false, "Set facing to '" + gate.getGateFacing() +"'");
+
+                StargateDBManager.stargateToSQL(gate);
+                WXTLogger.prettyLog(Level.INFO, false, "Saving gate: '" + gate.getGateName() + "', GateFace: '" + gate.getGateFacing().name() + "'");
+            }
+
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All existing Stargates are now fully operational.");
+        }
+
+        return true;
+    }
+
+    public static boolean doShowInfo(CommandSender sender, String[] args) {
+        final ArrayList<Stargate> gates = StargateManager.getAllGates();
+        if (args.length >= 2) {
+            Stargate gate = StargateManager.getStargate(args[1]);
+            if (gate != null) {
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "GateFace for '" + args[1] + "' is set to '" + gate.getGateFacing() + "'");
+            } else {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate '" + args[0] + "' not found in database");
+            }
+        } else {
+            for (final Stargate gate : gates) {
+                if (gate.isGateActive() || gate.isGateLightsActive()) {
+                    gate.shutdownStargate(false);
+                }
+                WXTLogger.prettyLog(Level.INFO, false, "GateFace for '" + gate.getGateName() + "' is set to '" + gate.getGateFacing().name() + "'");
+            }
+
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Check your console log");
+        }
+
+        return true;
+    }
+
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -911,7 +983,11 @@ public class Wormhole implements CommandExecutor {
                 return setWormholeKickbackBlockCount(sender, a);                
             } else if (a[0].equalsIgnoreCase("permissions")) {
                 return doShowPermissions(sender, a);
-            }else {
+            } else if ((a[0].equalsIgnoreCase("fixgate")) || (a[0].equalsIgnoreCase("fixgates"))) {
+                return doFixGates(sender, a);
+            } else if (a[0].equalsIgnoreCase("gateinfo")) {
+                return doShowInfo(sender, a);
+            } else {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', 'toggle_gwm', 'show_gwm', toggle_transport', 'show_transport' & 'custom'.");
             }

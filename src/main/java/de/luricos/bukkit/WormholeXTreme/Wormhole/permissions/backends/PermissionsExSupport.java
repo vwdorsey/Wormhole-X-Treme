@@ -27,7 +27,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import java.util.logging.Level;
@@ -42,7 +41,7 @@ import java.util.logging.Level;
 
 public class PermissionsExSupport extends PermissionBackend {
 
-    protected PermissionManager provider = null;
+    protected ru.tehkode.permissions.PermissionManager provider = null;
 
     public PermissionsExSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager config, String providerName) {
         super(manager, config, providerName);

@@ -100,7 +100,7 @@ public class ConfigManager {
         /** The target is active. */
         targetIsActive(errorHeader + "Target gate %sis currently active."),
         /** The target is active. */
-        targetIsInUseBy(errorHeader + "Target gate %s is currently in use %s."),
+        targetIsInUseBy(errorHeader + "Target gate %s is currently in use by %s."),
         /** The gate not active. */
         gateNotActive(errorHeader + "No gate activated to dial."),
         /** The gate remote active. */

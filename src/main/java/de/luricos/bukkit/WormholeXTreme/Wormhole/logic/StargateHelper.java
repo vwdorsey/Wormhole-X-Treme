@@ -22,12 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.logic;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate3DShape;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateNetwork;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateShape;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateShapeLayer;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.model.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DataUtils;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
@@ -159,18 +154,25 @@ public class StargateHelper {
             final World w = buttonBlock.getWorld();
             // Now we start calculaing the values for the blocks that need to be the stargate material.
 
-            if (facing == BlockFace.NORTH) {
-                facingVector[0] = 1;
-            } else if (facing == BlockFace.SOUTH) {
-                facingVector[0] = -1;
-            } else if (facing == BlockFace.EAST) {
-                facingVector[2] = 1;
-            } else if (facing == BlockFace.WEST) {
-                facingVector[2] = -1;
-            } else if (facing == BlockFace.UP) {
-                facingVector[1] = -1;
-            } else if (facing == BlockFace.DOWN) {
-                facingVector[1] = 1;
+            switch (facing) {
+                case NORTH:
+                    facingVector[0] = 1;
+                    break;
+                case SOUTH:
+                    facingVector[0] = -1;
+                    break;
+                case EAST:
+                    facingVector[2] = 1;
+                    break;
+                case WEST:
+                    facingVector[2] = -1;
+                    break;
+                case UP:
+                    facingVector[1] = -1;
+                    break;
+                case DOWN:
+                    facingVector[1] = 1;
+                    break;
             }
 
             final int[] directionVector = {0, 0, 0};
@@ -300,18 +302,25 @@ public class StargateHelper {
 
         // Now we start calculaing the values for the blocks that need to be the stargate material.
 
-        if (facing == BlockFace.NORTH) {
-            facingVector[0] = -1;
-        } else if (facing == BlockFace.SOUTH) {
-            facingVector[0] = 1;
-        } else if (facing == BlockFace.EAST) {
-            facingVector[2] = -1;
-        } else if (facing == BlockFace.WEST) {
-            facingVector[2] = 1;
-        } else if (facing == BlockFace.UP) {
-            facingVector[1] = 1;
-        } else if (facing == BlockFace.DOWN) {
-            facingVector[1] = -1;
+        switch (facing) {
+            case NORTH:
+                facingVector[2] = -1;
+                break;
+            case SOUTH:
+                facingVector[2] = 1;
+                break;
+            case EAST:
+                facingVector[0] = 1;
+                break;
+            case WEST:
+                facingVector[0] = -1;
+                break;
+            case UP:
+                facingVector[1] = 1;
+                break;
+            case DOWN:
+                facingVector[1] = -1;
+                break;
         }
 
         final int[] directionVector = {0, 0, 0};
@@ -328,7 +337,7 @@ public class StargateHelper {
         startingPosition[2] = activationBlock.getZ() - directionVector[2] * act_layer.getLayerActivationPosition()[2];
 
         // 2. Add/remove from the direction component to yield each layers 0,0,0
-        for (int i = 0; i <= 10; i++) {
+        for (int i = 0; i < shape.getShapeLayers().size(); i++) {
             if ((shape.getShapeLayers().size() > i) && (shape.getShapeLayers().get(i) != null)) {
                 final int layerOffset = shape.getShapeActivationLayer() - i;
                 final int[] layerStarter = {startingPosition[0] - facingVector[0] * layerOffset, startingPosition[1],
@@ -481,7 +490,7 @@ public class StargateHelper {
             final Block signBlockHolder = StargateHelper.getBlockFromVector(layer.getLayerDialSignPosition(), directionVector, lowerCorner, w);
             final Block signBlock = signBlockHolder.getRelative(tempGate.getGateFacing());
 
-            // If somethign went wrong but the gate is sign powered, we need to error out.
+            // If something went wrong but the gate is sign powered, we need to error out.
             if (!tryCreateGateSign(signBlock, tempGate) && tempGate.isGateSignPowered()) {
                 return false;
             } else if (tempGate.isGateSignPowered()) {

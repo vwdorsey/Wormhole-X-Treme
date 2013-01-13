@@ -66,7 +66,7 @@ public class WXIDC implements CommandExecutor {
                         }
 
                         // 3. always display current value at end.
-                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is:" + s.getGateIrisDeactivationCode());
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is: " + s.getGateIrisDeactivationCode());
                     } else {
                         sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                     }

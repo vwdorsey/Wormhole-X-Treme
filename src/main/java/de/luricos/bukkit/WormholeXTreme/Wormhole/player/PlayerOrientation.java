@@ -32,14 +32,16 @@ import java.util.Map;
  * @author sk89q, lycano
  */
 public enum PlayerOrientation {
-    NORTH("North", (new Vector(-1, 0, 0)), (new Vector(0, 0, 1)), true),
-    NORTH_EAST("Northeast", (new Vector(-1, 0, -1)).normalize(), (new Vector(-1, 0, 1)).normalize(), false),
-    EAST("East", (new Vector(0, 0, -1)), (new Vector(-1, 0, 0)), true),
-    SOUTH_EAST("Southeast", (new Vector(1, 0, -1)).normalize(), (new Vector(-1, 0, -1)).normalize(), false),
-    SOUTH("South", (new Vector(1, 0, 0)), (new Vector(0, 0, -1)), true),
-    SOUTH_WEST("Southwest", (new Vector(1, 0, 1)).normalize(), (new Vector(1, 0, -1)).normalize(), false),
-    WEST("West", (new Vector(0, 0, 1)), (new Vector(1, 0, 0)), true),
-    NORTH_WEST("Northwest", (new Vector(-1, 0, 1)).normalize(), (new Vector(1, 0, 1)).normalize(), false);
+    NORTH("North", new Vector(0, 0, -1), new Vector(-1, 0, 0), true),
+    NORTH_EAST("Northeast", new Vector(1, 0, -1).normalize(), new Vector(-1, 0, -1).normalize(), false),
+    EAST("East", new Vector(1, 0, 0), new Vector(0, 0, -1), true),
+    SOUTH_EAST("Southeast", new Vector(1, 0, 1).normalize(), new Vector(1, 0, -1).normalize(), false),
+    SOUTH("South", new Vector(0, 0, 1), new Vector(1, 0, 0), true),
+    SOUTH_WEST("Southwest", new Vector(-1, 0, 1).normalize(), (new Vector(1, 0, 1)).normalize(), false),
+    WEST("West", new Vector(-1, 0, 0), new Vector(0, 0, 1), true),
+    NORTH_WEST("Northwest", new Vector(-1, 0, -1).normalize(), (new Vector(-1, 0, 1)).normalize(), false),
+    UP("Up", new Vector(0, 1, 0), new Vector(0, 0, 1), true),
+    DOWN("Down", new Vector(0, -1, 0), new Vector(0, 0, 1), true);
     
     private String name;
     private Vector direction;
