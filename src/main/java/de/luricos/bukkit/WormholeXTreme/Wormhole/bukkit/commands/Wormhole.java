@@ -852,7 +852,7 @@ public class Wormhole implements CommandExecutor {
 
     public static boolean doShowPermissions(CommandSender sender, String[] args) {
         if (args.length >= 1) {
-            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Selected Permission-Provider: " + WormholeXTreme.getPermissionManager().getBackend().getName());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Selected Permission-Provider: " + WormholeXTreme.getPermissionManager().getBackend().getProviderName());
             return true;
         }
 
