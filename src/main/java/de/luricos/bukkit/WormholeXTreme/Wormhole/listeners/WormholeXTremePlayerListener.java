@@ -121,9 +121,9 @@ public class WormholeXTremePlayerListener implements Listener {
                     return false;
                 }
             }
+
             // Check to see if player has already run the "build" command.
             StargateShape shape = StargateManager.getPlayerBuilderShape(player);
-
             Stargate newGate;
             if (shape != null) {
                 newGate = StargateHelper.checkStargate(clickedBlock, direction, shape);
@@ -171,6 +171,7 @@ public class WormholeXTremePlayerListener implements Listener {
                     return true;
                 }
             } else {
+                //@TODO remove debug as we can save performance here
                 WXTLogger.prettyLog(Level.FINE, false, player.getName() + " has pressed a button or lever but we did not find a valid gate shape");
                 //player.sendMessage(ConfigManager.MessageStrings.gateWithInvalidShape.toString() + ConfigManager.MessageStrings.gateWithInvalidShapeAssistance);
             }

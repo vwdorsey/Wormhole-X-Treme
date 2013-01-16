@@ -22,6 +22,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholeDialSignException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayer;
@@ -170,7 +171,9 @@ public class Stargate {
     private boolean gateChevronsLocked = false;
     /** set to true after dial to prevent target deactivation of dial gates */
     private boolean gateEstablishedWormhole = false;
-    
+    /** for backwards compatibility we assume that any shape is valid. Set to false only on errors **/
+    private boolean stargateIsValid = true;
+
 
     /**
      * Instantiates a new stargate.
@@ -1657,7 +1660,7 @@ public class Stargate {
                 ? getGateShape().getShapePortalMaterial()
                 : Material.STATIONARY_WATER
                 : Material.AIR);
-        if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getTypeId() == 69)) {
+        if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER)) {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
         }
     }
@@ -1753,9 +1756,9 @@ public class Stargate {
         if (getGateRedstoneDialActivationBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateRedstoneDialActivationBlock().getLocation());
-                getGateRedstoneDialActivationBlock().setTypeId(55);
+                getGateRedstoneDialActivationBlock().setType(Material.REDSTONE_WIRE);
             } else {
-                if (getGateRedstoneGateActivatedBlock().getTypeId() == 55) {
+                if (getGateRedstoneGateActivatedBlock().getType() == Material.REDSTONE_WIRE) {
                     getGateStructureBlocks().remove(getGateRedstoneDialActivationBlock().getLocation());
                     getGateRedstoneDialActivationBlock().setTypeId(0);
                 }
@@ -1793,9 +1796,9 @@ public class Stargate {
         if (getGateRedstoneSignActivationBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateRedstoneSignActivationBlock().getLocation());
-                getGateRedstoneSignActivationBlock().setTypeId(55);
+                getGateRedstoneSignActivationBlock().setType(Material.REDSTONE_WIRE);
             } else {
-                if (getGateRedstoneGateActivatedBlock().getTypeId() == 55) {
+                if (getGateRedstoneGateActivatedBlock().getType() == Material.REDSTONE_WIRE) {
                     getGateStructureBlocks().remove(getGateRedstoneSignActivationBlock().getLocation());
                     getGateRedstoneSignActivationBlock().setTypeId(0);
                 }
@@ -1918,13 +1921,44 @@ public class Stargate {
         this.dialSignClicked(null);
     }
 
+    public Location getLocation() {
+        return getGateDialLeverBlock().getLocation();
+    }
+
+    public World getWorld() {
+        return getGateDialLeverBlock().getWorld();
+    }
+
+    public boolean isValid() {
+        return this.stargateIsValid;
+    }
+
+    public void invalidateGate() {
+        this.stargateIsValid = false;
+    }
+
     public void dialSignClicked(Action eventAction) {
         synchronized (getGateNetwork().getNetworkGateLock()) {
-            //@TODO check if this is still needed
+
             getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
-            setGateDialSign((Sign) getGateDialSignBlock().getState());
+
+            try {
+                // we only want to set the GateDialSign once as it already may have a state
+                if (getGateDialSign() == null)
+                    setGateDialSign((Sign) getGateDialSignBlock().getState());
+
+                // though it may still happen that the block is changed to something else than a sign
+                if (!(getGateDialSign().getType().equals(Material.WALL_SIGN)))
+                    throw new WormholeDialSignException("Expected WALL_SIGN. Found '" + getGateDialSign().getType().name() + "' for gate '" + getGateName() + "' in world '" + getWorld().getName() + "'.");
+            } catch (ClassCastException e) {
+                throw new WormholeDialSignException("Could not set DialSign for gate '" + getGateName() + "' in world '" + getWorld().getName() + "'. Cast State to Sign failed for BlockType '" + getGateDialSignBlock().getType().name() + "'");
+            } catch (WormholeDialSignException e) {
+                WXTLogger.prettyLog(Level.WARNING, false, e.getMessage());
+                return;
+            }
+
             getGateDialSign().setLine(0, "-" + getGateName() + "-");
-            
+
             String lineMarkerS = ">" + ChatColor.GREEN;
             String lineMarkerE = ChatColor.BLACK + "<";
 
@@ -1946,7 +1980,7 @@ public class Stargate {
             if ((eventAction != null) && (eventAction.equals(Action.RIGHT_CLICK_BLOCK))) {
                 direction = -1;
             }
-            
+
             getGateSignOrder().clear();
             int orderIndex = 1;
 
@@ -2108,7 +2142,7 @@ public class Stargate {
      * Toggle redstone gate activated power.
      */
     private void toggleRedstoneGateActivatedPower() {
-        if (isGateRedstonePowered() && (getGateRedstoneGateActivatedBlock() != null) && (getGateRedstoneGateActivatedBlock().getTypeId() == 69)) {
+        if (isGateRedstonePowered() && (getGateRedstoneGateActivatedBlock() != null) && (getGateRedstoneGateActivatedBlock().getType() == Material.LEVER)) {
             final byte leverState = getGateRedstoneGateActivatedBlock().getData();
             getGateRedstoneGateActivatedBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
         }
@@ -2135,15 +2169,15 @@ public class Stargate {
 
                 //@TODO can be removed after long term test, only nuke sign on load
                 if (eventAction == null) {
-                    getGateDialSignBlock().setTypeId(0); //nuke sign
+                    getGateDialSignBlock().setType(Material.AIR); //nuke sign
                 }
 
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK, eventAction));
             }
         } else if (WorldUtils.isSameBlock(clickedBlock, getGateDialSignBlock())) {
-            //@TODO can be removed after long term test, only nuke sign on load
-            if (eventAction == null) {
-                getGateDialSignBlock().setTypeId(0); //nuke sign
+            //@TODO can be removed after long term test; nuke sign on load
+            if ((eventAction == null) && (getGateDialSignBlock() != null)) {
+                getGateDialSignBlock().setType(Material.AIR); //nuke sign
             }
 
             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_CLICK, eventAction));

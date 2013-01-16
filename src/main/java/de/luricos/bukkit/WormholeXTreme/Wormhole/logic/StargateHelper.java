@@ -21,6 +21,7 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.logic;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholeActivationLayerNotFoundException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DataUtils;
@@ -286,86 +287,102 @@ public class StargateHelper {
      * @return the stargate
      */
     private static Stargate checkStargate3D(final Block buttonBlock, final BlockFace facing, final Stargate3DShape shape, final boolean create) {
-        final Stargate s = new Stargate();
-        s.setGateWorld(buttonBlock.getWorld());
-        // No need to find it, we already have it!
-        s.setGateDialLeverBlock(buttonBlock);
-        s.getGateStructureBlocks().add(s.getGateDialLeverBlock().getLocation());
-        s.setGateShape(shape);
-        s.setGateFacing(facing);
+        try {
+            final Stargate s = new Stargate();
 
-        final BlockFace opposite = WorldUtils.getInverseDirection(facing);
-        final Block activationBlock = buttonBlock.getRelative(opposite);
-        final StargateShapeLayer act_layer = shape.getShapeLayers().get(shape.getShapeActivationLayer());
+            if (shape.getShapeActivationLayer() == -1) {
+                throw new WormholeActivationLayerNotFoundException("Shape '" + shape.getShapeName() + "' is invalid. No ActivationLayer found!");
+            }
 
-        final int[] facingVector = {0, 0, 0};
+            final BlockFace opposite = WorldUtils.getInverseDirection(facing);
+            final Block activationBlock = buttonBlock.getRelative(opposite);
+            final StargateShapeLayer act_layer = shape.getShapeLayers().get(shape.getShapeActivationLayer());
 
-        // Now we start calculaing the values for the blocks that need to be the stargate material.
+            s.setGateWorld(buttonBlock.getWorld());
+            // No need to find it, we already have it!
+            s.setGateDialLeverBlock(buttonBlock);
+            s.getGateStructureBlocks().add(s.getGateDialLeverBlock().getLocation());
+            s.setGateShape(shape);
+            s.setGateFacing(facing);
 
-        switch (facing) {
-            case NORTH:
-                facingVector[2] = -1;
-                break;
-            case SOUTH:
-                facingVector[2] = 1;
-                break;
-            case EAST:
-                facingVector[0] = 1;
-                break;
-            case WEST:
-                facingVector[0] = -1;
-                break;
-            case UP:
-                facingVector[1] = 1;
-                break;
-            case DOWN:
-                facingVector[1] = -1;
-                break;
-        }
 
-        final int[] directionVector = {0, 0, 0};
-        final int[] startingPosition = {0, 0, 0};
+            final int[] facingVector = {0, 0, 0};
 
-        // Calculate the cross product
-        directionVector[0] = facingVector[1] * shape.getShapeReferenceVector()[2] - facingVector[2] * shape.getShapeReferenceVector()[1];
-        directionVector[1] = facingVector[2] * shape.getShapeReferenceVector()[0] - facingVector[0] * shape.getShapeReferenceVector()[2];
-        directionVector[2] = facingVector[0] * shape.getShapeReferenceVector()[1] - facingVector[1] * shape.getShapeReferenceVector()[0];
+            // Now we start calculaing the values for the blocks that need to be the stargate material.
 
-        // This is the 0,0,0 the block at the ground on the activation layer
-        startingPosition[0] = activationBlock.getX() - directionVector[0] * act_layer.getLayerActivationPosition()[2];
-        startingPosition[1] = activationBlock.getY() - act_layer.getLayerActivationPosition()[1];
-        startingPosition[2] = activationBlock.getZ() - directionVector[2] * act_layer.getLayerActivationPosition()[2];
+            switch (facing) {
+                case NORTH:
+                    facingVector[2] = -1;
+                    break;
+                case SOUTH:
+                    facingVector[2] = 1;
+                    break;
+                case EAST:
+                    facingVector[0] = 1;
+                    break;
+                case WEST:
+                    facingVector[0] = -1;
+                    break;
+                case UP:
+                    facingVector[1] = 1;
+                    break;
+                case DOWN:
+                    facingVector[1] = -1;
+                    break;
+            }
 
-        // 2. Add/remove from the direction component to yield each layers 0,0,0
-        for (int i = 0; i < shape.getShapeLayers().size(); i++) {
-            if ((shape.getShapeLayers().size() > i) && (shape.getShapeLayers().get(i) != null)) {
-                final int layerOffset = shape.getShapeActivationLayer() - i;
-                final int[] layerStarter = {startingPosition[0] - facingVector[0] * layerOffset, startingPosition[1],
-                    startingPosition[2] - facingVector[2] * layerOffset};
-                if (!checkStargateLayer(shape.getShapeLayers().get(i), layerStarter, directionVector, s, create)) {
-                    if (s.getGateNetwork() != null) {
-                        s.getGateNetwork().getNetworkGateList().remove(s);
-                        if (s.isGateSignPowered()) {
-                            s.getGateNetwork().getNetworkSignGateList().remove(s);
+            final int[] directionVector = {0, 0, 0};
+            final int[] startingPosition = {0, 0, 0};
+
+            // Calculate the cross product
+            directionVector[0] = facingVector[1] * shape.getShapeReferenceVector()[2] - facingVector[2] * shape.getShapeReferenceVector()[1];
+            directionVector[1] = facingVector[2] * shape.getShapeReferenceVector()[0] - facingVector[0] * shape.getShapeReferenceVector()[2];
+            directionVector[2] = facingVector[0] * shape.getShapeReferenceVector()[1] - facingVector[1] * shape.getShapeReferenceVector()[0];
+
+            // This is the 0,0,0 the block at the ground on the activation layer
+            startingPosition[0] = activationBlock.getX() - directionVector[0] * act_layer.getLayerActivationPosition()[2];
+            startingPosition[1] = activationBlock.getY() - act_layer.getLayerActivationPosition()[1];
+            startingPosition[2] = activationBlock.getZ() - directionVector[2] * act_layer.getLayerActivationPosition()[2];
+
+            // 2. Add/remove from the direction component to yield each layers 0,0,0
+            for (int i = 0; i < shape.getShapeLayers().size(); i++) {
+                if ((shape.getShapeLayers().size() > i) && (shape.getShapeLayers().get(i) != null)) {
+                    final int layerOffset = shape.getShapeActivationLayer() - i;
+                    final int[] layerStarter = {startingPosition[0] - facingVector[0] * layerOffset, startingPosition[1],
+                        startingPosition[2] - facingVector[2] * layerOffset};
+                    if (!checkStargateLayer(shape.getShapeLayers().get(i), layerStarter, directionVector, s, create)) {
+                        if (s.getGateNetwork() != null) {
+                            s.getGateNetwork().getNetworkGateList().remove(s);
+                            if (s.isGateSignPowered()) {
+                                s.getGateNetwork().getNetworkSignGateList().remove(s);
+                            }
                         }
+                        return null;
                     }
-                    return null;
                 }
             }
+            // Set the name sign location.
+            if (shape.getShapeSignPosition().length > 0) {
+                final int[] signLocationArray = {shape.getShapeSignPosition()[2] * directionVector[0] * -1,
+                    shape.getShapeSignPosition()[1], shape.getShapeSignPosition()[2] * directionVector[2] * -1};
+                final Block nameBlock = s.getGateWorld().getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
+                s.setGateNameBlockHolder(nameBlock);
+            }
+            /** Set the gate as redstone powered as needed */
+            if (shape.isShapeRedstoneActivated()) {
+                s.setGateRedstonePowered(true);
+            }
+            setupSignGateNetwork(s);
+            return s;
+        } catch (WormholeActivationLayerNotFoundException e) {
+            //WXTLogger.prettyLog(Level.WARNING, false, e.getMessage());
+            return null;
+
+            //@TODO reimplement when seperated SignGates from dial gates
+            //Stargate s = new Stargate();
+            //s.invalidateGate();
+            //return s;
         }
-        // Set the name sign location.
-        if (shape.getShapeSignPosition().length > 0) {
-            final int[] signLocationArray = {shape.getShapeSignPosition()[2] * directionVector[0] * -1,
-                shape.getShapeSignPosition()[1], shape.getShapeSignPosition()[2] * directionVector[2] * -1};
-            final Block nameBlock = s.getGateWorld().getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
-            s.setGateNameBlockHolder(nameBlock);
-        }
-        /** Set the gate as redstone powered as needed */
-        if (shape.isShapeRedstoneActivated()) {
-            s.setGateRedstonePowered(true);
-        }
-        setupSignGateNetwork(s);
-        return s;
     }
 
     /**

@@ -149,6 +149,15 @@ public class StargateManager {
     }
 
     /**
+     * Removes the player builder shape.
+     *
+     * @param playerName the Player's name
+     */
+    public static void removePlayerBuilderShape(String playerName) {
+        getPlayerBuilders().remove(playerName);
+    }
+
+    /**
      * Adds the given stargate to the list of stargates. Also adds all its blocks to big block index.
      * 
      * @param s The Stargate you want added.

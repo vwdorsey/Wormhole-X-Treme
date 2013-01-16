@@ -113,6 +113,8 @@ public class ConfigManager {
         gateDeactivated(normalHeader + "Gate %ssuccessfully deactivated."),
         /** The gate dialed. */
         gateConnected(normalHeader + "Stargates connected."),
+        /** gate is invalid */
+        gateIsInvalid(errorHeader + "Stargate has not a valid setup. Please check your log for errors."),
         /** no GateShape found */
         gateWithInvalidShape(errorHeader + "No valid Stargate shape was found."),
         /** no GateShape found assistance */
