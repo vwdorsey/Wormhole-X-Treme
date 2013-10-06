@@ -18,37 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigurationManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.events.WormholeSystemEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.Configuration;
+
+import java.util.logging.Level;
 
 /**
  * @author lycano
  */
-public class PermissionManager {
+public class ConfigurationManager {
 
-    protected PermissionBackend backend = null;
-    protected ConfigurationManager configManager;
+    protected ConfigurationBackend backend = null;
+    private Configuration config;
 
-    public PermissionManager(ConfigurationManager configManager) {
-        this.configManager = configManager;
+    public ConfigurationManager(Configuration config) {
+        this.config = config;
         this.initBackend();
     }
 
     private void initBackend() {
         // @TODO use config instead of static call
-
-        //String backendName = config.getConfigurations().get(ConfigManager.ConfigKeys.PERMISSIONS_BACKEND).getStringValue();
-        String backendName = "pex";
+        String backendName = this.config.getString("configuration.backend");
 
         if (backendName == null || backendName.isEmpty()) {
-            backendName = PermissionBackend.defaultBackend;
-
-            //@TODO implement save permission backend
-            //configManager.setBackend()
+            backendName = ConfigurationBackend.defaultBackend;
+            this.config.set("configuration.backend", backendName);
         }
 
         this.setBackend(backendName);
@@ -59,13 +56,13 @@ public class PermissionManager {
      *
      * @return current backend object
      */
-    public PermissionBackend getBackend() {
+    public ConfigurationBackend getBackend() {
         return this.backend;
     }
 
     public void setBackend(String backendName) {
         synchronized (this) {
-            this.backend = PermissionBackend.getBackend(backendName, this, this.configManager);
+            this.backend = ConfigurationBackend.getBackend(backendName, this.config);
             this.backend.initialize();
         }
 
@@ -93,11 +90,12 @@ public class PermissionManager {
             this.backend.end();
     }
 
-    public boolean has(Player player, String permissionString) {
-        return backend.has(player, permissionString);
+    public Level getLogLevel() {
+        return Level.parse(this.config.getString("logger.level", "INFO"));
     }
 
-    public boolean hasPermission(Player player, String permissionString) {
-        return backend.hasPermission(player, permissionString);
+    public String getBackendName() {
+        return this.backend.getName();
     }
+
 }

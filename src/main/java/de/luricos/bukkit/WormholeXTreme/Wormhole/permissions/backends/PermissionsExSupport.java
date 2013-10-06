@@ -20,16 +20,15 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.WormholeXTreme;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigurationManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionBackend;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-
-import java.util.logging.Level;
 
 /**
  * The Class PermissionsExSupport.
@@ -43,8 +42,8 @@ public class PermissionsExSupport extends PermissionBackend {
 
     protected ru.tehkode.permissions.PermissionManager provider = null;
 
-    public PermissionsExSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager config, String providerName) {
-        super(manager, config, providerName);
+    public PermissionsExSupport(PermissionManager manager, ConfigurationManager configManager, String providerName) {
+        super(manager, configManager, providerName);
     }
 
     @Override
@@ -60,19 +59,25 @@ public class PermissionsExSupport extends PermissionBackend {
 
             try {
                 provider = PermissionsEx.getPermissionManager();
-                WXTLogger.prettyLog(Level.INFO, false, "Attached to " + providerName + " version " + version);
+                WXTLogger.info(String.format("Attached to %s version %s", providerName, version));
             } catch (final ClassCastException e) {
-                WXTLogger.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
+                WXTLogger.info("Failed to get Permissions Handler. Defaulting to built-in permissions.");
             }
         } else {
-            WXTLogger.prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
+            WXTLogger.info("Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
         }
     }
 
     @Override
     public void reload() {
+        this.end();
+        this.initialize();
+    }
+
+    public void end() {
         provider = null;
-        WXTLogger.prettyLog(Level.INFO, false, "Detached from Permissions plugin '" + getProviderName() + "'.");
+        WXTLogger.info(String.format("Detached from Permissions plugin '%s'.", getProviderName()));
+
     }
 
     /**
@@ -83,7 +88,7 @@ public class PermissionsExSupport extends PermissionBackend {
      */
     private static void checkPermissionsVersion(String version) {
         if (!isSupportedVersion(version)) {
-            WXTLogger.prettyLog(Level.WARNING, false, "Not supported version. Recommended is at least 1.18");
+            WXTLogger.warn("Not supported version. Recommended is at least 1.18");
         }
     }
 

@@ -20,18 +20,19 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.WormholeXTreme;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigurationManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholePermissionBackendException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * @author lycano
@@ -41,10 +42,10 @@ public abstract class PermissionBackend {
     protected final static String defaultBackend = "bukkit";
     protected static Map<String, Class<? extends PermissionBackend>> registeredBackendAliases = new HashMap<String, Class<? extends PermissionBackend>>();
     protected PermissionManager manager;
-    protected ConfigManager configManager;
+    protected ConfigurationManager configManager;
     protected String providerName;
 
-    protected PermissionBackend(PermissionManager manager, ConfigManager configManager, String providerName) {
+    protected PermissionBackend(PermissionManager manager, ConfigurationManager configManager, String providerName) {
         this.manager = manager;
         this.configManager = configManager;
         this.providerName = providerName;
@@ -59,6 +60,11 @@ public abstract class PermissionBackend {
      * Reload Backend
      */
     public abstract void reload();
+
+    /**
+     * End Backend
+     */
+    public abstract void end();
 
     /**
      * Get ProviderName
@@ -126,7 +132,7 @@ public abstract class PermissionBackend {
 
         registeredBackendAliases.put(alias, backendClass);
 
-        WXTLogger.prettyLog(Level.INFO, false, "PermissionAlias backend: '" + alias + "' registered!");
+        WXTLogger.info(String.format("PermissionAlias backend: '%s' registered!", alias));
     }
 
     /**
@@ -151,6 +157,31 @@ public abstract class PermissionBackend {
     }
 
     /**
+     * Resolve permission backend
+     *
+     * first enabled will be used.
+     * Config node permissions.backend will be set to resolved backend
+     */
+    public static void resolvePermissionBackends() {
+        for (String providerAlias : getRegisteredAliases()) {
+            String pluginName = getBackendPluginName(providerAlias);
+            WXTLogger.info(String.format("Attempting to use supported permissions plugin '%s'", pluginName));
+
+            Plugin permToLoad = Bukkit.getPluginManager().getPlugin(pluginName);
+            if ((pluginName.equals(PermissionBackend.getDefaultBackend().getProviderName())) || ((permToLoad != null) && (permToLoad.isEnabled()))) {
+
+                //@TODO set permission provider in config
+                //ConfigManager.setPermissionBackend(providerAlias);
+                //WXTLogger.prettyLog(Level.INFO, false, "Config node PERMISSIONS_BACKEND changed to '" + providerAlias + "'");
+
+                return;
+            } else {
+                WXTLogger.info(String.format("Permission backend '%s' was not found as plugin or not enabled!", providerAlias));
+            }
+        }
+    }
+
+    /**
      * Returns the default Backend class instance
      *
      * @return new instance of PermissionBackend default object
@@ -164,10 +195,10 @@ public abstract class PermissionBackend {
      * Returns new backend class instance for specified backendName
      *
      * @param backendName Class name or alias of backend
-     * @param configManager Configuration object to access backend settings
+     * @param configManager ConfigurationManager object to access backend settings
      * @return new instance of PermissionBackend object
      */
-    public static PermissionBackend getBackend(String backendName, ConfigManager configManager) {
+    public static PermissionBackend getBackend(String backendName, ConfigurationManager configManager) {
         return getBackend(backendName, WormholeXTreme.getPermissionManager(), configManager, defaultBackend);
     }
 
@@ -176,10 +207,10 @@ public abstract class PermissionBackend {
      *
      * @param backendName Class name or alias of backend
      * @param manager PermissionManager object
-     * @param configManager Configuration object to access backend settings
+     * @param configManager ConfigurationManager object to access backend settings
      * @return new instance of PermissionBackend object
      */
-    public static PermissionBackend getBackend(String backendName, PermissionManager manager, ConfigManager configManager) {
+    public static PermissionBackend getBackend(String backendName, PermissionManager manager, ConfigurationManager configManager) {
         return getBackend(backendName, manager, configManager, defaultBackend);
     }
 
@@ -189,11 +220,11 @@ public abstract class PermissionBackend {
      *
      * @param backendName Class name or alias of backend
      * @param manager PermissionManager object
-     * @param configManager Configuration object to access backend settings
+     * @param configManager ConfigurationManager object to access backend settings
      * @param fallBackBackend name of backend that should be used if specified backend was not found or failed to initialize
      * @return new instance of PermissionBackend object
      */
-    public static PermissionBackend getBackend(String backendName, PermissionManager manager, ConfigManager configManager, String fallBackBackend) {
+    public static PermissionBackend getBackend(String backendName, PermissionManager manager, ConfigurationManager configManager, String fallBackBackend) {
         if (backendName == null || backendName.isEmpty()) {
             backendName = defaultBackend;
         }
@@ -203,16 +234,16 @@ public abstract class PermissionBackend {
         try {
             Class<? extends PermissionBackend> backendClass = getBackendClass(backendName);
 
-            WXTLogger.prettyLog(Level.INFO, false, "Initializing " + backendName + " backend");
+            WXTLogger.info(String.format("Initializing PermissionBackend \"%s\"", backendName));
 
-            Constructor<? extends PermissionBackend> constructor = backendClass.getConstructor(PermissionManager.class, ConfigManager.class, String.class);
+            Constructor<? extends PermissionBackend> constructor = backendClass.getConstructor(PermissionManager.class, ConfigurationManager.class, String.class);
             return (PermissionBackend) constructor.newInstance(manager, configManager, getBackendPluginName(backendName));
         } catch (ClassNotFoundException e) {
 
-            WXTLogger.prettyLog(Level.WARNING, false, "Backend \"" + backendName + "\" not found");
+            WXTLogger.warn(String.format("PermissionBackend \"%s\" not found", backendName));
 
             if (fallBackBackend == null) {
-                throw new WormholePermissionBackendException("Backend \"" + backendName + "\" not found: " + e.getMessage());
+                throw new WormholePermissionBackendException("PermissionBackend \"" + backendName + "\" not found: " + e.getMessage());
             }
 
             if (!className.equals(getBackendClassName(fallBackBackend))) {

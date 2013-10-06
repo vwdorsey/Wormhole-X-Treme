@@ -1,25 +1,25 @@
-Wormhole X-Treme v0.9
+Wormhole X-Treme v2.0
 
 New Install:
 
-0. Download the zip containing plugin, hsqldb, and gate shape files.
+1. Download the zip containing plugin, hsqldb, and gate shape files.
 
-1. Unzip file into same directory that your craftbukkit.jar exists in. This should put 
+2. Unzip file into same directory that your craftbukkit.jar exists in. This should put 
    the hsqldb.jar into the lib/ folder, the WormholeXTreme.jar into the plugins/ folder,
    and the latest versions of GateShapes into the plugins/WormholeXTreme/GateShapes/ folder.
    
-2. start server
+3. start server
 
-3.   (Optional) Stop the server and edit the newly generated /plugins/WormholeXTreme/settings.txt 
+4.   (Optional) Stop the server and edit the newly generated /plugins/WormholeXTreme/settings.txt 
      file as needed.
 
-3.1. (Optional) Edit gate shapes in /plugins/WormholeXTreme/GateShapes/
+4.1. (Optional) Edit gate shapes in /plugins/WormholeXTreme/GateShapes/
 
-3.2. (Optional) If using the Permissions plugin based plugin, set up the appropriate permissions.
+4.2. (Optional) If using the Permissions plugin based plugin, set up the appropriate permissions.
      If using SIMPLE_PERMISSIONS = true remember to use permissions from the Simple Mode list, 
      otherwise use nodes from Complex Node.
    
-3.3. (Optional) Start Server again
+4.3. (Optional) Start Server again
 
 
 Update:

@@ -53,27 +53,53 @@ public class WXTLogger {
     public static void setLogLevel(Level logLevel) {
         WXTLogger.logLevel = logLevel;
         WXTLogger.logger.setLevel(logLevel);
+
+        WXTLogger.prettyLog(Level.INFO, false, "Log Level changed to '" + logLevel.toString() + "'");
     }
-    
-    public static void prettyLog(final Level logLevel, final boolean version, final String message) {
+
+    private static void prettyLog(final Level logLevel, final boolean version, final String message) {
         final String prettyName = ("[" + getName() + "]");
         final String prettyVersion = ("[v" + getVersion() + "]");
         String prettyLogLine = prettyName;
         if (version) {
             prettyLogLine += prettyVersion;
         }
-        
+
         logger.log(logLevel, prettyLogLine + " " + message);
     }
-    
+
+    public static void info(final String message) {
+        info(message, false);
+    }
+
+    public static void info(final String message, boolean version) {
+        prettyLog(Level.INFO, version, message);
+    }
+
+    public static void warn(final String message) {
+        warn(message, false);
+    }
+
+    public static void warn(final String message, boolean version) {
+        prettyLog(Level.WARNING, version, message);
+    }
+
+    public static void severe(final String message) {
+        severe(message, false);
+    }
+
+    public static void severe(final String message, boolean version) {
+        prettyLog(Level.SEVERE, version, message);
+    }
+
     public static Level getLogLevel() {
         return logLevel;
     }
-    
+
     public static String getVersion() {
         return logPluginVersion;
     }
-    
+
     public static String getName() {
         return logPluginName;
     }
