@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
-version: 1.3
+version: 1.1
 authors: [Lologarithm, alron, lycano]
 softdepend: [PermissionsEx, WormholeXTremeWorlds, Help]
 description: >
@@ -19,9 +19,24 @@ commands:
      description: Wormhole administration and configuration commands.
      aliases: [wxt]
      usage: |
-            /<command> <commandtype> [ARG1] [ARG2]
-            Valid commandtypes - owner, perms, portalmaterial, irismaterial, lightmaterial, shutdown_timeout, activate_timeout, simple, regenerate, redstone, toggle_gwm, show_gwm, toggle_transport, show_transport, permissions and custom.
-
+            /<command> activate_timeout [timeout] - Set or get the stargate activate timeout.
+            /<command> custom <stargate|-all> <boolean> - Set Gate to custom mode.
+            /<command> irismaterial <stargate> [material] - Set the Iris-Material for stargate.
+            /<command> lightmaterial <stargate> [material] - Set the Chevron Light-Up Material for stargate to material.
+            /<command> owner <stargate> <new owner> - Set a new owner for stargate.
+            /<command> perms - This command is currently disabled.
+            /<command> permissions <provider> - Get or set permissions provider.
+            /<command> portalmaterial <stargate> [material] - Set the Portal-Material for stargate.
+            /<command> restrict <value> [count] - Get or set restriction count for value where value is group, true or false.
+            /<command> regenerate <stargate> [boolean] - Enable/Disable auto-regeneration for stargate.
+            /<command> redstone <stargate> [boolean] - Set or get redstone gate information.
+            /<command> shutdown_timeout [timeout] - Set or get the stargate shutdown timeout.
+            /<command> show_gwm - Show current welcome message status
+            /<command> show_transport - Show current set Transportation method.
+            /<command> simple [yes, no] - Enable or disable simple permissions.
+            /<command> toggle_gwm - Toggle stargate welcome message
+            /<command> toggle_transport - Toggle Transportation method. Toggles between EVENT, TELEPORT.
+            /<command> wooshdepth <stargate> [depth] - Get or set wooshdepht for stargate.
    wxlist:
      description: List all Stargates.
      usage: |
