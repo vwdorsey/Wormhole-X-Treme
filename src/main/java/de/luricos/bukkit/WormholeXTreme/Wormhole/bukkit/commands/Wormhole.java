@@ -31,7 +31,9 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -872,17 +874,39 @@ public class Wormhole implements CommandExecutor {
         return false;
     }
 
+    /**
+     * Rotates Gate facing [legacy feature)
+     *
+     * This can mix up your teleport location if used in bukkit > 1.4.x
+     * @param sender
+     * @param args
+     * @return
+     */
     public static boolean doFixGates(CommandSender sender, String[] args) {
-        if ((sender instanceof Player) && (!(sender.isOp()))) {
-            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + ConfigManager.MessageStrings.permissionNo);
-            return false;
+        boolean force = false;
+        for (String arg: args) {
+            if (arg.equalsIgnoreCase("-f"))
+                force = true;
+        }
+
+        if (!(force)) {
+            String bukkitVersion = Bukkit.getVersion();
+            sender.sendMessage(String.format("%sYour Server-Version is: %s. This is a legacy feature that will rotate all gate facings! If you know what you are doing type add -f to the end of the command",
+                    ConfigManager.MessageStrings.normalHeader, bukkitVersion));
+
+            return true;
         }
 
         final ArrayList<Stargate> gates = StargateManager.getAllGates();
         if (args.length >= 2) {
             Stargate gate = StargateManager.getStargate(args[1]);
             if (gate != null) {
-                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Set GateFace of '" + args[1] + "' to " + WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
+                sender.sendMessage(String.format("%sSet GateFace of '%s' from '%s' to '%s'",
+                        ConfigManager.MessageStrings.normalHeader.toString(),
+                        args[1],
+                        gate.getGateFacing().name(),
+                        WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing())));
+
                 gate.setGateFacing(WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
                 StargateDBManager.stargateToSQL(gate);
             } else {
@@ -895,14 +919,17 @@ public class Wormhole implements CommandExecutor {
                 if (gate.isGateActive() || gate.isGateLightsActive()) {
                     gate.shutdownStargate(false);
                 }
-                gate.setGateFacing(WorldUtils.getPerpendicularLeftDirection(gate.getGateFacing()));
-                WXTLogger.prettyLog(Level.INFO, false, "Set facing to '" + gate.getGateFacing() +"'");
+                BlockFace currentFacing = gate.getGateFacing();
+                BlockFace targetFacing = WorldUtils.getPerpendicularLeftDirection(currentFacing);
+
+                WXTLogger.prettyLog(Level.INFO, false, "Set facing from '" + currentFacing.name() + "' to '" + targetFacing.name() +"'");
+                gate.setGateFacing(targetFacing);
 
                 StargateDBManager.stargateToSQL(gate);
                 WXTLogger.prettyLog(Level.INFO, false, "Saving gate: '" + gate.getGateName() + "', GateFace: '" + gate.getGateFacing().name() + "'");
             }
 
-            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All existing Stargates are now fully operational.");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All existing Stargate facings are now fully rotated.");
         }
 
         return true;
@@ -983,7 +1010,7 @@ public class Wormhole implements CommandExecutor {
                 return setWormholeKickbackBlockCount(sender, a);                
             } else if (a[0].equalsIgnoreCase("permissions")) {
                 return doShowPermissions(sender, a);
-            } else if ((a[0].equalsIgnoreCase("fixgate")) || (a[0].equalsIgnoreCase("fixgates"))) {
+            } else if ((a[0].equalsIgnoreCase("legacyfixgate")) || (a[0].equalsIgnoreCase("legacyfixgates"))) {
                 return doFixGates(sender, a);
             } else if (a[0].equalsIgnoreCase("gateinfo")) {
                 return doShowInfo(sender, a);
