@@ -47,10 +47,10 @@ public abstract class ConfigurationBackend {
     public final static String defaultBackend = "xml";
     private static final Map<String, Class<? extends ConfigurationBackend>> REGISTERED_BACKENDS = new HashMap<String, Class<? extends ConfigurationBackend>>();
 
-    protected Configuration config;
+    protected ConfigurationManager manager;
 
-    protected ConfigurationBackend(Configuration config) {
-        this.config = config;
+    protected ConfigurationBackend(ConfigurationManager manager) {
+        this.manager = manager;
     }
 
     /**
@@ -204,7 +204,7 @@ public abstract class ConfigurationBackend {
     }
 
     protected final ConfigurationSection getConfig() {
-        return this.config;
+        return this.manager.getConfig();
     }
 
     public abstract Set<String> getKeys(boolean deep);

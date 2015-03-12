@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationOptions;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -18,15 +19,19 @@ import java.util.Set;
 /**
  * @author lycano
  */
-public class YmlConfigurationSupport extends ConfigurationBackend implements Configuration {
+public class YmlConfigurationSupport extends ConfigurationBackend {
 
-    public YmlConfigurationSupport(ConfigurationManager manager, Configuration config, String providerName) {
-        super(manager, config, providerName);
+    private FileConfiguration fileConfiguration;
+
+    public YmlConfigurationSupport(ConfigurationManager manager) {
+        super(manager);
+
+        this.fileConfiguration = (FileConfiguration) this.manager.getConfig();
     }
 
     @Override
     public void initialize() {
-        this.config.options().copyDefaults(true);
+        this.fileConfiguration.options().copyDefaults(true);
         WormholeXTreme.getPlugin().saveConfig();
     }
 
@@ -46,7 +51,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Set<String> getKeys(boolean deep) {
-        return this.config.getKeys(deep);
+        return this.fileConfiguration.getKeys(deep);
     }
 
     /* (non-Javadoc)
@@ -54,7 +59,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Map<String, Object> getValues(boolean deep) {
-        return this.config.getValues(deep);
+        return this.fileConfiguration.getValues(deep);
     }
 
     /* (non-Javadoc)
@@ -62,7 +67,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean contains(String path) {
-        return this.config.contains(path);
+        return this.fileConfiguration.contains(path);
     }
 
     /* (non-Javadoc)
@@ -70,7 +75,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isSet(String path) {
-        return this.config.isSet(path);
+        return this.fileConfiguration.isSet(path);
     }
 
     /* (non-Javadoc)
@@ -78,7 +83,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public String getCurrentPath() {
-        return this.config.getCurrentPath();
+        return this.fileConfiguration.getCurrentPath();
     }
 
     /* (non-Javadoc)
@@ -86,7 +91,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public String getName() {
-        return this.config.getName();
+        return this.fileConfiguration.getName();
     }
 
     /* (non-Javadoc)
@@ -94,7 +99,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Configuration getRoot() {
-        return this.config.getRoot();
+        return this.fileConfiguration.getRoot();
     }
 
     /* (non-Javadoc)
@@ -102,7 +107,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationSection getParent() {
-        return this.config.getParent();
+        return this.fileConfiguration.getParent();
     }
 
     /* (non-Javadoc)
@@ -110,7 +115,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Object get(String path) {
-        return this.config.get(path);
+        return this.fileConfiguration.get(path);
     }
 
     /* (non-Javadoc)
@@ -118,7 +123,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Object get(String path, Object def) {
-        return this.config.get(path, def);
+        return this.fileConfiguration.get(path, def);
     }
 
     /* (non-Javadoc)
@@ -126,7 +131,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public void set(String path, Object value) {
-        this.config.set(path, value);
+        this.fileConfiguration.set(path, value);
     }
 
     /* (non-Javadoc)
@@ -134,7 +139,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationSection createSection(String path) {
-        return this.config.createSection(path);
+        return this.fileConfiguration.createSection(path);
     }
 
     /* (non-Javadoc)
@@ -142,7 +147,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationSection createSection(String path, Map<?, ?> map) {
-        return this.config.createSection(path, map);
+        return this.fileConfiguration.createSection(path, map);
     }
 
     /* (non-Javadoc)
@@ -150,7 +155,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public String getString(String path) {
-        return this.config.getString(path);
+        return this.fileConfiguration.getString(path);
     }
 
     /* (non-Javadoc)
@@ -158,7 +163,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public String getString(String path, String def) {
-        return this.config.getString(path, def);
+        return this.fileConfiguration.getString(path, def);
     }
 
     /* (non-Javadoc)
@@ -166,7 +171,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isString(String path) {
-        return this.config.isString(path);
+        return this.fileConfiguration.isString(path);
     }
 
     /* (non-Javadoc)
@@ -174,7 +179,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public int getInt(String path) {
-        return this.config.getInt(path);
+        return this.fileConfiguration.getInt(path);
     }
 
     /* (non-Javadoc)
@@ -182,7 +187,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public int getInt(String path, int def) {
-        return this.config.getInt(path, def);
+        return this.fileConfiguration.getInt(path, def);
     }
 
     /* (non-Javadoc)
@@ -190,7 +195,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isInt(String path) {
-        return this.config.isInt(path);
+        return this.fileConfiguration.isInt(path);
     }
 
     /* (non-Javadoc)
@@ -198,7 +203,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean getBoolean(String path) {
-        return this.config.getBoolean(path);
+        return this.fileConfiguration.getBoolean(path);
     }
 
     /* (non-Javadoc)
@@ -206,7 +211,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean getBoolean(String path, boolean def) {
-        return this.config.getBoolean(path, def);
+        return this.fileConfiguration.getBoolean(path, def);
     }
 
     /* (non-Javadoc)
@@ -214,7 +219,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isBoolean(String path) {
-        return this.config.isBoolean(path);
+        return this.fileConfiguration.isBoolean(path);
     }
 
     /* (non-Javadoc)
@@ -222,7 +227,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public double getDouble(String path) {
-        return this.config.getDouble(path);
+        return this.fileConfiguration.getDouble(path);
     }
 
     /* (non-Javadoc)
@@ -230,7 +235,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public double getDouble(String path, double def) {
-        return this.config.getDouble(path, def);
+        return this.fileConfiguration.getDouble(path, def);
     }
 
     /* (non-Javadoc)
@@ -238,7 +243,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isDouble(String path) {
-        return this.config.isDouble(path);
+        return this.fileConfiguration.isDouble(path);
     }
 
     /* (non-Javadoc)
@@ -246,7 +251,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public long getLong(String path) {
-        return this.config.getLong(path);
+        return this.fileConfiguration.getLong(path);
     }
 
     /* (non-Javadoc)
@@ -254,7 +259,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public long getLong(String path, long def) {
-        return this.config.getLong(path, def);
+        return this.fileConfiguration.getLong(path, def);
     }
 
     /* (non-Javadoc)
@@ -262,7 +267,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isLong(String path) {
-        return this.config.isLong(path);
+        return this.fileConfiguration.isLong(path);
     }
 
     /* (non-Javadoc)
@@ -270,7 +275,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<?> getList(String path) {
-        return this.config.getList(path);
+        return this.fileConfiguration.getList(path);
     }
 
     /* (non-Javadoc)
@@ -278,7 +283,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<?> getList(String path, List<?> def) {
-        return this.config.getList(path, def);
+        return this.fileConfiguration.getList(path, def);
     }
 
     /* (non-Javadoc)
@@ -286,7 +291,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isList(String path) {
-        return this.config.isList(path);
+        return this.fileConfiguration.isList(path);
     }
 
     /* (non-Javadoc)
@@ -294,7 +299,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<String> getStringList(String path) {
-        return this.config.getStringList(path);
+        return this.fileConfiguration.getStringList(path);
     }
 
     /* (non-Javadoc)
@@ -302,7 +307,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Integer> getIntegerList(String path) {
-        return this.config.getIntegerList(path);
+        return this.fileConfiguration.getIntegerList(path);
     }
 
     /* (non-Javadoc)
@@ -310,7 +315,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Boolean> getBooleanList(String path) {
-        return this.config.getBooleanList(path);
+        return this.fileConfiguration.getBooleanList(path);
     }
 
     /* (non-Javadoc)
@@ -318,7 +323,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Double> getDoubleList(String path) {
-        return this.config.getDoubleList(path);
+        return this.fileConfiguration.getDoubleList(path);
     }
 
     /* (non-Javadoc)
@@ -326,7 +331,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
     */
     @Override
     public List<Float> getFloatList(String path) {
-        return this.config.getFloatList(path);
+        return this.fileConfiguration.getFloatList(path);
     }
 
     /* (non-Javadoc)
@@ -334,7 +339,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Long> getLongList(String path) {
-        return this.config.getLongList(path);
+        return this.fileConfiguration.getLongList(path);
     }
 
     /* (non-Javadoc)
@@ -342,7 +347,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Byte> getByteList(String path) {
-        return this.config.getByteList(path);
+        return this.fileConfiguration.getByteList(path);
     }
 
     /* (non-Javadoc)
@@ -350,7 +355,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
     */
     @Override
     public List<Character> getCharacterList(String path) {
-        return this.config.getCharacterList(path);
+        return this.fileConfiguration.getCharacterList(path);
     }
 
     /* (non-Javadoc)
@@ -358,7 +363,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Short> getShortList(String path) {
-        return this.config.getShortList(path);
+        return this.fileConfiguration.getShortList(path);
     }
 
     /* (non-Javadoc)
@@ -366,7 +371,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public List<Map<?, ?>> getMapList(String path) {
-        return this.config.getMapList(path);
+        return this.fileConfiguration.getMapList(path);
     }
 
     /* (non-Javadoc)
@@ -374,7 +379,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Vector getVector(String path) {
-        return this.config.getVector(path);
+        return this.fileConfiguration.getVector(path);
     }
 
     /* (non-Javadoc)
@@ -382,7 +387,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Vector getVector(String path, Vector def) {
-        return this.config.getVector(path, def);
+        return this.fileConfiguration.getVector(path, def);
     }
 
     /* (non-Javadoc)
@@ -390,7 +395,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isVector(String path) {
-        return this.config.isVector(path);
+        return this.fileConfiguration.isVector(path);
     }
 
     /* (non-Javadoc)
@@ -398,7 +403,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public OfflinePlayer getOfflinePlayer(String path) {
-        return this.config.getOfflinePlayer(path);
+        return this.fileConfiguration.getOfflinePlayer(path);
     }
 
     /* (non-Javadoc)
@@ -406,7 +411,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def) {
-        return this.config.getOfflinePlayer(path, def);
+        return this.fileConfiguration.getOfflinePlayer(path, def);
     }
 
     /* (non-Javadoc)
@@ -414,7 +419,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isOfflinePlayer(String path) {
-        return this.config.isOfflinePlayer(path);
+        return this.fileConfiguration.isOfflinePlayer(path);
     }
 
     /* (non-Javadoc)
@@ -422,7 +427,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ItemStack getItemStack(String path) {
-        return this.config.getItemStack(path);
+        return this.fileConfiguration.getItemStack(path);
     }
 
     /* (non-Javadoc)
@@ -430,7 +435,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ItemStack getItemStack(String path, ItemStack def) {
-        return this.config.getItemStack(path, def);
+        return this.fileConfiguration.getItemStack(path, def);
     }
 
     /* (non-Javadoc)
@@ -438,7 +443,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isItemStack(String path) {
-        return this.config.isItemStack(path);
+        return this.fileConfiguration.isItemStack(path);
     }
 
     /* (non-Javadoc)
@@ -446,7 +451,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Color getColor(String path) {
-        return this.config.getColor(path);
+        return this.fileConfiguration.getColor(path);
     }
 
     /* (non-Javadoc)
@@ -454,7 +459,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Color getColor(String path, Color def) {
-        return this.config.getColor(path, def);
+        return this.fileConfiguration.getColor(path, def);
     }
 
     /* (non-Javadoc)
@@ -462,7 +467,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isColor(String path) {
-        return this.config.isColor(path);
+        return this.fileConfiguration.isColor(path);
     }
 
     /* (non-Javadoc)
@@ -470,7 +475,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationSection getConfigurationSection(String path) {
-        return this.config.getConfigurationSection(path);
+        return this.fileConfiguration.getConfigurationSection(path);
     }
 
     /* (non-Javadoc)
@@ -478,7 +483,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public boolean isConfigurationSection(String path) {
-        return this.config.isConfigurationSection(path);
+        return this.fileConfiguration.isConfigurationSection(path);
     }
 
     /* (non-Javadoc)
@@ -486,7 +491,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationSection getDefaultSection() {
-        return this.config.getDefaultSection();
+        return this.fileConfiguration.getDefaultSection();
     }
 
     /* (non-Javadoc)
@@ -494,7 +499,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public void addDefault(String path, Object value) {
-        this.config.addDefault(path, value);
+        this.fileConfiguration.addDefault(path, value);
     }
 
     /* (non-Javadoc)
@@ -502,7 +507,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public void addDefaults(Map<String, Object> defaults) {
-        this.config.addDefaults(defaults);
+        this.fileConfiguration.addDefaults(defaults);
     }
 
     /* (non-Javadoc)
@@ -510,7 +515,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public void addDefaults(Configuration defaults) {
-        this.config.addDefaults(defaults);
+        this.fileConfiguration.addDefaults(defaults);
     }
 
     /* (non-Javadoc)
@@ -518,7 +523,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public void setDefaults(Configuration defaults) {
-        this.config.setDefaults(defaults);
+        this.fileConfiguration.setDefaults(defaults);
     }
 
     /* (non-Javadoc)
@@ -526,7 +531,7 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public Configuration getDefaults() {
-        return this.config.getDefaults();
+        return this.fileConfiguration.getDefaults();
     }
 
     /* (non-Javadoc)
@@ -534,6 +539,6 @@ public class YmlConfigurationSupport extends ConfigurationBackend implements Con
      */
     @Override
     public ConfigurationOptions options() {
-        return this.config.options();
+        return this.fileConfiguration.options();
     }
 }

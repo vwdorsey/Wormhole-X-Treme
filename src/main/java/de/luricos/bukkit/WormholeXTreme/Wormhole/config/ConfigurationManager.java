@@ -23,6 +23,7 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.config;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.events.WormholeSystemEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.logging.Level;
 
@@ -60,6 +61,10 @@ public class ConfigurationManager {
         return this.backend;
     }
 
+    public String getBackendName() {
+        return this.backend.getName();
+    }
+
     public void setBackend(String backendName) {
         synchronized (this) {
             this.backend = ConfigurationBackend.getBackend(backendName, this.config);
@@ -67,6 +72,10 @@ public class ConfigurationManager {
         }
 
         this.callEvent(WormholeSystemEvent.Action.PERMISSION_BACKEND_CHANGED);
+    }
+
+    public ConfigurationSection getConfig() {
+        return this.config;
     }
 
     protected void callEvent(WormholeSystemEvent event) {
@@ -92,10 +101,6 @@ public class ConfigurationManager {
 
     public Level getLogLevel() {
         return Level.parse(this.config.getString("logger.level", "INFO"));
-    }
-
-    public String getBackendName() {
-        return this.backend.getName();
     }
 
 }
