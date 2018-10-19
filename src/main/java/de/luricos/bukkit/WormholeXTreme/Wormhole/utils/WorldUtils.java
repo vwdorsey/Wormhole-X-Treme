@@ -214,15 +214,11 @@ public class WorldUtils {
     public static void scheduleChunkLoad(final Block b) {
         final World w = b.getWorld();
         final Chunk c = b.getChunk();
-        if (WormholeXTreme.getWorldHandler() != null) {
-            WormholeXTreme.getWorldHandler().addStickyChunk(c, "WormholeXTreme");
-        } else {
-            final int cX = c.getX();
-            final int cZ = c.getZ();
-            if (!w.isChunkLoaded(cX, cZ)) {
-                WXTLogger.prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
-                w.loadChunk(cX, cZ);
-            }
+        final int cX = c.getX();
+        final int cZ = c.getZ();
+        if (!w.isChunkLoaded(cX, cZ)) {
+            WXTLogger.prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
+            w.loadChunk(cX, cZ);
         }
     }
 
@@ -235,15 +231,11 @@ public class WorldUtils {
     public static void scheduleChunkUnload(final Block b) {
         final World w = b.getWorld();
         final Chunk c = b.getChunk();
-        if (WormholeXTreme.getWorldHandler() != null) {
-            WormholeXTreme.getWorldHandler().removeStickyChunk(c, "WormholeXTreme");
-        } else {
-            final int cX = c.getX();
-            final int cZ = c.getZ();
-            if (w.isChunkLoaded(cX, cZ)) {
-                WXTLogger.prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
-                w.unloadChunkRequest(cX, cZ);
-            }
+        final int cX = c.getX();
+        final int cZ = c.getZ();
+        if (w.isChunkLoaded(cX, cZ)) {
+            WXTLogger.prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
+            w.unloadChunkRequest(cX, cZ);
         }
     }
 }

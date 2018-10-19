@@ -68,8 +68,6 @@ public class ConfigManager {
         USE_COOLDOWN_GROUP_THREE,
         /** The HELP SUPPORT DISABLE. */
         HELP_SUPPORT_DISABLE,
-        /** The WORLDS SUPPORT DISABLE key. */
-        WORLDS_SUPPORT_ENABLED,
         /** The LOG LEVEL. */
         LOG_LEVEL,
         /** The Gate welcome message. */
@@ -466,20 +464,6 @@ public class ConfigManager {
      */
     public static boolean isUseCooldownEnabled() {
         return ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED) != null && ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED).getBooleanValue();
-    }
-
-    /**
-     * Checks if is wormhole worlds support enabled.
-     * 
-     * @return true, if is wormhole worlds support enabled
-     */
-    public static boolean isWormholeWorldsSupportEnabled() {
-        Setting wsd;
-        if ((wsd = ConfigManager.getConfigurations().get(ConfigKeys.WORLDS_SUPPORT_ENABLED)) != null) {
-            return wsd.getBooleanValue();
-        } else {
-            return false;
-        }
     }
 
     /**

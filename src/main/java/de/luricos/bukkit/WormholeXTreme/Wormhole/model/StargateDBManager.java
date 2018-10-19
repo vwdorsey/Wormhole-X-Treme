@@ -185,15 +185,9 @@ public class StargateDBManager {
 //                    }
 //                }
                 
-                if (ConfigManager.isWormholeWorldsSupportEnabled()) {
-                    //@TODO: should throw an exception instead
-                    if ((WormholeXTreme.getWorldHandler() != null) && !WormholeXTreme.getWorldHandler().loadWorld(worldName)) {
-                        WXTLogger.prettyLog(Level.WARNING, true, "World: " + worldName + " is not a Wormhole World, the suggested action is to add it as one. Otherwise disregard this warning.");
-                    }
-                } else {
-                    // this will create a new world if we run in native mode
-                    server.createWorld(new WorldCreator(worldName).environment(Environment.valueOf(worldEnvironment)));
-                }
+                // this will create a new world if we run in native mode
+                server.createWorld(new WorldCreator(worldName).environment(Environment.valueOf(worldEnvironment)));
+                
                 w = server.getWorld(worldName);
 
                 final Stargate s = StargateHelper.parseVersionedData(gatesData.getBytes("GateData"), w, gatesData.getString("Name"), sn);

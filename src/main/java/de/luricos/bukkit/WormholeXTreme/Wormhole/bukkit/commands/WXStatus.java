@@ -24,7 +24,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateDBManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -49,7 +48,6 @@ public class WXStatus implements CommandExecutor {
                 sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "System status");
                 sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "\u00A76----------------------------");
                 sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "DBConnection: " + ((StargateDBManager.isConnected()) ? "\u00A72ready" : "\u00A74failed"));
-                sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "Wxw-link: " + ((WormholeWorldsSupport.isEnabled()) ? "\u00A72ready" : "\u00A74failed"));
                 sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString());
             }
         } else {

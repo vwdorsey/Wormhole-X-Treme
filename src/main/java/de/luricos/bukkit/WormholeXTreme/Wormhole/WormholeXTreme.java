@@ -20,7 +20,6 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole;
 
-import de.luricos.bukkit.WormholeXTreme.Worlds.handler.WorldHandler;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Configuration;
@@ -35,7 +34,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.BukkitSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.PermissionsExSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.plugin.WormholeWorldsSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Bukkit;
@@ -65,9 +63,6 @@ public class WormholeXTreme extends JavaPlugin {
     protected PermissionManager permissionManager;
     protected ConfigManager configManager;
 
-    /** The wormhole x treme worlds. */
-    private static WorldHandler worldHandler = null;
-    
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
 
@@ -137,9 +132,6 @@ public class WormholeXTreme extends JavaPlugin {
         // clear wormholePlayers
         WormholePlayerManager.unregisterAllPlayers();
         
-        // disconnect from Worlds
-        WormholeWorldsSupport.disableWormholeWorlds();
-        
         // load config
         ConfigManager.setupConfigs(this.getDescription());
         
@@ -150,16 +142,11 @@ public class WormholeXTreme extends JavaPlugin {
         StargateHelper.reloadShapes();
         
         // Try and attach to Permissions and iConomy and Help
-        if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
-            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
-            StargateDBManager.loadStargates(this.getServer());
-        }
+        WXTLogger.prettyLog(Level.INFO, true, "Loading stargates.");
+        StargateDBManager.loadStargates(this.getServer());
 
         // reload permission backend
         this.permissionManager.reset();
-
-        // enable support if configured
-        WormholeWorldsSupport.enableWormholeWorlds(true);
         
         // register all players
         WormholePlayerManager.registerAllOnlinePlayers();
@@ -180,11 +167,8 @@ public class WormholeXTreme extends JavaPlugin {
 
         WXTLogger.prettyLog(Level.INFO, true, "Boot sequence initiated...");
 
-        // Try and attach to Permissions and iConomy and Help
-        if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
-            WXTLogger.prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds by our self.");
-            StargateDBManager.loadStargates(this.getServer());
-        }
+        WXTLogger.prettyLog(Level.INFO, true, "Loading stargates.");
+        StargateDBManager.loadStargates(this.getServer());
 
         try {
             // register Permission backends
@@ -199,9 +183,6 @@ public class WormholeXTreme extends JavaPlugin {
                 this.permissionManager = new PermissionManager(this.configManager);
             }
 
-            if (ConfigManager.isWormholeWorldsSupportEnabled()) {
-                WormholeWorldsSupport.enableWormholeWorlds();
-            }
         } catch (final Exception e) {
             // @TODO change this behavior to be more error friendly (skip gate instead)
             // Catched when a world is not loaded but a gate is in that world.
@@ -211,10 +192,8 @@ public class WormholeXTreme extends JavaPlugin {
         }
         
         registerEvents(true);
-        if (!ConfigManager.isWormholeWorldsSupportEnabled()) {
-            registerEvents(false);
-            registerCommands();
-        }
+        registerEvents(false);
+        registerCommands();
         
         // register all online players onEnable/onReload
         WormholePlayerManager.registerAllOnlinePlayers();
@@ -330,15 +309,6 @@ public class WormholeXTreme extends JavaPlugin {
     }
 
     /**
-     * Gets the wormhole x treme worlds.
-     * 
-     * @return the wormhole x treme worlds
-     */
-    public static WorldHandler getWorldHandler() {
-        return worldHandler;
-    }
-
-    /**
      * Register commands.
      */
     public static void registerCommands() {
@@ -393,16 +363,6 @@ public class WormholeXTreme extends JavaPlugin {
      */
     protected static void setScheduler(BukkitScheduler scheduler) {
         WormholeXTreme.scheduler = scheduler;
-    }
-
-    /**
-     * Sets the wormhole x treme worlds.
-     * 
-     * @param worldHandler
-     *            the new wormhole x treme worlds
-     */
-    public static void setWorldHandler(WorldHandler worldHandler) {
-        WormholeXTreme.worldHandler = worldHandler;
     }
 
     public static boolean isPluginAvailable() {
