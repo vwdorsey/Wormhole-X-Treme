@@ -112,6 +112,6 @@ public class WormholeXTremeRedstoneListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFromToEvent(BlockFromToEvent event) {
-        WXTLogger.prettyLog(Level.FINE, false, "We got a BlockFromToEvent here: " + event.getToBlock());
+        //WXTLogger.prettyLog(Level.FINE, false, "We got a BlockFromToEvent here: " + event.getToBlock());
     }
 }

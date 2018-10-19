@@ -63,7 +63,10 @@ public class WXTLogger {
             prettyLogLine += prettyVersion;
         }
         
-        logger.log(logLevel, prettyLogLine + " " + message);
+        //logger.log(logLevel, prettyLogLine + " " + message);
+        
+        // Hack to always have it print (FINE, etc aren't printing for some reason despite setting the level to FINE)
+        logger.log(Level.INFO, prettyLogLine + " " + message);
     }
     
     public static Level getLogLevel() {

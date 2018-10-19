@@ -59,7 +59,7 @@ public class StargateShape {
     /** The square of the woosh_depth, used in comparisions with squared distance. */
     private int shapeWooshDepthSquared = 0;
     /** The portal material. */
-    private Material shapePortalMaterial = Material.LEGACY_STATIONARY_WATER;
+    private Material shapePortalMaterial = Material.WATER;
     /** The iris material. */
     private Material shapeIrisMaterial = Material.STONE;
     /** The stargate material. */

@@ -190,7 +190,7 @@ public class Stargate {
                 ? getGateCustomPortalMaterial()
                 : getGateShape() != null
                 ? getGateShape().getShapePortalMaterial()
-                : Material.LEGACY_STATIONARY_WATER;
+                : Material.WATER;
         final int wooshDepth = isGateCustom()
                 ? getGateCustomWooshDepth()
                 : getGateShape() != null
@@ -1657,7 +1657,7 @@ public class Stargate {
                 ? getGateCustomPortalMaterial()
                 : getGateShape() != null
                 ? getGateShape().getShapePortalMaterial()
-                : Material.LEGACY_STATIONARY_WATER
+                : Material.WATER
                 : Material.AIR);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER)) {
             BlockState leverState = getGateIrisLeverBlock().getState();

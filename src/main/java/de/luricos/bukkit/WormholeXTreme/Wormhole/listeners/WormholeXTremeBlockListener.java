@@ -138,7 +138,7 @@ public class WormholeXTremeBlockListener implements Listener {
                     ? closest.getGateCustomPortalMaterial()
                     : closest.getGateShape() != null
                     ? closest.getGateShape().getShapePortalMaterial()
-                    : Material.LEGACY_STATIONARY_WATER) == Material.LEGACY_STATIONARY_LAVA)) {
+                    : Material.WATER) == Material.LAVA)) {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
                 if (((blockDistanceSquared <= (closest.isGateCustom()
                         ? closest.getGateCustomWooshDepthSquared()
@@ -195,7 +195,7 @@ public class WormholeXTremeBlockListener implements Listener {
                     ? closest.getGateCustomPortalMaterial()
                     : closest.getGateShape() != null
                     ? closest.getGateShape().getShapePortalMaterial()
-                    : Material.LEGACY_STATIONARY_WATER) == Material.LEGACY_STATIONARY_LAVA)) {
+                    : Material.WATER) == Material.LAVA)) {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
                 if (((blockDistanceSquared <= (closest.isGateCustom()
                         ? closest.getGateCustomWooshDepthSquared()

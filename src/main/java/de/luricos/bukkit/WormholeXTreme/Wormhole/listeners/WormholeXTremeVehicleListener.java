@@ -70,7 +70,7 @@ public class WormholeXTremeVehicleListener implements Listener {
                 ? st.getGateCustomPortalMaterial()
                 : st.getGateShape() != null
                 ? st.getGateShape().getShapePortalMaterial()
-                : Material.LEGACY_STATIONARY_WATER))) {
+                : Material.WATER))) {
             String gatenetwork;
             if (st.getGateNetwork() != null) {
                 gatenetwork = st.getGateNetwork().getNetworkName();
