@@ -32,7 +32,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionBackend;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.BukkitSupport;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends.PermissionsExSupport;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DBUpdateUtil;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;

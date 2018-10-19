@@ -35,6 +35,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -189,7 +190,7 @@ public class Stargate {
                 ? getGateCustomPortalMaterial()
                 : getGateShape() != null
                 ? getGateShape().getShapePortalMaterial()
-                : Material.STATIONARY_WATER;
+                : Material.LEGACY_STATIONARY_WATER;
         final int wooshDepth = isGateCustom()
                 ? getGateCustomWooshDepth()
                 : getGateShape() != null
@@ -204,7 +205,10 @@ public class Stargate {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         getGateAnimatedBlocks().add(b);
                         StargateManager.getOpeningAnimationBlocks().put(l, b);
-                        b.setType(wooshMaterial);
+                        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(
+                        		WormholeXTreme.getThisPlugin(),
+                        		() -> b.setType(wooshMaterial)
+                        		);
                     }
 
                     WXTLogger.prettyLog(Level.FINER, false, getGateName() + " Woosh Adding: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
@@ -481,23 +485,14 @@ public class Stargate {
     }
 
     /**
-     * Fill gate interior.
-     * 
+     * Fill gate interior
+     *
      * @param mat Material
      */
     public void fillGateInterior(Material mat) {
-        fillGateInterior(mat.getId());
-    }
-
-    /**
-     * Fill gate interior
-     *
-     * @param typeId Material's ID
-     */
-    public void fillGateInterior(int typeId) {
         for (Location loc : getGatePortalBlocks()) {
             final Block blk = getGateWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            blk.setTypeId(typeId, false);
+            blk.setType(mat, false);
             blk.getState().update();
         }
     }
@@ -1102,7 +1097,11 @@ public class Stargate {
         if (!teleportSign)
             return;
 
-        getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+        BlockState signState = getGateDialSignBlock().getState();
+        signState.setType(Material.WALL_SIGN);
+        signState.setRawData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+        signState.update(false, false);
+        
         setGateDialSign((Sign) getGateDialSignBlock().getState());
         getGateDialSign().setLine(0, getGateName());
         if (getGateNetwork() != null) {
@@ -1120,7 +1119,7 @@ public class Stargate {
      */
     public void resetTeleportSign() {
         if ((getGateDialSignBlock() != null) && (getGateDialSign() != null)) {
-            getGateDialSignBlock().setTypeId(0);
+            getGateDialSignBlock().setType(Material.AIR);
             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_RESET), 2);
         }
     }
@@ -1658,10 +1657,12 @@ public class Stargate {
                 ? getGateCustomPortalMaterial()
                 : getGateShape() != null
                 ? getGateShape().getShapePortalMaterial()
-                : Material.STATIONARY_WATER
+                : Material.LEGACY_STATIONARY_WATER
                 : Material.AIR);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER)) {
-            getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
+            BlockState leverState = getGateIrisLeverBlock().getState();
+            leverState.setRawData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
+            leverState.update();
         }
     }
 
@@ -1686,7 +1687,12 @@ public class Stargate {
             if (create) {
                 final Block nameSign = getGateNameBlockHolder().getRelative(getGateFacing());
                 getGateStructureBlocks().add(nameSign.getLocation());
-                nameSign.setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+                
+                BlockState signState = nameSign.getState();
+                signState.setType(Material.WALL_SIGN);
+                signState.setRawData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+                signState.update(false, false);
+                
                 final Sign sign = (Sign) nameSign.getState();
                 sign.setLine(0, "-" + getGateName() + "-");
 
@@ -1703,7 +1709,7 @@ public class Stargate {
                 final Block nameSign = getGateNameBlockHolder().getRelative(getGateFacing());
                 if (nameSign.getType().equals(Material.WALL_SIGN)) {
                     getGateStructureBlocks().remove(nameSign.getLocation());
-                    nameSign.setTypeId(0);
+                    nameSign.setType(Material.AIR);
                 }
             }
         }
@@ -1722,11 +1728,14 @@ public class Stargate {
         if (getGateIrisLeverBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateIrisLeverBlock().getLocation());
-                getGateIrisLeverBlock().setTypeIdAndData(Material.LEVER.getId(), WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
+                BlockState leverState = getGateIrisLeverBlock().getState();
+                leverState.setType(Material.LEVER);
+                leverState.setRawData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+                leverState.update(false, false);
             } else {
                 if (getGateIrisLeverBlock().getType().equals(Material.LEVER)) {
                     getGateStructureBlocks().remove(getGateIrisLeverBlock().getLocation());
-                    getGateIrisLeverBlock().setTypeId(0);
+                    getGateIrisLeverBlock().setType(Material.AIR);
                 }
             }
         }
@@ -1760,7 +1769,7 @@ public class Stargate {
             } else {
                 if (getGateRedstoneGateActivatedBlock().getType() == Material.REDSTONE_WIRE) {
                     getGateStructureBlocks().remove(getGateRedstoneDialActivationBlock().getLocation());
-                    getGateRedstoneDialActivationBlock().setTypeId(0);
+                    getGateRedstoneDialActivationBlock().setType(Material.AIR);
                 }
             }
         }
@@ -1776,11 +1785,16 @@ public class Stargate {
         if (getGateRedstoneGateActivatedBlock() != null) {
             if (create) {
                 getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
-                getGateRedstoneGateActivatedBlock().setTypeIdAndData(Material.LEVER.getId(), (byte) 0x5, false);
+                
+                BlockState bs = getGateRedstoneGateActivatedBlock().getState();
+                bs.setType(Material.LEVER);
+                bs.setRawData((byte) 0x5);
+                bs.update(false, false);
+                
             } else {
                 if (getGateRedstoneGateActivatedBlock().getType().equals(Material.LEVER)) {
                     getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
-                    getGateRedstoneGateActivatedBlock().setTypeId(0);
+                    getGateRedstoneGateActivatedBlock().setType(Material.AIR);
                 }
             }
         }
@@ -1800,7 +1814,7 @@ public class Stargate {
             } else {
                 if (getGateRedstoneGateActivatedBlock().getType() == Material.REDSTONE_WIRE) {
                     getGateStructureBlocks().remove(getGateRedstoneSignActivationBlock().getLocation());
-                    getGateRedstoneSignActivationBlock().setTypeId(0);
+                    getGateRedstoneSignActivationBlock().setType(Material.AIR);
                 }
             }
         }
@@ -1940,7 +1954,10 @@ public class Stargate {
     public void dialSignClicked(Action eventAction) {
         synchronized (getGateNetwork().getNetworkGateLock()) {
 
-            getGateDialSignBlock().setTypeIdAndData(Material.WALL_SIGN.getId(), WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+        	BlockState signState = getGateDialSignBlock().getState();
+            signState.setType(Material.WALL_SIGN);
+            signState.setRawData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+            signState.update(false, false);
 
             try {
                 // we only want to set the GateDialSign once as it already may have a state
@@ -2097,24 +2114,30 @@ public class Stargate {
             
             Material material = getGateDialLeverBlock().getType();
             if (regenerate) {
-                getGateDialLeverBlock().setTypeIdAndData(Material.LEVER.getId(), WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
+                BlockState leverState = getGateDialLeverBlock().getState();
+                leverState.setType(Material.LEVER);
+                leverState.setRawData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+                leverState.update(false, false);
+                
                 material = getGateDialLeverBlock().getType();
             }
             
             final byte leverState = getGateDialLeverBlock().getData();
+            final BlockState bs = getGateDialLeverBlock().getState();
             switch (material) {
                 case STONE_BUTTON:
-                    getGateDialLeverBlock().setType(Material.LEVER);
-                    getGateDialLeverBlock().setData(leverState);
+                    bs.setType(Material.LEVER);
+                    bs.setRawData(leverState);
                     WXTLogger.prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
-                    getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    bs.setRawData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 case LEVER:
-                    getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    bs.setRawData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 default:
                     break;
             }
+            bs.update();
             
             if (!isGateActive()) {
                 WorldUtils.scheduleChunkUnload(getGateDialLeverBlock());
@@ -2144,7 +2167,9 @@ public class Stargate {
     private void toggleRedstoneGateActivatedPower() {
         if (isGateRedstonePowered() && (getGateRedstoneGateActivatedBlock() != null) && (getGateRedstoneGateActivatedBlock().getType() == Material.LEVER)) {
             final byte leverState = getGateRedstoneGateActivatedBlock().getData();
-            getGateRedstoneGateActivatedBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+            BlockState bs = getGateRedstoneGateActivatedBlock().getState();
+            bs.setRawData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+            bs.update();
         }
     }
 

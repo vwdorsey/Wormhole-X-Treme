@@ -236,7 +236,7 @@ public class StargateHelper {
             // First go forward one
             Block bLoc = teleBlock.getRelative(facing);
             // Now go up until we hit air or water.
-            while ((bLoc.getTypeId() != 0) && (bLoc.getTypeId() != 8)) {
+            while ((bLoc.getType() != Material.AIR) && (bLoc.getType() != Material.WATER)) {
                 bLoc = bLoc.getRelative(BlockFace.UP);
             }
             final Location teleLoc = bLoc.getLocation();
@@ -255,7 +255,7 @@ public class StargateHelper {
                     bVect[2] * directionVector[2] * -1};
 
                 final Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
-                if (maybeBlock.getTypeId() == 0) {
+                if (maybeBlock.getType() == Material.AIR) {
                     tempGate.getGatePortalBlocks().add(maybeBlock.getLocation());
                 } else {
                     if (tempGate.getGateNetwork() != null) {
@@ -425,7 +425,7 @@ public class StargateHelper {
                 maybeBlock.setType(Material.AIR);
             }
 
-            if (maybeBlock.getTypeId() == 0) {
+            if (maybeBlock.getType() == Material.AIR) {
                 tempGate.getGatePortalBlocks().add(maybeBlock.getLocation());
             } else {
                 return false;
@@ -439,7 +439,7 @@ public class StargateHelper {
             // First go forward one
             // Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
             // Now go up until we hit air or water.
-            while ((teleBlock.getTypeId() != 0) && (teleBlock.getTypeId() != 8)) {
+            while ((teleBlock.getType() != Material.AIR) && (teleBlock.getType() != Material.WATER)) {
                 teleBlock = teleBlock.getRelative(BlockFace.UP);
             }
             final Location teleLoc = teleBlock.getLocation();
@@ -637,7 +637,7 @@ public class StargateHelper {
      * @return true, if is stargate material
      */
     private static boolean isStargateMaterial(final Block b, final StargateShape s) {
-        return b.getTypeId() == s.getShapeStructureMaterial().getId();
+        return b.getType() == s.getShapeStructureMaterial();
     }
 
     public static boolean isStargateShape(String name) {
@@ -1376,6 +1376,8 @@ public class StargateHelper {
         s.setGateRedstonePowered(DataUtils.byteToBoolean(byteBuff.get()));
 
         s.setGateCustom(DataUtils.byteToBoolean(byteBuff.get()));
+        
+        /*
         final int gateCustomStructureMaterial = byteBuff.getInt();
         s.setGateCustomStructureMaterial(gateCustomStructureMaterial != -1
                 ? Material.getMaterial(gateCustomStructureMaterial)
@@ -1392,6 +1394,20 @@ public class StargateHelper {
         s.setGateCustomIrisMaterial(gateCustomIrisMaterial != -1
                 ? Material.getMaterial(gateCustomIrisMaterial)
                 : null);
+        */
+        
+        // HACK START
+        // TODO: Fix this properly
+        final int gateCustomStructureMaterial = byteBuff.getInt();
+        s.setGateCustomStructureMaterial(null);
+        final int gateCustomPortalMaterial = byteBuff.getInt();
+        s.setGateCustomPortalMaterial(null);
+        final int gateCustomLightMaterial = byteBuff.getInt();
+        s.setGateCustomLightMaterial(null);
+        final int gateCustomIrisMaterial = byteBuff.getInt();
+        s.setGateCustomIrisMaterial(null);
+        // HACK END
+        
         s.setGateCustomWooshTicks(byteBuff.getInt());
         s.setGateCustomLightTicks(byteBuff.getInt());
         s.setGateCustomWooshDepth(byteBuff.getInt());

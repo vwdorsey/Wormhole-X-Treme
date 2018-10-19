@@ -30,6 +30,7 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -65,11 +66,11 @@ public class WormholeXTremeVehicleListener implements Listener {
         final Location l = event.getTo();
         final Block ch = l.getWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
         final Stargate st = StargateManager.getGateFromBlock(ch);
-        if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (ch.getTypeId() == (st.isGateCustom()
-                ? st.getGateCustomPortalMaterial().getId()
+        if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (ch.getType() == (st.isGateCustom()
+                ? st.getGateCustomPortalMaterial()
                 : st.getGateShape() != null
-                ? st.getGateShape().getShapePortalMaterial().getId()
-                : 9))) {
+                ? st.getGateShape().getShapePortalMaterial()
+                : Material.LEGACY_STATIONARY_WATER))) {
             String gatenetwork;
             if (st.getGateNetwork() != null) {
                 gatenetwork = st.getGateNetwork().getNetworkName();

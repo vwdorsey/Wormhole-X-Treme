@@ -371,11 +371,11 @@ public class WormholeXTremePlayerListener implements Listener {
 
         Stargate stargate = StargateManager.getGateFromBlock(gateBlockFinal);
 
-        if ((stargate != null) && (stargate.isGateActive()) && (stargate.getGateTarget() != null) && (gateBlockFinal.getTypeId() == (stargate.isGateCustom()
-                ? stargate.getGateCustomPortalMaterial().getId()
+        if ((stargate != null) && (stargate.isGateActive()) && (stargate.getGateTarget() != null) && (gateBlockFinal.getType() == (stargate.isGateCustom()
+                ? stargate.getGateCustomPortalMaterial()
                 : stargate.getGateShape() != null
-                ? stargate.getGateShape().getShapePortalMaterial().getId()
-                : Material.STATIONARY_WATER.getId())) 
+                ? stargate.getGateShape().getShapePortalMaterial()
+                : Material.LEGACY_STATIONARY_WATER)) 
                 && (!WormholePlayerManager.getRegisteredWormholePlayer(player).getProperties(stargate).hasUsedStargate())) {
 
             WormholePlayer wormholePlayer = WormholePlayerManager.getRegisteredWormholePlayer(player);
