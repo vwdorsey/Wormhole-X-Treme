@@ -172,7 +172,6 @@ public class WormholeXTreme extends JavaPlugin {
 
         try {
             // register Permission backends
-            PermissionBackend.registerBackendAlias("pex", PermissionsExSupport.class);
             PermissionBackend.registerBackendAlias("bukkit", BukkitSupport.class);
 
             // resolve currently used PermissionPlugin
