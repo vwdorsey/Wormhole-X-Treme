@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,17 +45,17 @@ public class Compass implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean doCompass(final Player player) {
-        if (WXPermissions.checkPermission(player, PermissionType.COMPASS)) {
+        //if (WXPermissions.checkPermission(player, PermissionType.COMPASS)) {
             final Stargate closest = StargateManager.findClosestStargate(player.getLocation());
             if (closest != null) {
                 player.setCompassTarget(closest.getGatePlayerTeleportLocation());
-                player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
+                player.sendMessage(Messages.createNormalMessage("Compass set to wormhole: " + closest.getGateName()));
             } else {
-                player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
+                player.sendMessage(Messages.createErrorMessage("No wormholes to track!"));
             }
-        } else {
-            player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-        }
+        /*} else {
+            player.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+        }*/
         return true;
     }
 

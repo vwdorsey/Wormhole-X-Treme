@@ -20,34 +20,29 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.backends;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionBackend;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-import org.bukkit.entity.Player;
-
-import java.util.logging.Level;
 
 /**
  * @author lycano
  */
 public class BukkitSupport extends PermissionBackend {
-
-    public BukkitSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager config, String providerName) {
-        super(manager, config, providerName);
-    }
-
-    @Override
-    public void initialize() {
-        WXTLogger.prettyLog(Level.INFO, false, "Attached to Bukkit");
-    }
-
-    @Override
-    public void reload() {
-        WXTLogger.prettyLog(Level.INFO, false, "Detached from BukkitSupport");
-    }
-
-    @Override
-    public boolean hasPermission(Player player, String permissionString) {
-        return player.hasPermission(permissionString);
-    }
+//
+//    public BukkitSupport(de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionManager manager, ConfigManager config, String providerName) {
+//        super(manager, config, providerName);
+//    }
+//
+//    @Override
+//    public void initialize() {
+//        WXTLogger.prettyLog(Level.INFO, false, "Attached to Bukkit");
+//    }
+//
+//    @Override
+//    public void reload() {
+//        WXTLogger.prettyLog(Level.INFO, false, "Detached from BukkitSupport");
+//    }
+//
+//    @Override
+//    public boolean hasPermission(Player player, String permissionString) {
+//        return player.hasPermission(permissionString);
+//    }
 }

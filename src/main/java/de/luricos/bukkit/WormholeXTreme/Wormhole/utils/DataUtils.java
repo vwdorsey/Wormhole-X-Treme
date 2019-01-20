@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import javax.xml.crypto.Data;
 import java.nio.ByteBuffer;
 
 /**
@@ -32,6 +33,8 @@ import java.nio.ByteBuffer;
  * @author Ben Echols (Lologarithm)
  */
 public class DataUtils {
+
+    private DataUtils() {}
 
     /**
      * Block from bytes.

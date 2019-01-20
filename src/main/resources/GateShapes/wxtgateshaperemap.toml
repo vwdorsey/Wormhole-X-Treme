@@ -1,0 +1,112 @@
+title = "WormholeXTreme Portal Definition"
+
+[info]
+name = "Standard"
+version = 1
+
+[config]
+shape = '3d' # Available in 2d or 3d flavors
+width = 7 # width of portal
+height = 7 # height or portal
+
+[config.ticks]
+woosh = 3
+light = 2
+
+[config.materials]
+active = 'GLOWSTONE'
+iris = 'STONE'
+portal = 'WATER'
+stargate = 'OBSIDIAN'
+
+[config.definition]
+layers = 4 # woosh depth for 3d, ignored for 2d
+
+[[config.definition.layer]]
+data = [
+['?','?','%','9','%','?','?'],
+['?','5','@','@','@','4','?'],
+['%','@','@','@','@','@','%'],
+['3','@','@','@','@','@','8'],
+['1','@','@','@','@','@','%'],
+['?','6','@','@','@','7','?'],
+['?','?','%','2','%','?','?']
+]
+special = ['%:N','%:P','%:L#1','%:L#2','%:L#3','%:L#4','%:L#5','%:L#6','%:L#7']
+
+[[config.definition.layer]]
+data = [
+['?','?','?','?','?','?','?'],
+['?','?','1','1','1','?','?'],
+['?','1','1','1','1','1','?'],
+['?','1','1','1','1','1','?'],
+['?','1','1','1','1','1','?'],
+['?','?','1','1','1','?','?'],
+['?','?','?','2','?','?','?']
+]
+special = ['?:W1','?:M']
+
+[[config.definition.layer]]
+data = [
+['?','?','?','?','?','?','?'],
+['?','?','?','1','?','?','?'],
+['?','?','1','1','1','?','?'],
+['?','1','1','1','1','1','?'],
+['?','?','1','1','1','?','?'],
+['?','?','?','1','?','?','?'],
+['?','?','?','?','?','?','?']
+]
+special = ['?:W#2']
+
+[[config.definition.layer]]
+data = [
+['?','?','?','?','?','?','?'],
+['?','?','?','?','?','?','?'],
+['?','?','?','1','?','?','?'],
+['?','?','1','1','1','?','?'],
+['?','?','?','1','?','?','?'],
+['?','?','?','?','?','2','?'],
+['?','?','?','?','?','3','?']
+]
+special = ['?:W#3','%:A','%:I']
+
+# GateShape Layer Line Definitions
+# Each Layer requires a config.definition.layer block in the order they should exist in.
+# Blocks can only be placed into layers.
+# a 2D gate would have only 1 layer.
+# Primary blocks are:
+#    [?] = Ignored
+#    [%] = Stargate Material from config.materials
+#    [@] = Air blocks that will turn into the portal material when activated.
+#    Extra parameters:
+#   --- These parameters are 1 of each per gate ---
+#    :N = Block where the name sign will be created. This is optional.
+#    :P = Block where players teleport in at. The players feet will be on this block.
+#    :M = Block where minecarts teleport in at. The minecart wheels will be on this block.
+#    :A = Block where the activation switch is attached to. 1 per gate!
+#           The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#           The switch will face in the positive layer direction.
+#           In this example the switch will face towards where layer 3 would be (if there was a 3rd layer)
+#    :D = Block the sign dialer hangs from. Only 1 per gate!
+#           The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#           This block is not required, so shapes with this block can be either type. (sign or dial)
+#           Without this block a gateshape can only be /dial gate.
+#    :I = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
+#
+#    I, D, N, and A cannot be the same block, and none of those can contain W
+#
+#   --- There can be many of these per gate -- (Currently no restriction)
+#    :L = Blocks that will light when gate is activated
+#       Optionally you may add a #number after L to indicate the order it lights.
+#       Defaults to 1 if there is no #
+#    :W#? = Blocks that will woosh when gate is activated
+#       ? indicates which order this woosh block should appear
+#
+#    Redstone Blocks:
+#   --- There can only be 1 of each of these per gate, and they can-not occupy the same block as anything else ---
+#    [RD] = Redstone activation block. A redstone charge next to this block will activate the gate.
+#           This block requires a :D block for targetting. This block should be on top of a [%] block.
+#    [RS] = Redstone sign dialer cycle block. A redstone charge next to this block will cycle sign targets.
+#           This block requires a :D block for targetting. This block should be on top of a [%] block.
+#    [RA] = Redstone gate Activated block. This block will provide redstone charge when the gate is activated.
+#           This block should be on top of a [S] block.

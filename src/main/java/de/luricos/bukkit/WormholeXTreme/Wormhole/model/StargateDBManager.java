@@ -20,10 +20,8 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.PermissionsManager.PermissionLevel;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -101,43 +99,43 @@ public class StargateDBManager {
         return false;
     }
 
-    /**
-     * Gets the all individual permissions.
-     * 
-     * @return the concurrent hash map
-     */
-    public static ConcurrentHashMap<String, PermissionLevel> getAllIndividualPermissions() {
-        final ConcurrentHashMap<String, PermissionLevel> perms = new ConcurrentHashMap<String, PermissionLevel>();
-        if (!isConnected()) {
-            connectDB();
-        }
-
-        ResultSet perm = null;
-        try {
-            if (wormholeSQLConnection.isClosed()) {
-                connectDB();
-            }
-
-            if (getAllIndvPermStatement == null) {
-                getAllIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT PlayerName, Permission FROM StargateIndividualPermissions;");
-            }
-
-            perm = getAllIndvPermStatement.executeQuery();
-            while (perm.next()) {
-                perms.put(perm.getString("PlayerName"), PermissionLevel.valueOf(perm.getString("Permission")));
-            }
-        } catch (final SQLException e) {
-            WXTLogger.prettyLog(Level.SEVERE, false, "Error GetAllIndividualPermissions: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                perm.close();
-            } catch (final SQLException e) {
-                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
-            }
-        }
-        return perms;
-    }
+//    /**
+//     * Gets the all individual permissions.
+//     *
+//     * @return the concurrent hash map
+//     */
+//    public static ConcurrentHashMap<String, PermissionLevel> getAllIndividualPermissions() {
+//        final ConcurrentHashMap<String, PermissionLevel> perms = new ConcurrentHashMap<>();
+//        if (!isConnected()) {
+//            connectDB();
+//        }
+//
+//        ResultSet perm = null;
+//        try {
+//            if (wormholeSQLConnection.isClosed()) {
+//                connectDB();
+//            }
+//
+//            if (getAllIndvPermStatement == null) {
+//                getAllIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT PlayerName, Permission FROM StargateIndividualPermissions;");
+//            }
+//
+//            perm = getAllIndvPermStatement.executeQuery();
+//            while (perm.next()) {
+//                perms.put(perm.getString("PlayerName"), PermissionLevel.valueOf(perm.getString("Permission")));
+//            }
+//        } catch (final SQLException e) {
+//            WXTLogger.prettyLog(Level.SEVERE, false, "Error GetAllIndividualPermissions: " + e.getMessage());
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                perm.close();
+//            } catch (final SQLException e) {
+//                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
+//            }
+//        }
+//        return perms;
+//    }
 
     /**
      * Load stargates.
@@ -419,61 +417,61 @@ public class StargateDBManager {
         }
     }
 
-    /**
-     * Store individual permission in db.
-     * 
-     * @param player
-     *            the player
-     * @param pl
-     *            the pl
-     */
-    public static void storeIndividualPermissionInDB(final String player, final PermissionLevel pl) {
-        if (!isConnected()) {
-            connectDB();
-        }
-
-        ResultSet perm = null;
-        try {
-            if (wormholeSQLConnection.isClosed()) {
-                connectDB();
-            }
-
-            if (getIndvPermStatement == null) {
-                getIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateIndividualPermissions WHERE PlayerName = ?;");
-            }
-
-            getIndvPermStatement.setString(1, player);
-            perm = getIndvPermStatement.executeQuery();
-            if (!perm.next()) {
-                if (storeIndvPermStatement == null) {
-                    storeIndvPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateIndividualPermissions ( PlayerName, Permission ) VALUES ( ? , ? );");
-                }
-
-                storeIndvPermStatement.setString(1, player);
-                storeIndvPermStatement.setString(2, pl.toString());
-                storeIndvPermStatement.executeUpdate();
-            } else {
-                if (updateIndvPermStatement == null) {
-                    updateIndvPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateIndividualPermissions SET Permission = ? WHERE PlayerName = ?;");
-                }
-
-                updateIndvPermStatement.setString(2, player);
-                updateIndvPermStatement.setString(1, pl.toString());
-                final int modified = updateIndvPermStatement.executeUpdate();
-
-                if (modified != 1) {
-                    WXTLogger.prettyLog(Level.SEVERE, false, "Failed to update " + player + " permissions in DB.");
-                }
-            }
-        } catch (final SQLException e) {
-            WXTLogger.prettyLog(Level.SEVERE, false, "Error StoreIndividualPermissionInDB : " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                perm.close();
-            } catch (final SQLException e) {
-                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
-            }
-        }
-    }
+//    /**
+//     * Store individual permission in db.
+//     *
+//     * @param player
+//     *            the player
+//     * @param pl
+//     *            the pl
+//     */
+//    public static void storeIndividualPermissionInDB(final String player, final PermissionLevel pl) {
+//        if (!isConnected()) {
+//            connectDB();
+//        }
+//
+//        ResultSet perm = null;
+//        try {
+//            if (wormholeSQLConnection.isClosed()) {
+//                connectDB();
+//            }
+//
+//            if (getIndvPermStatement == null) {
+//                getIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateIndividualPermissions WHERE PlayerName = ?;");
+//            }
+//
+//            getIndvPermStatement.setString(1, player);
+//            perm = getIndvPermStatement.executeQuery();
+//            if (!perm.next()) {
+//                if (storeIndvPermStatement == null) {
+//                    storeIndvPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateIndividualPermissions ( PlayerName, Permission ) VALUES ( ? , ? );");
+//                }
+//
+//                storeIndvPermStatement.setString(1, player);
+//                storeIndvPermStatement.setString(2, pl.toString());
+//                storeIndvPermStatement.executeUpdate();
+//            } else {
+//                if (updateIndvPermStatement == null) {
+//                    updateIndvPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateIndividualPermissions SET Permission = ? WHERE PlayerName = ?;");
+//                }
+//
+//                updateIndvPermStatement.setString(2, player);
+//                updateIndvPermStatement.setString(1, pl.toString());
+//                final int modified = updateIndvPermStatement.executeUpdate();
+//
+//                if (modified != 1) {
+//                    WXTLogger.prettyLog(Level.SEVERE, false, "Failed to update " + player + " permissions in DB.");
+//                }
+//            }
+//        } catch (final SQLException e) {
+//            WXTLogger.prettyLog(Level.SEVERE, false, "Error StoreIndividualPermissionInDB : " + e.getMessage());
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                perm.close();
+//            } catch (final SQLException e) {
+//                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
+//            }
+//        }
+//    }
 }

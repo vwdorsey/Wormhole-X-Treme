@@ -2,7 +2,7 @@ name: WormholeXTreme
 main: de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme
 version: 1.2
 api-version: 1.13
-authors: [Lologarithm, alron, lycano, Zytharian]
+authors: [Lologarithm, alron, lycano, Zytharian, Sir-Dizzle]
 softdepend: [Help]
 description: >
              Wormhole X-Treme! Wormholes as travel portals. Splash Effect, IDC,
@@ -37,7 +37,7 @@ commands:
             /<command> simple [yes, no] - Enable or disable simple permissions.
             /<command> toggle_gwm - Toggle stargate welcome message
             /<command> toggle_transport - Toggle Transportation method. Toggles between EVENT, TELEPORT.
-            /<command> wooshdepth <stargate> [depth] - Get or set wooshdepht for stargate.
+            /<command> wooshdepth <stargate> [depth] - Get or set wooshdepth for stargate.
    wxlist:
      description: List all Stargates.
      usage: |

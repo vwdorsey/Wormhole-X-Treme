@@ -25,7 +25,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholePlayerNotFou
 import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholePlayerNotOnlineException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -43,7 +42,7 @@ import java.util.logging.Level;
  */
 public class WormholePlayerManager {
     
-    private static Map<String, WormholePlayer> wormholePlayers = new HashMap<String, WormholePlayer>();
+    private static Map<String, WormholePlayer> wormholePlayers = new HashMap<>();
     
     public static void registerPlayer(String playerName) {
         try {

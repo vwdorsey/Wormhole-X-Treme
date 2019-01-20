@@ -21,10 +21,10 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,21 +38,21 @@ public class WXReload implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG)) {
+        //if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG)) {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0))
                 return false;
             
             if ((a[0].equalsIgnoreCase("n")) || (a[0].equalsIgnoreCase("now"))) {
                 if (WormholeXTreme.getThisPlugin().reloadPlugin()) {
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "Reloading complete");
+                    sender.sendMessage(Messages.createNormalMessage("Reloading complete"));
                 } else {
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader + "Error during reload see console log");
+                    sender.sendMessage(Messages.createNormalMessage("Error during reload see console log"));
                 }
             }
-        } else {
-            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-        }
+        /*} else {
+            sender.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+        }*/
         
         return true;
     }

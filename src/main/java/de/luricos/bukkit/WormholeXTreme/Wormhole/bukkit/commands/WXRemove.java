@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -52,20 +52,20 @@ public class WXRemove implements CommandExecutor {
             final Stargate s = StargateManager.getStargate(a[0]);
 
             if (s != null) {
-                if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, s, PermissionType.REMOVE)) {
+                //if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, s, PermissionType.REMOVE)) {
                     boolean destroy = false;
                     if ((a.length == 2) && a[1].equalsIgnoreCase("-all")) {
                         destroy = true;
                     }
                     CommandUtilities.gateRemove(s, destroy);
 
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.getGateName());
-                } else {
-                    sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-                }
+                    sender.sendMessage(Messages.createNormalMessage("Wormhole Removed: " + s.getGateName()));
+                /*} else {
+                    sender.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+                }*/
 
             } else {
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0] + ". Remember proper capitalization.");
+                sender.sendMessage(Messages.Error.GATE_DOESNT_EXIST+ a[0] + ". Remember proper capitalization.");
             }
         } else {
             return false;

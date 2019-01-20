@@ -23,10 +23,8 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,7 +43,7 @@ import java.util.logging.Level;
  * the wormholeXTremeRedstone event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see WormholeXTremeRedstoneEvent
+ * //@see WormholeXTremeRedstoneEvent
  */
 public class WormholeXTremeRedstoneListener implements Listener {
 

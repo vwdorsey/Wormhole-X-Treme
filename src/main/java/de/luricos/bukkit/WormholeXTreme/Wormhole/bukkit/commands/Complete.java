@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,25 +60,25 @@ public class Complete implements CommandExecutor {
                     network = key_value_string[1];
                 }
             }
-            if (WXPermissions.checkPermission(player, network, PermissionType.BUILD)) {
-                if (!StargateRestrictions.isPlayerBuildRestricted(player)) {
+            //if (WXPermissions.checkPermission(player, network, PermissionType.BUILD)) {
+                //if (!StargateRestrictions.isPlayerBuildRestricted(player)) {
                     if (StargateManager.getStargate(name) == null) {
                         if (StargateManager.completeStargate(player, name, idc, network)) {
-                            player.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
+                            player.sendMessage(Messages.Info.BUILD_SUCCESS.toString());
                         } else {
-                            player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
+                            player.sendMessage(Messages.createErrorMessage("Construction Failed!"));
                         }
                     } else {
-                        player.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
+                        player.sendMessage(Messages.Error.GATE_ALREADY_EXISTS.toString() + "\"" + name + "\"");
                     }
-                } else {
-                    player.sendMessage(ConfigManager.MessageStrings.playerBuildCountRestricted.toString());
-                }
-            } else {
-                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-            }
+                /*} else {
+                    player.sendMessage(Messages.Error.BUILD_RESTRICTIONS.toString());
+                }*/
+            /*} else {
+                player.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+            }*/
         } else {
-            player.sendMessage(ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"");
+            player.sendMessage(Messages.Error.GATE_NAME_INVALID + "\"" + name + "\"");
         }
         return true;
     }

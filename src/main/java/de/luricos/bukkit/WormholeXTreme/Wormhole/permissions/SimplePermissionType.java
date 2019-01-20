@@ -33,58 +33,58 @@ import java.util.Map;
  * @author alron
  */
 enum SimplePermissionType {
-
-    /** The USE. */
-    USE("wormhole.simple.use"),
-    /** The BUILD. */
-    BUILD("wormhole.simple.build"),
-    /** The REMOVE. */
-    REMOVE("wormhole.simple.remove"),
-    /** The CONFIG. */
-    CONFIG("wormhole.simple.config");
-    /** The simple permission node. */
-    private final String simplePermissionNode;
-    /** The Constant simplePermissionMap. */
-    private static final Map<String, SimplePermissionType> simplePermissionMap = new HashMap<String, SimplePermissionType>();
-
-    static {
-        for (final SimplePermissionType simplePermissionType : EnumSet.allOf(SimplePermissionType.class)) {
-            simplePermissionMap.put(simplePermissionType.simplePermissionNode, simplePermissionType);
-        }
-    }
-
-    /**
-     * From simple permission node.
-     * 
-     * @param simplePermissionNode
-     *            the simple permission node
-     * @return the simple permission
-     */
-    public static SimplePermissionType fromSimplePermissionNode(final String simplePermissionNode) // NO_UCD
-    {
-        return simplePermissionMap.get(simplePermissionNode);
-    }
-
-    /**
-     * Instantiates a new simple permission.
-     * 
-     * @param simplePermissionNode
-     *            the simple permission node
-     */
-    private SimplePermissionType(final String simplePermissionNode) {
-        this.simplePermissionNode = simplePermissionNode;
-    }
-
-    /**
-     * Gets the simple permission.
-     * 
-     * @return the simple permission string
-     */
-    public String getString() {
-        return simplePermissionNode;
-    }
-
-    public boolean checkPermission(Player player) {
-        return WormholeXTreme.getPermissionManager().has(player, getString());
-    }
+//
+//    /** The USE. */
+//    USE("wormhole.simple.use"),
+//    /** The BUILD. */
+//    BUILD("wormhole.simple.build"),
+//    /** The REMOVE. */
+//    REMOVE("wormhole.simple.remove"),
+//    /** The CONFIG. */
+//    CONFIG("wormhole.simple.config");
+//    /** The simple permission node. */
+//    private final String simplePermissionNode;
+//    /** The Constant simplePermissionMap. */
+//    private static final Map<String, SimplePermissionType> simplePermissionMap = new HashMap<>();
+//
+//    static {
+//        for (final SimplePermissionType simplePermissionType : EnumSet.allOf(SimplePermissionType.class)) {
+//            simplePermissionMap.put(simplePermissionType.simplePermissionNode, simplePermissionType);
+//        }
+//    }
+//
+//    /**
+//     * From simple permission node.
+//     *
+//     * @param simplePermissionNode
+//     *            the simple permission node
+//     * @return the simple permission
+//     */
+//    public static SimplePermissionType fromSimplePermissionNode(final String simplePermissionNode) // NO_UCD
+//    {
+//        return simplePermissionMap.get(simplePermissionNode);
+//    }
+//
+//    /**
+//     * Instantiates a new simple permission.
+//     *
+//     * @param simplePermissionNode
+//     *            the simple permission node
+//     */
+//    private SimplePermissionType(final String simplePermissionNode) {
+//        this.simplePermissionNode = simplePermissionNode;
+//    }
+//
+//    /**
+//     * Gets the simple permission.
+//     *
+//     * @return the simple permission string
+//     */
+//    public String getString() {
+//        return simplePermissionNode;
+//    }
+//
+//    public boolean checkPermission(Player player) {
+//        return WormholeXTreme.getPermissionManager().has(player, getString());
+//    }
 }

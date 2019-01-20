@@ -22,18 +22,10 @@ package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.security.CodeSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -131,7 +123,7 @@ public class DBUpdateUtil {
         InputStream is = null;
         BufferedReader br = null;
         String line;
-        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayList<String> list = new ArrayList<>();
 
         try {
             is = WormholeXTreme.class.getResourceAsStream(s);

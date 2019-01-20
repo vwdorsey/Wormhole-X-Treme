@@ -21,13 +21,12 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigLoader;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.events.StargateMinecartTeleportEvent;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.StargateRestrictions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -85,24 +84,25 @@ public class WormholeXTremeVehicleListener implements Listener {
             final Vector v = veh.getVelocity();
             veh.setVelocity(nospeed);
             final Entity e = veh.getPassenger();
-            if ((e != null) && (e instanceof Player)) {
+            if (e instanceof Player) {
                 final Player p = (Player) e;
                 WXTLogger.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
-                if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.SIGN)) || (!st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.DIALER)))) {
-                    p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                /*if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.SIGN)) || (!st.isGateSignPowered() && !WXPermissions.checkPermission(p, st, PermissionType.DIALER)))) {
+                    p.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
                     return false;
-                }
+                }*/
                 if (st.getGateTarget().isGateIrisActive()) {
-                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
+                    p.sendMessage(Messages.Error.GATE_IRIS_LOCKED.toString());
                     veh.teleport(st.getGateMinecartTeleportLocation() != null
                             ? st.getGateMinecartTeleportLocation()
                             : st.getGatePlayerTeleportLocation());
-                    if (ConfigManager.getTimeoutShutdown() == 0) {
+                    if (ConfigLoader.getConfig().timeouts().postdial() == 0) {
                         st.shutdownStargate(true);
                     }
                     return false;
                 }
-                if (ConfigManager.isUseCooldownEnabled()) {
+
+                /*if (ConfigManager.isUseCooldownEnabled()) {
                     if (StargateRestrictions.isPlayerUseCooldown(p)) {
                         p.sendMessage(ConfigManager.MessageStrings.playerUseCooldownRestricted.toString());
                         p.sendMessage(ConfigManager.MessageStrings.playerUseCooldownWaitTime.toString() + StargateRestrictions.checkPlayerUseCooldownRemaining(p));
@@ -110,14 +110,14 @@ public class WormholeXTremeVehicleListener implements Listener {
                     } else {
                         StargateRestrictions.addPlayerUseCooldown(p);
                     }
-                }
+                }*/
             } else {
                 if (st.getGateTarget().isGateIrisActive()) {
                     WXTLogger.prettyLog(Level.FINE, false, "Minecart in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
                     veh.teleport(st.getGateMinecartTeleportLocation() != null
                             ? st.getGateMinecartTeleportLocation()
                             : st.getGatePlayerTeleportLocation());
-                    if (ConfigManager.getTimeoutShutdown() == 0) {
+                    if (ConfigLoader.getConfig().timeouts().postdial() == 0) {
                         st.shutdownStargate(true);
                     }
                     return false;
@@ -160,14 +160,10 @@ public class WormholeXTremeVehicleListener implements Listener {
                     WormholeXTreme.getThisPlugin().getServer().getPluginManager().callEvent(teleportevent);
                     e.teleport(target);
                     final Vector newnew_speed = new_speed;
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
-
-                        @Override
-                        public void run() {
-                            newveh.setPassenger(e);
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), () -> {
+                            newveh.addPassenger(e);
                             newveh.setVelocity(newnew_speed);
                             newveh.setFireTicks(0);
-                        }
                     }, 5);
                 } else {
                     veh.teleport(target);
@@ -175,7 +171,7 @@ public class WormholeXTremeVehicleListener implements Listener {
                 }
             }
 
-            if (ConfigManager.getTimeoutShutdown() == 0) {
+            if (ConfigLoader.getConfig().timeouts().postdial() == 0) {
                 st.shutdownStargate(true);
             }
             return true;

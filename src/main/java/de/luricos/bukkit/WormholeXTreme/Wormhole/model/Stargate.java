@@ -21,7 +21,7 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigLoader;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholeDialSignException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
@@ -139,17 +139,17 @@ public class Stargate {
     /** The current_lighting_iteration. */
     private int gateLightingCurrentIteration = 0;
     /** List of all blocks contained in this stargate, including buttons and levers. */
-    private final ArrayList<Location> gateStructureBlocks = new ArrayList<Location>();
+    private final ArrayList<Location> gateStructureBlocks = new ArrayList<>();
     /** List of all blocks that that are part of the "portal". */
-    private final ArrayList<Location> gatePortalBlocks = new ArrayList<Location>();
+    private final ArrayList<Location> gatePortalBlocks = new ArrayList<>();
     /** List of all blocks that turn on when gate is active. */
-    private final ArrayList<ArrayList<Location>> gateLightBlocks = new ArrayList<ArrayList<Location>>();
+    private final ArrayList<ArrayList<Location>> gateLightBlocks = new ArrayList<>();
     /** List of all blocks that woosh in order when gate is active. */
-    private final ArrayList<ArrayList<Location>> gateWooshBlocks = new ArrayList<ArrayList<Location>>();
+    private final ArrayList<ArrayList<Location>> gateWooshBlocks = new ArrayList<>();
     /** The Animated blocks. */
-    private final ArrayList<Block> gateAnimatedBlocks = new ArrayList<Block>();
+    private final ArrayList<Block> gateAnimatedBlocks = new ArrayList<>();
     /** The gate_order. */
-    private final HashMap<Integer, Stargate> gateSignOrder = new HashMap<Integer, Stargate>();
+    private final HashMap<Integer, Stargate> gateSignOrder = new HashMap<>();
     /** The gate custom. */
     private boolean gateCustom = false;
     /** The gate custom structure material. */
@@ -186,11 +186,7 @@ public class Stargate {
      * Animate opening.
      */
     public void animateOpening() {
-        final Material wooshMaterial = isGateCustom()
-                ? getGateCustomPortalMaterial()
-                : getGateShape() != null
-                ? getGateShape().getShapePortalMaterial()
-                : Material.WATER;
+        final Material wooshMaterial = isGateCustom() ? getGateCustomPortalMaterial() : getGateShape() != null ? getGateShape().getShapePortalMaterial() : Material.WATER;
         final int wooshDepth = isGateCustom()
                 ? getGateCustomWooshDepth()
                 : getGateShape() != null
@@ -376,7 +372,7 @@ public class Stargate {
             WormholeXTreme.getScheduler().cancelTask(getGateAfterShutdownTaskId());
         }
 
-        final int timeout = ConfigManager.getTimeoutShutdown() * 20;
+        final int timeout = ConfigLoader.getConfig().timeouts().postdial() * 20;
         if (timeout > 0) {
             setGateShutdownTaskId(WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout));
             WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" created.");
@@ -1882,7 +1878,7 @@ public class Stargate {
             WormholeXTreme.getScheduler().cancelTask(getGateActivateTaskId());
         }
 
-        final int timeout = ConfigManager.getTimeoutActivate() * 20;
+        final int timeout = ConfigLoader.getConfig().timeouts().predial() * 20;
         setGateActivateTaskId(WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DEACTIVATE), timeout));
         WXTLogger.prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ActivateTaskID \"" + getGateActivateTaskId() + "\" created.");
     }

@@ -20,13 +20,13 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTStringUtils;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,10 +48,10 @@ public class Build implements CommandExecutor {
      */
     private static boolean doBuild(final Player player, final String[] args) {
         if (args.length == 1) {
-            if ((!WXPermissions.checkPermission(player, PermissionType.CONFIG)) || (!WXPermissions.checkPermission(player, PermissionType.BUILD))) {
-                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-                return true;
-            }
+//            if ((!WXPermissions.checkPermission(player, PermissionType.CONFIG)) || (!WXPermissions.checkPermission(player, PermissionType.BUILD))) {
+//                player.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+//                return true;
+//            }
 
             String shapeName = args[0];
 
@@ -69,9 +69,9 @@ public class Build implements CommandExecutor {
 
             if (StargateHelper.isStargateShape(shapeName)) {
                 StargateManager.addPlayerBuilderShape(player.getName(), StargateHelper.getStargateShape(shapeName));
-                player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + StargateHelper.getStargateShapeName(shapeName));
+                player.sendMessage(Messages.createNormalMessage(String.format("Press Activation button on new DHD to autobuild Stargate in the shape of: %s", StargateHelper.getStargateShapeName(shapeName))));
             } else {
-                player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + shapeName);
+                player.sendMessage(Messages.Error.GATE_SHAPE_INVALID.toString() + shapeName);
             }
 
             return true;

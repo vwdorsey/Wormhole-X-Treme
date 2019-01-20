@@ -138,9 +138,10 @@ public class StargateUpdateRunnable implements Runnable {
             case LIGHTUP:
                 stargate.lightStargate(true);
                 break;
+                /*
             case COOLDOWN_REMOVE:
                 StargateRestrictions.removePlayerUseCooldown(player);
-                break;
+                break;*/
             default:
                 break;
         }

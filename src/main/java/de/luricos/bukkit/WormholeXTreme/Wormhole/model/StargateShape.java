@@ -21,7 +21,6 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -89,9 +88,9 @@ public class StargateShape {
         this.setShapeSignPosition(new int[]{});
         this.setShapeEnterPosition(new int[]{});
 
-        final ArrayList<Integer[]> blockPositions = new ArrayList<Integer[]>();
-        final ArrayList<Integer[]> portalPositions = new ArrayList<Integer[]>();
-        final ArrayList<Integer> lightPositions = new ArrayList<Integer>();
+        final ArrayList<Integer[]> blockPositions = new ArrayList<>();
+        final ArrayList<Integer[]> portalPositions = new ArrayList<>();
+        final ArrayList<Integer> lightPositions = new ArrayList<>();
 
         int numBlocks = 0;
         int curWooshDepth = 0;

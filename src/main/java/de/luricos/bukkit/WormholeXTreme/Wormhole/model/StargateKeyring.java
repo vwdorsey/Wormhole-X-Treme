@@ -35,7 +35,7 @@ public enum StargateKeyring {
     
     private String name;
     
-    private static final Map<String, StargateKeyring> mapping = new HashMap<String, StargateKeyring>();
+    private static final Map<String, StargateKeyring> mapping = new HashMap<>();
 
     static {
         for (StargateKeyring kr : EnumSet.allOf(StargateKeyring.class)) {

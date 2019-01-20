@@ -36,13 +36,13 @@ public class StargateNetwork {
     /** The net name. */
     private String networkName;
     /** The gate list. */
-    private final ArrayList<Stargate> networkGateList = new ArrayList<Stargate>();
+    private final ArrayList<Stargate> networkGateList = new ArrayList<>();
     /** The sign gate list. */
-    private final ArrayList<Stargate> networkSignGateList = new ArrayList<Stargate>();
+    private final ArrayList<Stargate> networkSignGateList = new ArrayList<>();
     /** The gate lock. */
     private Object networkGateLock = new Object();
     /** The individual permissions. */
-    private final HashMap<String, PermissionsManager.PermissionLevel> networkIndividualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+    //private final HashMap<String, PermissionsManager.PermissionLevel> networkIndividualPermissions = new HashMap<>();
 
     /**
      * Gets the network gate list.
@@ -67,9 +67,9 @@ public class StargateNetwork {
      * 
      * @return the network individual permissions
      */
-    public HashMap<String, PermissionsManager.PermissionLevel> getNetworkIndividualPermissions() {
-        return networkIndividualPermissions;
-    }
+//    public HashMap<String, PermissionsManager.PermissionLevel> getNetworkIndividualPermissions() {
+//        return networkIndividualPermissions;
+//    }
 
     /**
      * Gets the network name.

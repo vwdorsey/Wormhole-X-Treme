@@ -25,7 +25,6 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.player.WormholePlayerManager;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -45,25 +44,25 @@ public class StargateManager {
     // to enter a gate or if water is trying to flow out, also will contain the stone buttons used to activate.
 
     /** The all_gate_blocks. */
-    private static Map<Location, Stargate> allGateBlocks = new HashMap<Location, Stargate>();
+    private static Map<Location, Stargate> allGateBlocks = new HashMap<>();
     // List of All stargates indexed by name. Useful for dialing and such
     /** The stargate_list. GateName, Stargate*/
-    private static Map<String, Stargate> stargateList = new HashMap<String, Stargate>();
+    private static Map<String, Stargate> stargateList = new HashMap<>();
     // List of stargates built but not named. Indexed by the player that built it.
     /** The incomplete_stargates. PlayerName, Stargate*/
-    private static Map<String, Stargate> incompleteStargates = new HashMap<String, Stargate>();
+    private static Map<String, Stargate> incompleteStargates = new HashMap<>();
     // List of stargates that have been activated but not yet dialed. Only used for gates without public use sign.
     /** The activated_stargates. GateName, Stargate*/
-    private static Map<String, Stargate> activatedStargates = new HashMap<String, Stargate>();
+    private static Map<String, Stargate> activatedStargates = new HashMap<>();
     // List of networks indexed by their name
     /** The stargate_networks. NetworkName, StargateNetwork*/
-    private static Map<String, StargateNetwork> stargateNetworks = new HashMap<String, StargateNetwork>();
+    private static Map<String, StargateNetwork> stargateNetworks = new HashMap<>();
     // List of players ready to build a stargate, with the shape they are trying to build.
     /** The player_builders. PlayerName, StargateShape*/
-    private static Map<String, StargateShape> playerBuilders = new HashMap<String, StargateShape>();
+    private static Map<String, StargateShape> playerBuilders = new HashMap<>();
     // List of blocks that are part of an active animation. Only use this to make sure water doesn't flow everywhere.
     /** The Constant opening_animation_blocks. */
-    private static Map<Location, Block> openingAnimationBlocks = new HashMap<Location, Block>();
+    private static Map<Location, Block> openingAnimationBlocks = new HashMap<>();
 
     /**
      * This method adds a stargate that has been activated but not dialed by a player.
@@ -351,7 +350,7 @@ public class StargateManager {
      * @return the array list
      */
     public static ArrayList<Stargate> getAllGates() {
-        ArrayList<Stargate> gates = new ArrayList<Stargate>();
+        ArrayList<Stargate> gates = new ArrayList<>();
 
         for (Stargate s : getStargateList().values()) {
             gates.add(s);

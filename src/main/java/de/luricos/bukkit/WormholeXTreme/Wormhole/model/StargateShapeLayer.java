@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class StargateShapeLayer {
 
     /** The block positions. */
-    private ArrayList<Integer[]> layerBlockPositions = new ArrayList<Integer[]>();
+    private ArrayList<Integer[]> layerBlockPositions = new ArrayList<>();
     /** The sign position. */
     private int[] layerNameSignPosition = null;
     /** The exit position. */
@@ -54,11 +54,11 @@ public class StargateShapeLayer {
     /** The layer redstone activation position. */
     private int[] layerRedstoneGateActivatedPosition = null;
     /** The light_positions. */
-    private ArrayList<ArrayList<Integer[]>> layerLightPositions = new ArrayList<ArrayList<Integer[]>>();
+    private ArrayList<ArrayList<Integer[]>> layerLightPositions = new ArrayList<>();
     /** The positions of woosh. First array is the order to activate them. Inner array is list of points */
-    private ArrayList<ArrayList<Integer[]>> layerWooshPositions = new ArrayList<ArrayList<Integer[]>>();
+    private ArrayList<ArrayList<Integer[]>> layerWooshPositions = new ArrayList<>();
     /** The water_positions. */
-    private ArrayList<Integer[]> layerPortalPositions = new ArrayList<Integer[]>();
+    private ArrayList<Integer[]> layerPortalPositions = new ArrayList<>();
 
     /**
      * Instantiates a new stargate shape layer.
@@ -130,7 +130,7 @@ public class StargateShapeLayer {
                         }
 
                         if (getLayerLightPositions().get(light_iteration) == null) {
-                            final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+                            final ArrayList<Integer[]> new_it = new ArrayList<>();
                             getLayerLightPositions().set(light_iteration, new_it);
                         }
 
@@ -144,7 +144,7 @@ public class StargateShapeLayer {
                         }
 
                         if (getLayerWooshPositions().get(w_iteration) == null) {
-                            final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+                            final ArrayList<Integer[]> new_it = new ArrayList<>();
                             getLayerWooshPositions().set(w_iteration, new_it);
                         }
 

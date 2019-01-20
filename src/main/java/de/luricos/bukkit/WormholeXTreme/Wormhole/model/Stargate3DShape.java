@@ -21,7 +21,6 @@
 package de.luricos.bukkit.WormholeXTreme.Wormhole.model;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class Stargate3DShape extends StargateShape {
     /**
      * Layers of the 3D shape. Layers go from 1 - 10
      */
-    private final ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<StargateShapeLayer>();
+    private final ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<>();
     /** The activation_layer. */
     private int shapeActivationLayer = -1;
     /** The sign_layer. */

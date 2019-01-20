@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,7 +49,7 @@ public class WXIDC implements CommandExecutor {
             if (StargateManager.isStargate(a[0])) {
                 final Stargate s = StargateManager.getStargate(a[0]);
                 if (!s.isGateSignPowered() && (s.getGateIrisLeverBlock() != null)) {
-                    if (!CommandUtilities.playerCheck(sender) || (WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(((Player) sender).getName())))) {
+                    //if (!CommandUtilities.playerCheck(sender) || (WXPermissions.checkPermission((Player) sender, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(((Player) sender).getName())))) {
                         // 2. if args other than name - do a set                
                         if (a.length >= 2) {
                             if (a[1].equals("-clear")) {
@@ -66,15 +66,15 @@ public class WXIDC implements CommandExecutor {
                         }
 
                         // 3. always display current value at end.
-                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is: " + s.getGateIrisDeactivationCode());
-                    } else {
-                        sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-                    }
+                        sender.sendMessage(Messages.createNormalMessage(String.format("IDC for gate: %s is: %s",s.getGateName(), s.getGateIrisDeactivationCode())));
+                    /*} else {
+                        sender.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+                    }*/
                 } else {
-                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Iris not available for sign powered stargates or gates without an iris activation block.");
+                    sender.sendMessage(Messages.createErrorMessage("Iris not available for sign powered stargates or gates without an iris activation block."));
                 }
             } else {
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Stargate: " + a[0]);
+                sender.sendMessage(Messages.Error.GATE_DOESNT_EXIST.toString() + a[0]);
 
             }
             return true;

@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,21 +46,21 @@ public class Go implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean doGo(final Player player, final String[] args) {
-        if (WXPermissions.checkPermission(player, PermissionType.GO)) {
+        //if (WXPermissions.checkPermission(player, PermissionType.GO)) {
             if (args.length == 1) {
                 final String goGate = args[0].trim().replace("\n", "").replace("\r", "");
                 final Stargate s = StargateManager.getStargate(goGate);
                 if (s != null) {
                     player.teleport(s.getGatePlayerTeleportLocation());
                 } else {
-                    player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + args[0]);
+                    player.sendMessage(Messages.Error.GATE_DOESNT_EXIST.toString() + args[0]);
                 }
             } else {
                 return false;
             }
-        } else {
-            player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-        }
+        /*} else {
+            player.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+        }*/
         return true;
     }
 

@@ -24,15 +24,14 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholePlayerEmptyS
 import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholePlayerNullPointerException;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.ArrayList;
 
 /**
  *
@@ -40,8 +39,8 @@ import java.util.ArrayList;
  */
 public class WormholePlayer extends LocalPlayer {
     
-    private Map<String, WormholePlayerUsageProperties> usageProperties = new HashMap<String, WormholePlayerUsageProperties>();
-    private Map<String, Stargate> stargateMap = new HashMap<String, Stargate>();
+    private Map<String, WormholePlayerUsageProperties> usageProperties = new HashMap<>();
+    private Map<String, Stargate> stargateMap = new HashMap<>();
     
     private String currentGateName = "";
     
@@ -188,7 +187,7 @@ public class WormholePlayer extends LocalPlayer {
     }
     
     public List<Stargate> getStargates() {
-        List<Stargate> stargates = new ArrayList<Stargate>();
+        List<Stargate> stargates = new ArrayList<>();
         for (Stargate s : stargateMap.values())
             stargates.add(s);
         

@@ -20,12 +20,12 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
-
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,9 +45,9 @@ public class WXList implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.LIST)) {
+        //if (!CommandUtilities.playerCheck(sender) || WXPermissions.checkPermission((Player) sender, PermissionType.LIST)) {
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
-            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");
+            sender.sendMessage(Messages.createNormalMessage("Available gates \u00A73::"));
             StringBuilder sb = new StringBuilder();
             // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
             for (int i = 0; i < gates.size(); i++) {
@@ -64,9 +64,9 @@ public class WXList implements CommandExecutor {
                 sender.sendMessage(sb.toString());
             }
 
-        } else {
-            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
-        }
+        /*} else {
+            sender.sendMessage(Messages.Error.BAD_PERMISSIONS.toString());
+        }*/
         return true;
     }
 }

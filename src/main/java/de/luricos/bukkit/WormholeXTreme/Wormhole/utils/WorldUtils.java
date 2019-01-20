@@ -20,7 +20,6 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;

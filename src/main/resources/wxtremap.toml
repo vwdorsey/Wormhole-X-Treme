@@ -1,0 +1,17 @@
+title = "WormholeXTreme Config"
+
+[plugin]
+help = 'enable'
+transportType = 'event' # Event is default, change to tp if a plugin overwriting onPlayerMove() is used
+
+[permissions]
+provider = 'wxt' #wxt or bukkit supported
+type = 'basic' #basic or advanced supported
+
+[permissions.builtin]
+
+[permissions.advanced]
+
+[timeouts]
+predial = 30 # Seconds to keep gate open before dialing
+postdial = 15 # Seconds to keep gate open after dialing

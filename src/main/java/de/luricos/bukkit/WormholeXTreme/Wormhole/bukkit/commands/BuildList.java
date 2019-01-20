@@ -20,10 +20,11 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.config.Messages;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateHelper;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions;
+//import de.luricos.bukkit.WormholeXTreme.Wormhole.permissions.WXPermissions.PermissionType;
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.CommandUtilities;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,9 +46,9 @@ public class BuildList implements CommandExecutor {
      * @return true, if successful
      */
     private static boolean listBuilds(final Player player, final String[] args) {
-        if (!WXPermissions.checkPermission(player, PermissionType.CONFIG)) {
-            return false;
-        }
+//        if (!WXPermissions.checkPermission(player, PermissionType.CONFIG)) {
+//            return false;
+//        }
 
         int gateID = 1;
         StringBuilder shapeNames = new StringBuilder();
@@ -57,7 +58,7 @@ public class BuildList implements CommandExecutor {
         }
         shapeNames.delete(shapeNames.length()-2, shapeNames.length());
 
-        player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available Shapes: " + shapeNames);
+        player.sendMessage(Messages.createNormalMessage(String.format("Available Shapes: %s", shapeNames)));
         return true;
     }
 

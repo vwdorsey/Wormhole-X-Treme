@@ -48,7 +48,7 @@ public enum PlayerOrientation {
     private Vector leftDirection;
     private boolean isOrthogonal;
     
-    private static final Map<String, PlayerOrientation> mapping = new HashMap<String, PlayerOrientation>();
+    private static final Map<String, PlayerOrientation> mapping = new HashMap<>();
 
     static {
         for (PlayerOrientation pd : EnumSet.allOf(PlayerOrientation.class)) {
@@ -119,7 +119,7 @@ public enum PlayerOrientation {
     
     /**
      * Get PlayerOrientation by facing
-     * @param PlayerOrientation NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
+     * @param facing NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
      * @return PlayerOrientation
      */
     public static PlayerOrientation byDirection(PlayerOrientation facing) {

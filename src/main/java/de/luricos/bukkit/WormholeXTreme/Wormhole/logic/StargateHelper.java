@@ -25,9 +25,8 @@ import de.luricos.bukkit.WormholeXTreme.Wormhole.exceptions.WormholeActivationLa
 import de.luricos.bukkit.WormholeXTreme.Wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.*;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.DataUtils;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WXTLogger;
-
+import de.luricos.bukkit.WormholeXTreme.Wormhole.utils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -35,16 +34,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +47,7 @@ import java.util.logging.Level;
 public class StargateHelper {
 
     /** The Constant shapes. */
-    private static final ConcurrentHashMap<String, StargateShape> stargateShapes = new ConcurrentHashMap<String, StargateShape>();
+    private static final ConcurrentHashMap<String, StargateShape> stargateShapes = new ConcurrentHashMap<>();
     /** The Constant StargateSaveVersion. */
     private static final byte StargateSaveVersion = 8;
     /** The Empty block. */
@@ -205,7 +195,7 @@ public class StargateHelper {
                     for (final int lightPosition : shape.getShapeLightPositions()) {
                         if (lightPosition == i) {
                             while (tempGate.getGateLightBlocks().size() < 2) {
-                                tempGate.getGateLightBlocks().add(new ArrayList<Location>());
+                                tempGate.getGateLightBlocks().add(new ArrayList<>());
                             }
                             // In 2d gate all lights go in first iteration!
                             tempGate.getGateLightBlocks().get(1).add(maybeBlock.getLocation());
@@ -480,7 +470,7 @@ public class StargateHelper {
 
         for (int i = 0; i < layer.getLayerWooshPositions().size(); i++) {
             if (tempGate.getGateWooshBlocks().size() < i + 1) {
-                tempGate.getGateWooshBlocks().add(new ArrayList<Location>());
+                tempGate.getGateWooshBlocks().add(new ArrayList<>());
             }
             if (layer.getLayerWooshPositions().get(i) != null) {
                 for (final Integer[] position : layer.getLayerWooshPositions().get(i)) {
@@ -492,7 +482,7 @@ public class StargateHelper {
 
         for (int i = 0; i < layer.getLayerLightPositions().size(); i++) {
             if (tempGate.getGateLightBlocks().size() < i + 1) {
-                tempGate.getGateLightBlocks().add(new ArrayList<Location>());
+                tempGate.getGateLightBlocks().add(new ArrayList<>());
             }
             if (layer.getLayerLightPositions().get(i) != null) {
                 for (final Integer[] position : layer.getLayerLightPositions().get(i)) {
@@ -620,7 +610,7 @@ public class StargateHelper {
     }
 
     public static List<String> getShapeNames() {
-        List<String> shapeNames = new ArrayList<String>();
+        List<String> shapeNames = new ArrayList<>();
         for (String shapeName: getStargateShapes().keySet()) {
             shapeNames.add(getStargateShapeName(shapeName));
         }
@@ -668,55 +658,10 @@ public class StargateHelper {
             }
         }
 
-        final FilenameFilter filenameFilter = new FilenameFilter() {
-
-            @Override
-            public boolean accept(final File dir, final String name) {
-                return !name.startsWith(".") && name.endsWith(".shape");
-            }
-        };
+        final FilenameFilter filenameFilter = (dir, name) -> !name.startsWith(".") && name.endsWith(".shape");
 
         if (directory.exists() && (directory.listFiles(filenameFilter).length == 0)) {
-            BufferedReader br = null;
-            BufferedWriter bw = null;
-            final String[] defaultShapeNames = {"Standard.shape", "StandardSignDial.shape", "Minimal.shape",
-                "MinimalSignDial.shape", "Horizontal.shape", "HorizontalSignDial.shape"};
-            try {
-                for (String shape : defaultShapeNames) {
-                    final File defaultShapeFile = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator + shape);
-                    final InputStream is = WormholeXTreme.class.getResourceAsStream("/GateShapes/3d/" + shape);
-                    br = new BufferedReader(new InputStreamReader(is));
-                    bw = new BufferedWriter(new FileWriter(defaultShapeFile));
-
-                    for (String s = ""; (s = br.readLine()) != null;) {
-                        bw.write(s);
-                        bw.write("\n");
-                    }
-
-                    br.close();
-                    bw.close();
-                    is.close();
-                }
-            } catch (final IOException e) {
-                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
-            } catch (final NullPointerException e) {
-                WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
-            } finally {
-                try {
-                    if (br != null) {
-                        br.close();
-                    }
-                } catch (final IOException e) {
-                    WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
-                }
-                try {
-                    if (bw != null) {
-                        bw.close();
-                    }
-                } catch (final IOException e) {
-                    WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
-                }
-            }
+            doDefaultFileCopy();
         }
 
         final File[] shapeFiles = directory.listFiles(filenameFilter);
@@ -725,7 +670,7 @@ public class StargateHelper {
                 WXTLogger.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + fi.getName() + "\"");
                 BufferedReader bufferedReader = null;
                 try {
-                    final ArrayList<String> fileLines = new ArrayList<String>();
+                    final ArrayList<String> fileLines = new ArrayList<>();
                     bufferedReader = new BufferedReader(new FileReader(fi));
                     for (String s = ""; (s = bufferedReader.readLine()) != null;) {
                         fileLines.add(s);
@@ -739,8 +684,6 @@ public class StargateHelper {
                     } else {
                         getStargateShapes().put(shape.getShapeNameKey(), shape);
                     }
-                } catch (final FileNotFoundException e) {
-                    WXTLogger.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
                 } catch (final IOException e) {
                     WXTLogger.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
                 } finally {
@@ -761,20 +704,61 @@ public class StargateHelper {
         }
     }
 
+    private static void doDefaultFileCopy() {
+        BufferedReader br = null;
+        BufferedWriter bw = null;
+        final String[] defaultShapeNames = {"Standard.shape", "StandardSignDial.shape", "Minimal.shape",
+                "MinimalSignDial.shape", "Horizontal.shape", "HorizontalSignDial.shape"};
+        try {
+            for (String shape : defaultShapeNames) {
+                final File defaultShapeFile = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator + shape);
+                final InputStream is = WormholeXTreme.class.getResourceAsStream("/GateShapes/3d/" + shape);
+                br = new BufferedReader(new InputStreamReader(is));
+                bw = new BufferedWriter(new FileWriter(defaultShapeFile));
+
+                for (String s = ""; (s = br.readLine()) != null;) {
+                    bw.write(s);
+                    bw.write("\n");
+                }
+
+                br.close();
+                bw.close();
+                is.close();
+            }
+        } catch (final IOException e) {
+            WXTLogger.prettyLog(Level.SEVERE, false, "Unable to create files: " + e.getMessage());
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (final IOException e) {
+                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
+            }
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+            } catch (final IOException e) {
+                WXTLogger.prettyLog(Level.FINE, false, e.getMessage());
+            }
+        }
+    }
+
     /**
      * Parses the versioned data.
      * 
-     * @param gate_data the gate_data
+     * @param gateData the gateData
      * @param w the w
      * @param name the name
      * @param network the network
      * @return the stargate
      */
-    public static Stargate parseVersionedData(final byte[] gate_data, final World w, final String name, final StargateNetwork network) {
+    public static Stargate parseVersionedData(final byte[] gateData, final World w, final String name, final StargateNetwork network) {
         final Stargate s = new Stargate();
         s.setGateName(name);
         s.setGateNetwork(network);
-        final ByteBuffer byteBuff = ByteBuffer.wrap(gate_data);
+        final ByteBuffer byteBuff = ByteBuffer.wrap(gateData);
 
         // First get version byte
         s.setLoadedVersion(byteBuff.get());
@@ -1026,7 +1010,7 @@ public class StargateHelper {
             s.getGateLightBlocks().add(null);
         }
 
-        s.getGateLightBlocks().set(1, new ArrayList<Location>());
+        s.getGateLightBlocks().set(1, new ArrayList<>());
 
         numBlocks = byteBuff.getInt();
         for (int i = 0; i < numBlocks; i++) {
@@ -1125,7 +1109,7 @@ public class StargateHelper {
         int numLayers = byteBuff.getInt();
 
         while (s.getGateLightBlocks().size() < numLayers) {
-            s.getGateLightBlocks().add(new ArrayList<Location>());
+            s.getGateLightBlocks().add(new ArrayList<>());
         }
         for (int i = 0; i < numLayers; i++) {
             numBlocks = byteBuff.getInt();
@@ -1139,7 +1123,7 @@ public class StargateHelper {
         numLayers = byteBuff.getInt();
 
         while (s.getGateWooshBlocks().size() < numLayers) {
-            s.getGateWooshBlocks().add(new ArrayList<Location>());
+            s.getGateWooshBlocks().add(new ArrayList<>());
         }
         for (int i = 0; i < numLayers; i++) {
             numBlocks = byteBuff.getInt();
@@ -1246,7 +1230,7 @@ public class StargateHelper {
         int numLayers = byteBuff.getInt();
 
         while (s.getGateLightBlocks().size() < numLayers) {
-            s.getGateLightBlocks().add(new ArrayList<Location>());
+            s.getGateLightBlocks().add(new ArrayList<>());
         }
         for (int i = 0; i < numLayers; i++) {
             numBlocks = byteBuff.getInt();
@@ -1260,7 +1244,7 @@ public class StargateHelper {
         numLayers = byteBuff.getInt();
 
         while (s.getGateWooshBlocks().size() < numLayers) {
-            s.getGateWooshBlocks().add(new ArrayList<Location>());
+            s.getGateWooshBlocks().add(new ArrayList<>());
         }
         for (int i = 0; i < numLayers; i++) {
             numBlocks = byteBuff.getInt();
@@ -1432,7 +1416,7 @@ public class StargateHelper {
         final int numLightLayers = byteBuff.getInt();
 
         while (s.getGateLightBlocks().size() < numLightLayers) {
-            s.getGateLightBlocks().add(new ArrayList<Location>());
+            s.getGateLightBlocks().add(new ArrayList<>());
         }
 
         for (int i = 0; i < numLightLayers; i++) {
@@ -1447,7 +1431,7 @@ public class StargateHelper {
         final int numWooshLayers = byteBuff.getInt();
 
         while (s.getGateWooshBlocks().size() < numWooshLayers) {
-            s.getGateWooshBlocks().add(new ArrayList<Location>());
+            s.getGateWooshBlocks().add(new ArrayList<>());
         }
         for (int i = 0; i < numWooshLayers; i++) {
             final int numWooshBlocks = byteBuff.getInt();
@@ -1493,7 +1477,7 @@ public class StargateHelper {
     }
 
     /**
-     * Stargateto binary.
+     * Stargate to binary.
      * 
      * @param s
      *            the s

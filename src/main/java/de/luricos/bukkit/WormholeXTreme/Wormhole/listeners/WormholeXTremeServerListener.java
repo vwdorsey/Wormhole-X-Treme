@@ -20,8 +20,6 @@
  */
 package de.luricos.bukkit.WormholeXTreme.Wormhole.listeners;
 
-import de.luricos.bukkit.WormholeXTreme.Wormhole.WormholeXTreme;
-import de.luricos.bukkit.WormholeXTreme.Wormhole.config.ConfigManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,9 +39,9 @@ public class WormholeXTremeServerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(final PluginDisableEvent event) {
-        if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
+        /*if (event.getPlugin().getDescription().getName().equals("PermissionsEx") && !ConfigManager.getPermissionsSupportDisable()) {
             WormholeXTreme.getPermissionManager().end();
-        }
+        }*/
     }
 
     /* (non-Javadoc)

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.WormholeXTreme.Wormhole.bukkit.commands;
+package de.luricos.bukkit.WormholeXTreme.Wormhole.utils;
 
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.Stargate;
 import de.luricos.bukkit.WormholeXTreme.Wormhole.model.StargateManager;
@@ -73,7 +73,7 @@ public class CommandUtilities {
         boolean startQuoteFound = false;
         boolean endQuoteFound = false;
 
-        final ArrayList<String> argsPartsList = new ArrayList<String>();
+        final ArrayList<String> argsPartsList = new ArrayList<>();
 
         for (final String part : args) {
             // First check to see if we have a starting or stopping quote

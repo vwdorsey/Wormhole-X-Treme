@@ -47,30 +47,30 @@ public class StargateMinecartTeleportEvent extends Event {
         this.newMinecart = newMinecart;
     }
 
-    /**
-     * Gets the new minecart.
-     * 
-     * @return the new minecart
-     */
-    public Minecart getNewMinecart() {
-        return newMinecart;
-    }
+//    /**
+//     * Gets the new minecart.
+//     *
+//     * @return the new minecart
+//     */
+//    public Minecart getNewMinecart() {
+//        return newMinecart;
+//    }
 
-    /**
-     * Gets the old minecart.
-     * 
-     * @return the old minecart
-     */
-    public Minecart getOldMinecart() {
-        return oldMinecart;
-    }
+//    /**
+//     * Gets the old minecart.
+//     *
+//     * @return the old minecart
+//     */
+//    public Minecart getOldMinecart() {
+//        return oldMinecart;
+//    }
 
     @Override
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+//    public static HandlerList getHandlerList() {
+//        return handlers;
+//    }
 }
